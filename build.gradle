@@ -23,6 +23,7 @@ subprojects {
     targetCompatibility = JavaVersion.VERSION_17
 
     apply plugin: 'java'
+    apply plugin: "java-test-fixtures"
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
@@ -47,9 +48,9 @@ subprojects {
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
         implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'org.springframework.security:spring-security-test'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+        testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testFixturesImplementation 'org.springframework.security:spring-security-test'
+        testFixturesRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
     tasks.named('test') {
