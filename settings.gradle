@@ -1,1 +1,5 @@
 rootProject.name = 'saerojinro-server'
+include 'saerojinro-api'
+include 'saerojinro-common'
+include 'saerojinro-domain'
+include 'saerojinro-infra'

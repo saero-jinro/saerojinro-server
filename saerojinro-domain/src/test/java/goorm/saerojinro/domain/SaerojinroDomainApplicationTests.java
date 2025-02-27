@@ -1,10 +1,10 @@
-package com.goorm.saerojinroserver;
+package goorm.saerojinro.domain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SaerojinroServerApplicationTests {
+class SaerojinroDomainApplicationTests {
 
 	@Test
 	void contextLoads() {
