@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: coverage
+    environment: test
 
     steps:
       - name: Check out repository
