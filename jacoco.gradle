@@ -51,7 +51,11 @@ private excludedClassFilesForReport(classDirectories) {
                         // TODO: 추후에 작업하면서 추가하면 될 것 같습니다.
                         "**/presentation/**",
                         "**/exception/**",
-                        "**/config/**"
+                        "**/config/**",
+                        "goorm/saerojinro/api/SaerojinroApiApplication.class",
+                        "goorm/saerojinro/admin/SaerojinroAdminApplication.class",
+                        "goorm/saerojinro/auth/SaerojinroAuthApplication.class",
+                        "goorm/saerojinro/speaker/SaerojinroSpeakerApplication.class",
                 ])
             })
     )
