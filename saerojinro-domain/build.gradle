@@ -8,6 +8,8 @@ jar {
 
 dependencies {
     implementation project(":saerojinro-common")
+
+    testFixturesImplementation project(':saerojinro-common')
 }
 
 apply from: "../jacoco.gradle"

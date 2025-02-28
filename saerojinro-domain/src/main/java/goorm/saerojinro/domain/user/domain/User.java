@@ -2,6 +2,8 @@ package goorm.saerojinro.domain.user.domain;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
+import static goorm.saerojinro.common.domain.Provider.GOOGLE;
+import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -63,27 +65,23 @@ public class User extends BaseTimeEntity {
 			.build();
 	}
 
-	public static User kakaoOidcCreate(String oauthIdentity, Provider provider, String name){
+	public static User createKakaoUser(String oauthIdentity, String name){
 		return User.builder()
 			.oauthIdentity(oauthIdentity)
 			.name(name)
-			.provider(provider)
+			.provider(KAKAO)
 			.role(ATTENDEE)
 			.build();
 	}
 
-	public static User googleOidcCreate(String oauthIdentity, Provider provider, String name, String email){
+	public static User createGoogleUser(String oauthIdentity, String name, String email){
 		return User.builder()
 			.oauthIdentity(oauthIdentity)
 			.name(name)
 			.email(email)
-			.provider(provider)
+			.provider(GOOGLE)
 			.role(ATTENDEE)
 			.build();
-	}
-
-	public void updateEmail(String email){
-		this.email = email;
 	}
 
 	public void updateName(String name){
