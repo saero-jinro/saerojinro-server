@@ -1,0 +1,21 @@
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+
+}
+
+apply from: "../jacoco.gradle"
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
