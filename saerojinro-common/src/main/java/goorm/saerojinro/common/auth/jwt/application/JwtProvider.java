@@ -34,11 +34,6 @@ public class JwtProvider {
 
     private final Header header = Jwts.header().type("JWT").build();
 
-    public String generateAccessToken(Long userId, Role role, Duration duration) {
-        Date now = new Date();
-        return makeToken(new Date(now.getTime() + duration.toMillis()), userId, role);
-    }
-
     public String generateAccessToken(Long userId, Role role) {
         Date now = new Date();
         return makeToken(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()), userId, role);
