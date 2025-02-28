@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
-import goorm.saerojinro.common.domain.Interest;
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.common.domain.Provider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,7 +54,7 @@ public class User extends BaseTimeEntity {
 	private Provider provider;
 
 	@Enumerated(STRING)
-	private Interest interest;
+	private Category interest;
 
 	public static User createAdmin(String email, String password, String name) {
 		return User.builder()
@@ -92,7 +92,7 @@ public class User extends BaseTimeEntity {
 		this.role = role;
 	}
 
-	public void updateInterest(Interest interest){
+	public void updateInterest(Category interest){
 		this.interest = interest;
 	}
 

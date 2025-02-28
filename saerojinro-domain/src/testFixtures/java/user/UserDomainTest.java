@@ -3,7 +3,7 @@ package user;
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
-import static goorm.saerojinro.common.domain.Interest.BACKEND;
+import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static goorm.saerojinro.common.domain.Provider.GOOGLE;
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import goorm.saerojinro.common.domain.BaseRole;
-import goorm.saerojinro.common.domain.Interest;
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.user.domain.User;
 
 public class UserDomainTest {
@@ -109,7 +109,7 @@ public class UserDomainTest {
 	@DisplayName("updateInterest는 유저 관심사를 변경할 수 있다.")
 	public void updateInterest_Success() {
 		// given
-		Interest newInterest = BACKEND;
+		Category newInterest = BACKEND;
 
 		// when
 		user.updateInterest(newInterest);

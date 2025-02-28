@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Interest {
+public enum Category {
 	BACKEND("백엔드 개발 - 서버, 데이터베이스, API 개발 등"),
 	FRONTEND("프론트엔드 개발 - 웹, 모바일 UI 개발 등"),
 	AI("인공지능 - 머신러닝, 딥러닝, AI 모델 개발 등"),
