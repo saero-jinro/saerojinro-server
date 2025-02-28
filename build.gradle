@@ -39,7 +39,7 @@ subprojects {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.postgresql:postgresql'
 
         implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
 
