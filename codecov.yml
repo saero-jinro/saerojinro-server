@@ -10,8 +10,12 @@ coverage:
         paths:
           - "saerojinro-api/src"
           - "saerojinro-domain/src"
+          - "saerojinro-admin/src"
+          - "saerojinro-speaker/src"
           - "saerojinro-api/src/testFixtures"
           - "saerojinro-domain/src/testFixtures"
+          - "saerojinro-admin/src/testFixtures"
+          - "saerojinro-speaker/src/testFixtures"
         only_pulls: true
     patch:
       default:
