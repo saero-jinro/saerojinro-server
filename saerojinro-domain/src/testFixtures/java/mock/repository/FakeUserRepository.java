@@ -1,4 +1,4 @@
-package mock;
+package mock.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
+import mock.TestEntityUtils;
 
 public class FakeUserRepository implements UserRepository {
 	private final List<User> data = Collections.synchronizedList(new ArrayList<>());
