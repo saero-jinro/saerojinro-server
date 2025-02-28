@@ -14,7 +14,8 @@ public class UserCommandService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public User createAdmin(String email, String password, String name) {
-		User user = User.createAdmin(email, password, name);
+		String encodedPassword = bCryptPasswordEncoder.encode(password);
+		User user = User.createAdmin(email, encodedPassword, name);
 		return userRepository.save(user);
 	}
 }
