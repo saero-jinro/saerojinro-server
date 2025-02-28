@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: coverage
+    environment: test
 
     steps:
       - name: Check out repository
@@ -41,6 +41,8 @@ jobs:
           paths: |
             ${{ github.workspace }}/saerojinro-domain/build/jacoco/test/jacocoTestReport.xml
             ${{ github.workspace }}/saerojinro-api/build/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/saerojinro-admin/build/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/saerojinro-speaker/build/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
           min-coverage-changed-files: 70
