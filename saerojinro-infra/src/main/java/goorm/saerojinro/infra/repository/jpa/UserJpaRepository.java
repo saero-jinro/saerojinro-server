@@ -9,4 +9,6 @@ import goorm.saerojinro.domain.user.domain.User;
 
 public interface UserJpaRepository extends JpaRepository<User, Long> {
 	Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider);
+
+	Optional<User> findByEmail(String email);
 }

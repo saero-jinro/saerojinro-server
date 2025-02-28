@@ -6,6 +6,8 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import goorm.saerojinro.common.auth.domain.Provider;
 import goorm.saerojinro.common.auth.domain.Role;
 import goorm.saerojinro.common.auth.domain.Interest;
@@ -93,5 +95,9 @@ public class User {
 
 	public void updateInterest(Interest interest){
 		this.interest = interest;
+	}
+
+	public boolean isPasswordMatched(String rawPassword, PasswordEncoder passwordEncoder) {
+		return passwordEncoder.matches(rawPassword, password);
 	}
 }

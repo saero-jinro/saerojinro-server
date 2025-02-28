@@ -34,22 +34,22 @@ public class JwtProvider {
 
     private final Header header = Jwts.header().type("JWT").build();
 
-    public String generateAccessToken(String userId, Role role, Duration duration) {
+    public String generateAccessToken(Long userId, Role role, Duration duration) {
         Date now = new Date();
         return makeToken(new Date(now.getTime() + duration.toMillis()), userId, role);
     }
 
-    public String generateAccessToken(String userId, Role role) {
+    public String generateAccessToken(Long userId, Role role) {
         Date now = new Date();
         return makeToken(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()), userId, role);
     }
 
-    public String generateRefreshToken(String userId, Role role) {
+    public String generateRefreshToken(Long userId, Role role) {
         Date now = new Date();
         return makeToken(new Date(now.getTime() + Duration.ofDays(1).toMillis()), userId, role);
     }
 
-    private String makeToken(Date expiry, String userId, Role role) {
+    private String makeToken(Date expiry, Long userId, Role role) {
         Date now = new Date();
 
         return Jwts.builder()
@@ -57,7 +57,7 @@ public class JwtProvider {
             .issuer(jwtProperties.getIssuer())
             .issuedAt(now)
             .expiration(expiry)
-            .subject(userId)
+            .subject(userId.toString())
             .claim("role", role.name())
             .signWith(jwtProperties.getSecretKey())
             .compact();
