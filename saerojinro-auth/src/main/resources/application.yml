@@ -4,3 +4,46 @@ server:
 spring:
   application:
     name: saerojinro-auth
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "${KAKAO_REDIRECT_URI}"
+            client-authentication-method: client_secret_post
+            scope:
+              - openid
+              - profile_nickname
+              - profile_image
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "${GOOGLE_REDIRECT_URI}"
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+              - email
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            jwk-set-uri: https://kauth.kakao.com/.well-known/jwks.json
+            issuer-uri: https://kauth.kakao.com
+            user-name-attribute: sub
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secret_key_string: ${JWT_SECRET_KEY_STRING}
+
+oidc:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+  google:
+    client-id: ${GOOGLE_CLIENT_ID}
+

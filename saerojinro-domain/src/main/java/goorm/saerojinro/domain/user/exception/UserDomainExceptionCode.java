@@ -16,7 +16,6 @@ public enum UserDomainExceptionCode implements ExceptionCode {
 	INVALID_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 	INVALID_USER(BAD_REQUEST, "사용자가 일치하지 않습니다"),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "유효한 인증 정보가 없습니다."),
-	PROVIDER_NOT_FOUND(BAD_REQUEST, "올바르지 않은 제공자입니다.")
 	;
 
 	private final HttpStatus status;

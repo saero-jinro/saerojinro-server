@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.base;
+package goorm.saerojinro.common.auth.domain;
 
 import java.time.LocalDateTime;
 

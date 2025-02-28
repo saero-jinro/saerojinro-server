@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.base;
+package goorm.saerojinro.common.auth.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

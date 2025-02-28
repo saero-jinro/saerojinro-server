@@ -1,12 +1,14 @@
 package goorm.saerojinro.domain.user.domain;
 
-import static goorm.saerojinro.domain.user.domain.Role.ADMIN;
-import static goorm.saerojinro.domain.user.domain.Role.ATTENDEE;
+import static goorm.saerojinro.common.auth.domain.Role.ADMIN;
+import static goorm.saerojinro.common.auth.domain.Role.ATTENDEE;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import goorm.saerojinro.domain.base.Interest;
+import goorm.saerojinro.common.auth.domain.Provider;
+import goorm.saerojinro.common.auth.domain.Role;
+import goorm.saerojinro.common.auth.domain.Interest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

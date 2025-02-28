@@ -1,8 +1,8 @@
-package goorm.saerojinro.domain.user.domain;
+package goorm.saerojinro.common.auth.domain;
 
 import java.util.Arrays;
 
-import goorm.saerojinro.domain.user.exception.ProviderNotFoundException;
+import goorm.saerojinro.common.exception.ProviderNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

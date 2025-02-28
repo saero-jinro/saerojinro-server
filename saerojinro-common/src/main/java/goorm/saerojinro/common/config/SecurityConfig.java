@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import goorm.saerojinro.common.auth.filter.TokenAuthenticationFilter;
-import goorm.saerojinro.common.auth.jwt.TokenProvider;
+import goorm.saerojinro.common.auth.filter.JwtAuthenticationFilter;
+import goorm.saerojinro.common.auth.jwt.application.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-	private final TokenProvider tokenProvider;
+	private final JwtProvider tokenProvider;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -93,8 +93,8 @@ public class SecurityConfig {
 		};
 	}
 
-	public TokenAuthenticationFilter tokenAuthenticationFilter() {
-		return new TokenAuthenticationFilter(tokenProvider);
+	public JwtAuthenticationFilter tokenAuthenticationFilter() {
+		return new JwtAuthenticationFilter(tokenProvider);
 	}
 
 	@Bean

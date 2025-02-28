@@ -7,7 +7,11 @@ jar {
 }
 
 dependencies {
+    implementation project(":saerojinro-common")
+    implementation project(":saerojinro-domain")
+    implementation project(":saerojinro-infra")
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 apply from: "../jacoco.gradle"
