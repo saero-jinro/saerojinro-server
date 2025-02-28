@@ -10,6 +10,11 @@ dependencies {
     implementation project(":saerojinro-common")
     implementation project(":saerojinro-domain")
     implementation project(":saerojinro-infra")
+
+    testFixturesImplementation project(":saerojinro-domain")
+    testFixturesImplementation project(":saerojinro-common")
+
+    testFixturesImplementation testFixtures(project(':saerojinro-domain'))
 }
 
 apply from: "../jacoco.gradle"
