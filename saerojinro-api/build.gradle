@@ -7,7 +7,8 @@ jar {
 }
 
 dependencies {
-
+    implementation project(":saerojinro-common")
+    implementation project(":saerojinro-infra")
 }
 
 apply from: "../jacoco.gradle"
