@@ -3,6 +3,7 @@ package goorm.saerojinro.common.domain;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -17,4 +18,15 @@ public abstract class BaseTimeEntity {
 	@CreationTimestamp
 	@Column(nullable = false, updatable = false)
 	protected LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column(nullable = false)
+	protected LocalDateTime updatedAt;
+
+	@Column
+	protected LocalDateTime deletedAt;
+
+	public void delete(){
+		deletedAt = LocalDateTime.now();
+	}
 }
