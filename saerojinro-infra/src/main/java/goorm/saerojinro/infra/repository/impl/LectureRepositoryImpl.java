@@ -2,7 +2,7 @@ package goorm.saerojinro.infra.repository.impl;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
-import goorm.saerojinro.infra.repository.jpa.JpaLectureRepository;
+import goorm.saerojinro.infra.repository.jpa.LectureJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,24 +12,24 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class LectureRepositoryImpl implements LectureRepository {
-	private final JpaLectureRepository repository;
+	private final LectureJpaRepository lectureJpaRepository;
 	@Override
 	public Lecture save(Lecture lecture) {
-		return repository.save(lecture);
+		return lectureJpaRepository.save(lecture);
 	}
 
 	@Override
 	public List<Lecture> findAll() {
-		return repository.findAll();
+		return lectureJpaRepository.findAll();
 	}
 
 	@Override
 	public Optional<Lecture> findById(Long id) {
-		return repository.findById(id);
+		return lectureJpaRepository.findById(id);
 	}
 
 	@Override
 	public void delete(Lecture lecture) {
-		repository.delete(lecture);
+		lectureJpaRepository.delete(lecture);
 	}
 }
