@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
+import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,9 @@ public class UserQueryService {
 
 	public User login(String email, String password) {
 		User user = getByEmail(email);
-		user.isPasswordMatched(password, bCryptPasswordEncoder);
+		if(!user.isPasswordMatched(password, bCryptPasswordEncoder)) {
+			throw new InvalidPasswordException();
+		}
 
 		return user;
 	}
