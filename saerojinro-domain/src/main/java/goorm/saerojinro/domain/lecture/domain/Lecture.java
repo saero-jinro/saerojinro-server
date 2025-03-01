@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Lecture extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long lectureId;
+	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "speaker_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT),
