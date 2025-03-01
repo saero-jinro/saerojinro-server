@@ -132,4 +132,14 @@ public class UserDomainTest {
 		// then
 		assertTrue(isMatched);
 	}
+
+	@Test
+	@DisplayName("getUsername은 email을 반환한다")
+	public void getUsername_Success() {
+		// when
+		String response = user.getUsername();
+
+		// then
+		assertEquals(EMAIL, response);
+	}
 }
