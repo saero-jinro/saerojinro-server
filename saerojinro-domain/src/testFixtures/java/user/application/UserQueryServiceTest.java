@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
+import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import mock.repository.FakeUserRepository;
 
 public class UserQueryServiceTest {
@@ -55,6 +56,17 @@ public class UserQueryServiceTest {
 		assertEquals("박민준", result.getName());
 		assertEquals(email, result.getEmail());
 		assertEquals(ADMIN, result.getRole());
+	}
+
+	@Test
+	@DisplayName("getByEmail은 해당 이메일을 가진 유저가 존재하지 않으면 UserNotFoundException을 발생한다.")
+	public void getByEmail_Failed() {
+		// given
+		String email = "emai@email.com";
+
+		// when
+		assertThatThrownBy(() -> userQueryService.getByEmail(email))
+			.isInstanceOf(UserNotFoundException.class);
 	}
 
 	@Test
