@@ -1,8 +1,8 @@
 package goorm.saerojinro.domain.lecture.domain;
 
-import goorm.saerojinro.common.entity.BaseTimeEntity;
-import goorm.saerojinro.common.model.Category;
-import goorm.saerojinro.common.model.LectureStatus;
+import goorm.saerojinro.common.domain.BaseTimeEntity;
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

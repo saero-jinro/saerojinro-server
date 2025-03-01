@@ -1,7 +1,7 @@
 package lecture;
 
-import goorm.saerojinro.common.model.Category;
-import goorm.saerojinro.common.model.LectureStatus;
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final String TITLE = "Java Basics";
-	private static final String CONTENTS = "Introduction to Java Language";
+	private static final String TITLE = "Title";
+	private static final String CONTENTS = "Contents";
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
-	private static final String LOCATION = "Room 101";
+	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
 	private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
