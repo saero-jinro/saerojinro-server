@@ -36,13 +36,13 @@ public class Notification {
 	private String title;
 
 	@Column(nullable = false)
-	private String content;
+	private String contents;
 
-	public static Notification create(Lecture lecture, String title, String content) {
+	public static Notification createNotification(Lecture lecture, String title, String contents) {
 		return Notification.builder()
 			.lecture(lecture)
 			.title(title)
-			.content(content)
+			.contents(contents)
 			.build();
 	}
 }
