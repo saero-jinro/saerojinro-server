@@ -78,10 +78,10 @@ public class SecurityConfig {
 	CorsConfigurationSource corsConfigurationSource() {
 		return request -> {
 			CorsConfiguration config = new CorsConfiguration();
-			config.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
-			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 필요한 메서드만 허용
-			config.setAllowedOriginPatterns(Arrays.asList("*")); // 특정 도메인 허용
-			config.setAllowCredentials(true); // 인증 정보 포함 허용
+			config.setAllowedHeaders(Collections.singletonList("*"));
+			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+			config.setAllowedOriginPatterns(Arrays.asList("*"));
+			config.setAllowCredentials(true);
 			return config;
 		};
 	}
