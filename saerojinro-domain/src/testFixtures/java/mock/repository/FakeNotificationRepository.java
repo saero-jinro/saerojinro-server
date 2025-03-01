@@ -16,7 +16,7 @@ public class FakeNotificationRepository implements NotificationRepository {
 	@Override
 	public Notification save(Notification notification) {
 		Notification build = Notification.builder()
-			.id(sequence.getAndIncrement())
+			.id(sequence.incrementAndGet())
 			.lecture(notification.getLecture())
 			.title(notification.getTitle())
 			.contents(notification.getContents())
