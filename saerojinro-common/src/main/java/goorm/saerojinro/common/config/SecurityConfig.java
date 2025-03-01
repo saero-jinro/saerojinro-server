@@ -1,5 +1,8 @@
 package goorm.saerojinro.common.config;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -10,7 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
+import goorm.saerojinro.common.filter.JwtAuthenticationFilter;
+import goorm.saerojinro.common.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -18,10 +25,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
+	private final JwtProvider jwtProvider;
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
-			//.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+			.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
 			.csrf(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
@@ -29,7 +38,7 @@ public class SecurityConfig {
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
-			//.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(SWAGGER_PATTERNS).permitAll()
 				.requestMatchers(STATIC_RESOURCES_PATTERNS).permitAll()
@@ -64,8 +73,24 @@ public class SecurityConfig {
 
 	};
 
+	CorsConfigurationSource corsConfigurationSource() {
+		return request -> {
+			CorsConfiguration config = new CorsConfiguration();
+			config.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
+			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 필요한 메서드만 허용
+			config.setAllowedOriginPatterns(Arrays.asList("*")); // 특정 도메인 허용
+			config.setAllowCredentials(true); // 인증 정보 포함 허용
+			return config;
+		};
+	}
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter(jwtProvider);
+	}
+
 }
