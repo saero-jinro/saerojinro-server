@@ -5,6 +5,8 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -70,7 +72,7 @@ public class SecurityConfig {
 	};
 
 	private static final String[] PUBLIC_ENDPOINTS = {
-
+		"/api/admin/login"
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {
@@ -93,4 +95,11 @@ public class SecurityConfig {
 		return new JwtAuthenticationFilter(jwtProvider);
 	}
 
+	@Bean
+	public RoleHierarchy roleHierarchy() {
+		return RoleHierarchyImpl.withDefaultRolePrefix()
+			.role("ADMIN").implies("SPEAKER")
+			.role("SPEAKER").implies("ATTENDEE")
+			.build();
+	}
 }
