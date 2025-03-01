@@ -33,17 +33,17 @@ import lombok.RequiredArgsConstructor;
 public class JwtProvider {
 	private final JwtProperties jwtProperties;
 
-	public String generateAccessToken(String userId, BaseRole role) {
+	public String generateAccessToken(String email, BaseRole role) {
 		Date now = new Date();
-		return makeToken(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()), userId, role);
+		return makeToken(new Date(now.getTime() + Duration.ofHours(1).toMillis()), email, role);
 	}
 
-	public String generateRefreshToken(String userId, BaseRole role) {
+	public String generateRefreshToken(String email, BaseRole role) {
 		Date now = new Date();
-		return makeToken(new Date(now.getTime() + Duration.ofDays(1).toMillis()), userId, role);
+		return makeToken(new Date(now.getTime() + Duration.ofDays(1).toMillis()), email, role);
 	}
 
-	private String makeToken(Date expiry, String userId, BaseRole role) {
+	private String makeToken(Date expiry, String email, BaseRole role) {
 		Date now = new Date();
 
 ;
@@ -52,7 +52,7 @@ public class JwtProvider {
 			.setIssuer(jwtProperties.getIssuer())
 			.setIssuedAt(now)
 			.setExpiration(expiry)
-			.setSubject(userId)
+			.setSubject(email)
 			.claim("role", role.name())
 			.signWith(HS256, jwtProperties.getSecretKey())
 			.compact();

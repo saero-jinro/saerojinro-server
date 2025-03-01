@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import goorm.saerojinro.domain.user.domain.User;
@@ -30,5 +31,10 @@ public class FakeUserRepository implements UserRepository {
 		TestEntityUtils.setCreatedAt(newUser, LocalDateTime.now());
 		data.add(newUser);
 		return newUser;
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return data.stream().filter(u -> u.getEmail().equals(email)).findAny();
 	}
 }
