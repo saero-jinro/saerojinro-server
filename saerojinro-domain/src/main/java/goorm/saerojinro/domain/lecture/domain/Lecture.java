@@ -21,8 +21,7 @@ public class Lecture extends BaseTimeEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "speaker_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT),
-		insertable = false, updatable = false)
+	@JoinColumn(name = "speaker_id", nullable = false, insertable = false)
 	private User speaker;
 
 	@Column(nullable = false, unique = true)
