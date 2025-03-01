@@ -1,7 +1,8 @@
-package goorm.saerojinro.domain.lecture;
+package goorm.saerojinro.infra.repository.impl;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
+import goorm.saerojinro.infra.repository.jpa.JpaLectureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
