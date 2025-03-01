@@ -2,8 +2,6 @@ package goorm.saerojinro.common.domain;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,7 +21,6 @@ public abstract class BaseTimeEntity {
 
 	@UpdateTimestamp
 	@Column(nullable = false)
-	@LastModifiedDate
 	protected LocalDateTime updatedAt;
 
 	@Column
