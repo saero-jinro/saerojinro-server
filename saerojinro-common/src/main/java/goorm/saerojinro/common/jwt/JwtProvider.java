@@ -46,7 +46,6 @@ public class JwtProvider {
 	private String makeToken(Date expiry, String email, BaseRole role) {
 		Date now = new Date();
 
-;
 		return Jwts.builder()
 			.setHeaderParam(TYPE,JWT_TYPE)
 			.setIssuer(jwtProperties.getIssuer())

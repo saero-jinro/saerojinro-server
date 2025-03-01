@@ -72,7 +72,9 @@ public class SecurityConfig {
 	};
 
 	private static final String[] PUBLIC_ENDPOINTS = {
-		"/api/admin/login"
+		"/api/auth/login",
+		"/api/auth/kakao/login",
+		"/api/auth/google/login",
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {

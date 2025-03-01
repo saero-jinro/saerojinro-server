@@ -20,3 +20,7 @@ spring:
     defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secret_key: ${JWT_SECRET_KEY}
