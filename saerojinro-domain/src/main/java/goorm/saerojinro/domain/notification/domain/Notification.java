@@ -1,5 +1,6 @@
 package goorm.saerojinro.domain.notification.domain;
 
+import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "notification")
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
-public class Notification {
+public class Notification extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
