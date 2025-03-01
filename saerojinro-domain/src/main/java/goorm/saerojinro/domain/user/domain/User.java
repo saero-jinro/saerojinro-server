@@ -8,6 +8,13 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import goorm.saerojinro.common.domain.BaseRole;
@@ -31,7 +38,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "\"user\"")
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
-public class User extends BaseTimeEntity {
+public class User extends BaseTimeEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private long id;
@@ -98,5 +105,15 @@ public class User extends BaseTimeEntity {
 
 	public boolean isPasswordMatched(String rawPassword, PasswordEncoder passwordEncoder) {
 		return passwordEncoder.matches(rawPassword, password);
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
 	}
 }
