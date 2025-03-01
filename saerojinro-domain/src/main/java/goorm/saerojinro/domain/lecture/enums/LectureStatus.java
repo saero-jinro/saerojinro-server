@@ -1,4 +1,4 @@
-package goorm.saerojinro.common.model;
+package goorm.saerojinro.domain.lecture.enums;
 
 public enum LectureStatus {
 	PENDING_APPROVAL,
