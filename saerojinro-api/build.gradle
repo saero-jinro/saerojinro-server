@@ -9,6 +9,7 @@ jar {
 dependencies {
     implementation project(":saerojinro-domain")
     implementation project(":saerojinro-infra")
+    implementation project(":saerojinro-common")
 
     testFixturesImplementation project(':saerojinro-domain')
     testFixturesImplementation project(':saerojinro-infra')
