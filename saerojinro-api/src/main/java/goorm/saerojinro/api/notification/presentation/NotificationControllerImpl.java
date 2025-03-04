@@ -1,10 +1,14 @@
 package goorm.saerojinro.api.notification.presentation;
 
 import goorm.saerojinro.api.notification.application.NotificationFacade;
+import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
+import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -23,6 +27,7 @@ public class NotificationControllerImpl implements NotificationController {
 	}
 
 	@Override
+	@GetMapping("/my")
 	public ResponseEntity<ReceivedNotificationListResponse> myNotifications() {
 		ReceivedNotificationListResponse response = notificationFacade.myNotification();
 		return ResponseEntity.ok(response);
@@ -30,8 +35,12 @@ public class NotificationControllerImpl implements NotificationController {
 
 	// TODO
 	@Override
-	public ResponseEntity<Void> sendAll() {
-		return null;
+	@PostMapping("/send-all")
+	public ResponseEntity<Void> sendAll(
+		@RequestBody NotificationSendAllRequest request
+	) {
+		notificationFacade.sendNotificationAll(request);
+		return ResponseEntity.noContent().build();
 	}
 
 	@Override

@@ -1,17 +1,16 @@
 package goorm.saerojinro.api.notification.application;
 
 import goorm.saerojinro.api.notification.presentation.exception.EmitterNotFoundException;
+import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.NotificationSendResponse;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
-import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import goorm.saerojinro.infra.repository.impl.UserRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -25,28 +24,23 @@ public class NotificationFacade {
 	private final NotificationCommandService notificationCommandService;
 	private final NotificationQueryService notificationQueryService;
 	private final EmitterRepository emitterRepository;
-	// TODO commandService로 교체
-//	private final LectureCommandService lectureCommandService;
-	private final LectureRepository lectureRepository;
-	private final UserQueryService userQueryService;
-	private final UserRepositoryImpl userRepositoryImpl;
 
 	public SseEmitter subscribe() {
 		// TODO 현재 로그인한 유저 가져오기
-		User user = User.builder().build();
+		User user = User.builder().id(1L).build();
 		SseEmitter emitter = new SseEmitter();
 		return emitterRepository.save(user.getId(), emitter);
 	}
 
 	public void sendNotificationWithRequest(NotificationSendRequest request) {
-//		Notification notification = Notification.createNotification(
-//			// TODO userService
-//			userRepositoryImpl.findById(request.receiverId())
-//			request.title(),
-//			request.contents()
-//		);
-//
-//		sendNotification(request.receiverId(), notification);
+		Notification notification = Notification.createNotification(
+			// TODO userService에서 아이디로 조회
+			User.builder().id(request.receiverId()).build(),
+			request.title(),
+			request.contents()
+		);
+
+		sendNotification(request.receiverId(), notification);
 	}
 
 	public void sendNotification(Long receiverId, Notification notification) {
@@ -63,7 +57,14 @@ public class NotificationFacade {
 		}
 	}
 
-	public void sendNotificationAll(Notification notification) {
+	public void sendNotificationAll(NotificationSendAllRequest request) {
+		Notification notification = Notification.createNotification(
+			// TODO 전체공지는 사용자를 어떻게 할지 고민
+			null,
+			request.title(),
+			request.contents()
+		);
+		notificationCommandService.save(notification);
 		NotificationSendResponse message = NotificationSendResponse.from(notification);
 
 		List<SseEmitter> all = emitterRepository.findAll();
@@ -78,12 +79,9 @@ public class NotificationFacade {
 
 	public ReceivedNotificationListResponse myNotification() {
 		// TODO 현재 로그인한 유저 가져오기
-		User user = User.builder().build();
+		User user = User.builder().id(1L).build();
 
-		// user -> 예약한 강의 찾기 -> lectureId
-		Long lectureId = null;
-
-		List<Notification> notificationList = notificationQueryService.findByUserId(lectureId);
+		List<Notification> notificationList = notificationQueryService.findByUserId(user.getId());
 		return ReceivedNotificationListResponse.from(notificationList);
 	}
 }

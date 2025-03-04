@@ -1,11 +1,15 @@
 package goorm.saerojinro.api.notification.presentation;
 
+import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Tag(name = "Notification", description = "알림 API")
@@ -31,7 +35,12 @@ public interface NotificationController {
 			- Assignee : 이신행
 		""")
 	@ApiResponses()
-	ResponseEntity<Void> sendAll();
+	ResponseEntity<Void> sendAll(
+		@Parameter(
+			description = "전체 알림 request 객체 입니다",
+			required = true
+		) @Valid @RequestBody NotificationSendAllRequest sendRequest
+	);
 
 	@Operation(summary = "강의 기준 알림 전송 API", description = """
 			- Description : 이 API는 강의를 예약한 사용자에게 알림을 전송합니다
