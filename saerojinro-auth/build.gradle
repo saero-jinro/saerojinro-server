@@ -11,6 +11,8 @@ dependencies {
     implementation project(":saerojinro-domain")
     implementation project(":saerojinro-infra")
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     testFixturesImplementation project(":saerojinro-domain")
     testFixturesImplementation project(":saerojinro-common")
 

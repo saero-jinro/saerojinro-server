@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import goorm.saerojinro.common.domain.Provider;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import mock.TestEntityUtils;
@@ -36,5 +37,12 @@ public class FakeUserRepository implements UserRepository {
 	@Override
 	public Optional<User> findByEmail(String email) {
 		return data.stream().filter(u -> u.getEmail().equals(email)).findAny();
+	}
+
+	@Override
+	public Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider) {
+		return data.stream().filter(u ->
+			u.getOauthIdentity().equals(identifier) && u.getProvider().equals(provider)
+		).findAny();
 	}
 }
