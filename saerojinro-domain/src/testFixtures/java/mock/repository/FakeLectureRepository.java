@@ -3,6 +3,7 @@ package mock.repository;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,5 +47,12 @@ public class FakeLectureRepository implements LectureRepository {
 	@Override
 	public void delete(Lecture lecture) {
 		data.removeIf(l -> l.getId().equals(lecture.getId()));
+	}
+
+	@Override
+	public List<Lecture> findByStartDate(LocalDate day) {
+		return data.stream()
+			.filter(lecture -> lecture.getStartTime().toLocalDate().equals(day))
+			.toList();
 	}
 }

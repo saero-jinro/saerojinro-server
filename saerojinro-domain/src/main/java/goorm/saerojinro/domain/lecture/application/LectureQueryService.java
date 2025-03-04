@@ -6,6 +6,7 @@ import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,5 +20,9 @@ public class LectureQueryService {
 
 	public Lecture getByLectureId(Long lectureId) {
 		return lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
+	}
+
+	public List<Lecture> getByDate(LocalDate day) {
+		return lectureRepository.findByStartDate(day);
 	}
 }

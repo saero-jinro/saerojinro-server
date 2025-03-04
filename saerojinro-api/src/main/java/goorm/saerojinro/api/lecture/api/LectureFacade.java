@@ -8,6 +8,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -25,5 +26,12 @@ public class LectureFacade {
 	public LectureDetailResponse getByLectureId(long lectureId) {
 		Lecture lecture = lectureService.getByLectureId(lectureId);
 		return LectureDetailResponse.from(lecture);
+	}
+
+	public LectureListResponse getByDate(LocalDate day) {
+		List<LectureResponse> responses = lectureService.getByDate(day).stream()
+			.map(LectureResponse::from)
+			.toList();
+		return LectureListResponse.from(responses);
 	}
 }

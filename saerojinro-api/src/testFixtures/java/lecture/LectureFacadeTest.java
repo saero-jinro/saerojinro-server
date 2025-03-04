@@ -1,56 +1,49 @@
 package lecture;
 
-import goorm.saerojinro.api.lecture.api.LectureFacade;
-import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
+import mock.repository.FakeLectureRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
-import static goorm.saerojinro.common.domain.Category.*;
-import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
+import static goorm.saerojinro.common.domain.Category.BACKEND;
+import static goorm.saerojinro.domain.lecture.enums.LectureStatus.PENDING_APPROVAL;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LectureFacadeTest {
 
-	@Mock
 	private LectureQueryService lectureQueryService;
-
-	@InjectMocks
-	private LectureFacade lectureFacade;
+	private FakeLectureRepository lectureRepository;
 
 	private Lecture lecture1;
 	private Lecture lecture2;
 
 	@BeforeEach
 	void setUp() {
+		lectureRepository = new FakeLectureRepository();
+		lectureQueryService = new LectureQueryService(lectureRepository);
+
 		User speaker = User.builder()
-			.id(1L)
-			.name("Dummy Speaker")
+			.name("Speaker")
 			.role(SPEAKER)
 			.build();
 
 		lecture1 = Lecture.builder()
-			.id(101L)
 			.speaker(speaker)
 			.title("Lecture One")
 			.contents("Contents One")
+			.maxCapacity(100L)
 			.startTime(LocalDateTime.of(2025, 3, 1, 10, 0))
 			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
 			.location("room A")
@@ -59,50 +52,50 @@ public class LectureFacadeTest {
 			.build();
 
 		lecture2 = Lecture.builder()
-			.id(102L)
 			.speaker(speaker)
 			.title("Lecture Two")
 			.contents("Contents Two")
-			.startTime(LocalDateTime.of(2025, 3, 2, 10, 0))
-			.endTime(LocalDateTime.of(2025, 3, 2, 12, 0))
+			.maxCapacity(100L)
+			.startTime(LocalDateTime.of(2025, 3, 1, 10, 0))
+			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
 			.location("room B")
 			.category(BACKEND)
 			.lectureStatus(PENDING_APPROVAL)
 			.build();
+
+		lectureRepository.save(lecture1);
+		lectureRepository.save(lecture2);
 	}
 
 	@Test
 	@DisplayName("모든 강의를 조회할 수 있다")
 	void getAllLecture_success() {
-		// given
-		List<Lecture> lectureList = Arrays.asList(lecture1, lecture2);
-		when(lectureQueryService.getAllLecture()).thenReturn(lectureList);
-
-		// when
-		LectureListResponse responses = lectureFacade.getAllLecture();
-
-		// then
-		assertNotNull(responses);
-		assertEquals(2, responses.totalCount());
-		assertEquals(2, responses.lectures().size());
-
-		LectureResponse response = responses.lectures().get(0);
-		assertEquals("Lecture One", response.title());
-		assertNotNull(response.speaker());
+		List<Lecture> lectures = lectureQueryService.getAllLecture();
+		assertNotNull(lectures);
+		assertEquals(2, lectures.size());
 	}
 
 	@Test
 	@DisplayName("강의 아이디로 강의 상세 정보를 조회할 수 있다")
 	void getByLectureId_success() {
-		// given
-		when(lectureQueryService.getByLectureId(101L)).thenReturn(lecture1);
+		Lecture lecture = lectureQueryService.getByLectureId(1L);
+		assertNotNull(lecture);
+		assertEquals("Lecture One", lecture.getTitle());
+	}
 
-		// when
-		LectureDetailResponse detailResponse = lectureFacade.getByLectureId(101L);
+	@Test
+	@DisplayName("존재하지 않는 강의 ID면 예외를 반환한다")
+	void getByLectureId_notFound() {
+		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getByLectureId(999L));
+	}
 
-		// then
-		assertNotNull(detailResponse);
-		assertEquals("Lecture One", detailResponse.title());
-		assertEquals("Contents One", detailResponse.contents());
+	@Test
+	@DisplayName("주어진 날짜에 해당하는 강의를 조회할 수 있다")
+	void getByDate_success() {
+		LocalDate date = LocalDate.of(2025, 3, 1);
+		List<Lecture> lecturesOnDay = lectureQueryService.getByDate(date);
+		assertNotNull(lecturesOnDay);
+		assertEquals(2, lecturesOnDay.size());
+		assertEquals("Lecture Two", lecturesOnDay.get(1).getTitle());
 	}
 }

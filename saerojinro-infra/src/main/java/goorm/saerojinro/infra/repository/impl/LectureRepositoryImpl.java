@@ -6,6 +6,7 @@ import goorm.saerojinro.infra.repository.jpa.LectureJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LectureRepositoryImpl implements LectureRepository {
 	private final LectureJpaRepository lectureJpaRepository;
+
 	@Override
 	public Lecture save(Lecture lecture) {
 		return lectureJpaRepository.save(lecture);
@@ -26,6 +28,11 @@ public class LectureRepositoryImpl implements LectureRepository {
 	@Override
 	public Optional<Lecture> findById(Long id) {
 		return lectureJpaRepository.findById(id);
+	}
+
+	@Override
+	public List<Lecture> findByStartDate(LocalDate day) {
+		return lectureJpaRepository.findByStartDate(day);
 	}
 
 	@Override
