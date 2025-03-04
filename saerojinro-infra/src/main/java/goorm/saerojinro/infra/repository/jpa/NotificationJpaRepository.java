@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NotificationJpaRepository extends JpaRepository<Notification, Long> {
-	List<Notification> findAllByLectureIdAndDeletedAtIsNullOrderByCreatedAt(Long lectureId);
+	List<Notification> findAllByUserIdAndDeletedAtIsNullOrderByCreatedAt(Long userId);
 }
