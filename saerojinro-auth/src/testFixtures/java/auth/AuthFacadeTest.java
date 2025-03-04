@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import goorm.saerojinro.auth.application.AuthFacade;
 import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
+import goorm.saerojinro.auth.social.kakao.KakaoOidcProperties;
+import goorm.saerojinro.auth.social.kakao.KakaoOidcService;
 import goorm.saerojinro.common.jwt.JwtProperties;
 import goorm.saerojinro.common.jwt.JwtProvider;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -25,7 +27,8 @@ public class AuthFacadeTest {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		authFacade = new AuthFacade(
 			new UserQueryService(fakeUserRepository, bCryptPasswordEncoder),
-			new JwtProvider(new JwtProperties("testIssuer", "testSecretKey"))
+			new JwtProvider(new JwtProperties("testIssuer", "testSecretKey")),
+			new KakaoOidcService(fakeUserRepository, new KakaoOidcProperties("kakaoClientId"))
 		);
 
 		fakeUserRepository.save(User.builder()
