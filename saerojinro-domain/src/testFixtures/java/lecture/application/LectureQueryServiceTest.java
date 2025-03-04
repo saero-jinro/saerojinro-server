@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class LectureQueryServiceTest {
 			"Lecture Two",
 			"Content Two",
 			100L,
-			LocalDateTime.of(2025, 3, 2, 10, 0),
-			LocalDateTime.of(2025, 3, 2, 12, 0),
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			LocalDateTime.of(2025, 3, 1, 12, 0),
 			"Location Two",
 			Category.BACKEND
 		);
@@ -87,5 +88,17 @@ public class LectureQueryServiceTest {
 		// when & then
 		assertThatThrownBy(() -> lectureQueryService.getByLectureId(999L))
 			.isInstanceOf(LectureNotFoundException.class);
+	}
+
+	@Test
+	@DisplayName("특정 일자의 강의를 조회할 수 있다.")
+	void getByDate_success() {
+		// when
+		List<Lecture> lectures = lectureQueryService.getByDate(LocalDate.of(2025, 3, 1));
+
+		// then
+		assertNotNull(lectures);
+		assertEquals("Lecture One", lectures.get(0).getTitle());
+		assertEquals("Lecture Two", lectures.get(1).getTitle());
 	}
 }
