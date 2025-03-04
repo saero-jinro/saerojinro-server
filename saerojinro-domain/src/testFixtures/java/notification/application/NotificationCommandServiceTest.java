@@ -1,11 +1,13 @@
 package notification.application;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
+import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeNotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,16 +26,22 @@ public class NotificationCommandServiceTest {
 		NotificationRepository notificationRepository = new FakeNotificationRepository();
 		notificationCommandService = new NotificationCommandService(notificationRepository);
 
+		final User SPEAKER = User.builder()
+			.id(1L)
+			.name("Test Speaker")
+			.role(BaseRole.SPEAKER)
+			.build();
+
 		final String LECTURE_TITLE = "Title";
 		final String LECTURE_CONTENTS = "Contents";
+		final Long MAX_CAPACITY = 100L;
 		final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 		final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 		final String LOCATION = "Location";
 		final Category CATEGORY = Category.BACKEND;
-		final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
 		Lecture lecture = Lecture.createLecture(
-			LECTURE_TITLE, LECTURE_CONTENTS, START_TIME, END_TIME, LOCATION, CATEGORY, STATUS
+			SPEAKER, LECTURE_TITLE, LECTURE_CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		final String TITLE = "Notification Title";
