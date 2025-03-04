@@ -1,17 +1,14 @@
 package notification.application;
 
-import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
+import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeNotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class NotificationQueryServiceTest {
 	private NotificationQueryService notificationQueryService;
 
-	private static final Long LECTURE_ID = 1L;
+	private static final Long USER_ID = 1L;
 
 	private static final String TITLE = "Notification Title";
 	private static final String CONTENTS = "Notification Contents";
@@ -29,34 +26,16 @@ public class NotificationQueryServiceTest {
 		NotificationRepository notificationRepository = new FakeNotificationRepository();
 		notificationQueryService = new NotificationQueryService(notificationRepository);
 
-		final String LECTURE_TITLE = "Title";
-		final String LECTURE_CONTENTS = "Contents";
-		final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
-		final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
-		final String LOCATION = "Location";
-		final Category CATEGORY = Category.BACKEND;
-		final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
+		User user = User.builder().id(USER_ID).build();
+		Notification notification = Notification.createNotification(user, TITLE, CONTENTS);
 
-		Lecture lecture = Lecture.builder()
-			.id(LECTURE_ID)
-			.title(LECTURE_TITLE)
-			.contents(LECTURE_CONTENTS)
-			.startTime(START_TIME)
-			.endTime(END_TIME)
-			.location(LOCATION)
-			.category(CATEGORY)
-			.lectureStatus(STATUS)
-			.build();
-
-		Notification notification = Notification.createNotification(lecture, TITLE, CONTENTS);
 		notificationRepository.save(notification);
 	}
 
-
 	@Test
-	@DisplayName("findByLectureId는 notification을 조회한다")
-	public void findByLectureId_Success() {
-		Notification notification = notificationQueryService.findByLectureId(LECTURE_ID).getFirst();
+	@DisplayName("findByUserId는 notification을 조회한다")
+	public void findByUserId_Success() {
+		Notification notification = notificationQueryService.findByUserId(USER_ID).getFirst();
 
 		assertEquals(1L, notification.getId());
 		assertEquals(TITLE, notification.getTitle());
@@ -64,9 +43,9 @@ public class NotificationQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("findByLectureId는 lectureId가 존재하지 않을 때 빈 리스트를 반환한다")
-	public void findByLectureId_return_Empty() {
-		List<Notification> notifications = notificationQueryService.findByLectureId(100L);
+	@DisplayName("findByUserId는 userId가 존재하지 않을 때 빈 리스트를 반환한다")
+	public void findByUserId_return_Empty() {
+		List<Notification> notifications = notificationQueryService.findByUserId(100L);
 		assertEquals(0, notifications.size());
 	}
 }

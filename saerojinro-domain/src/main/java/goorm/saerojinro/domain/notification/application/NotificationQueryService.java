@@ -12,7 +12,7 @@ import java.util.List;
 public class NotificationQueryService {
 	private final NotificationRepository notificationRepository;
 
-	public List<Notification> findByLectureId(Long lectureId) {
-		return notificationRepository.findByLectureId(lectureId);
+	public List<Notification> findByUserId(Long userId) {
+		return notificationRepository.findByUserId(userId);
 	}
 }

@@ -1,14 +1,10 @@
 package notification;
 
-import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.notification.domain.Notification;
+import goorm.saerojinro.domain.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,19 +17,8 @@ public class NotificationDomainTest {
 
 	@BeforeEach
 	public void init() {
-		final String LECTURE_TITLE = "Title";
-		final String LECTURE_CONTENTS = "Contents";
-		final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
-		final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
-		final String LOCATION = "Location";
-		final Category CATEGORY = Category.BACKEND;
-		final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
-
-		Lecture lecture = Lecture.createLecture(
-			LECTURE_TITLE, LECTURE_CONTENTS, START_TIME, END_TIME, LOCATION, CATEGORY, STATUS
-		);
-
-		notification = Notification.createNotification(lecture, TITLE, CONTENTS);
+		User user = User.createAdmin("email@email.com", "password", "name");
+		notification = Notification.createNotification(user, TITLE, CONTENTS);
 	}
 
 

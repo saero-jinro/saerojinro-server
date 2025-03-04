@@ -19,7 +19,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 	}
 
 	@Override
-	public List<Notification> findByLectureId(Long lectureId) {
+	public List<Notification> findByUserId(Long lectureId) {
 		return jpaRepository.findAllByLectureIdAndDeletedAtIsNullOrderByCreatedAt(lectureId);
 	}
 }

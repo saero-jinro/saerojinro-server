@@ -16,7 +16,7 @@ public class FakeNotificationRepository implements NotificationRepository {
 	public Notification save(Notification notification) {
 		Notification build = Notification.builder()
 			.id(sequence.incrementAndGet())
-			.lecture(notification.getLecture())
+			.user(notification.getUser())
 			.title(notification.getTitle())
 			.contents(notification.getContents())
 			.build();
@@ -26,9 +26,9 @@ public class FakeNotificationRepository implements NotificationRepository {
 	}
 
 	@Override
-	public List<Notification> findByLectureId(Long lectureId) {
+	public List<Notification> findByUserId(Long lectureId) {
 		return data.stream()
-			.filter(n -> n.getLecture().getId().equals(lectureId))
+			.filter(n -> n.getUser().getId() == lectureId)
 			.toList();
 	}
 }
