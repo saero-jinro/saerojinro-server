@@ -22,6 +22,7 @@ public class FakeUserRepository implements UserRepository {
 			.id(sequence.getAndIncrement())
 			.oauthIdentity(user.getOauthIdentity())
 			.email(user.getEmail())
+			.profileImage(user.getProfileImage())
 			.password(user.getPassword())
 			.name(user.getName())
 			.role(user.getRole())
