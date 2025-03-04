@@ -4,9 +4,12 @@ import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Repository
 public class EmitterRepositoryImpl implements EmitterRepository {
@@ -23,5 +26,10 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 	@Override
 	public Optional<SseEmitter> findById(Long id) {
 		return Optional.ofNullable(emitters.get(id));
+	}
+
+	@Override
+	public List<SseEmitter> findAll() {
+		return new ArrayList<>(emitters.values());
 	}
 }

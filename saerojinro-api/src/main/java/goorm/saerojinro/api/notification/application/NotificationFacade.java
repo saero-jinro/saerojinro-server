@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.notification.application.NotificationCommandServi
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
+import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class NotificationFacade {
 	// TODO commandService로 교체
 //	private final LectureCommandService lectureCommandService;
 	private final LectureRepository lectureRepository;
+	private final UserQueryService userQueryService;
 
 	public SseEmitter subscribe() {
 		// TODO 현재 로그인한 유저 가져오기
@@ -62,6 +64,19 @@ public class NotificationFacade {
 			emitter.send(SseEmitter.event().data(message));
 		} catch (IOException e) {
 			emitter.completeWithError(e);
+		}
+	}
+
+	public void sendNotificationAll(Notification notification) {
+		NotificationSendResponse message = NotificationSendResponse.from(notification);
+
+		List<SseEmitter> all = emitterRepository.findAll();
+		for (SseEmitter emitter : all) {
+			try {
+				emitter.send(SseEmitter.event().data(message));
+			} catch (IOException e) {
+				emitter.completeWithError(e);
+			}
 		}
 	}
 
