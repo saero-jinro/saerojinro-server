@@ -2,6 +2,7 @@ package lecture;
 
 import goorm.saerojinro.api.lecture.api.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -78,15 +79,16 @@ public class LectureFacadeTest {
 		when(lectureQueryService.getAllLecture()).thenReturn(lectureList);
 
 		// when
-		List<LectureResponse> responses = lectureFacade.getAllLecture();
+		LectureListResponse responses = lectureFacade.getAllLecture();
 
 		// then
-		assertNotNull(responses, "응답 리스트는 null이 아니어야 합니다.");
-		assertEquals(2, responses.size(), "강의 응답 리스트의 크기는 2여야 합니다.");
+		assertNotNull(responses);
+		assertEquals(2, responses.totalCount());
+		assertEquals(2, responses.lectures().size());
 
-		LectureResponse response1 = responses.get(0);
-		assertEquals("Lecture One", response1.title());
-		assertNotNull(response1.speaker());
+		LectureResponse response = responses.lectures().get(0);
+		assertEquals("Lecture One", response.title());
+		assertNotNull(response.speaker());
 	}
 
 	@Test
@@ -99,7 +101,7 @@ public class LectureFacadeTest {
 		LectureDetailResponse detailResponse = lectureFacade.getByLectureId(101L);
 
 		// then
-		assertNotNull(detailResponse, "LectureDetailResponse는 null이 아니어야 합니다.");
+		assertNotNull(detailResponse);
 		assertEquals("Lecture One", detailResponse.title());
 		assertEquals("Contents One", detailResponse.contents());
 	}

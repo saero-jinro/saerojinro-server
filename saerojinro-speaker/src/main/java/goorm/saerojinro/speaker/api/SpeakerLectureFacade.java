@@ -13,8 +13,6 @@ public class SpeakerLectureFacade {
 	private final LectureCommandService lectureService;
 
 	public LectureCreateResponse createLecture(long speakerId, LectureCreateRequest request) {
-		// TODO 강연자 검증 로직 추가
-
 		Lecture lecture = lectureService.createLecture(
 			speakerId,
 			request.title(),
