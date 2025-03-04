@@ -22,7 +22,7 @@ public class AuthFacade {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final JwtProvider jwtProvider;
-	private final KakaoOidcTokenValidator kakaoOidcService;
+	private final KakaoOidcTokenValidator kakaoOidcTokenValidator;
 
 	@Transactional(readOnly = true)
 	public JwtResponse emailLogin(EmailLoginRequest request) {
@@ -36,7 +36,7 @@ public class AuthFacade {
 
 	@Transactional
 	public JwtResponse kakaoSocialLogin(SocialLoginRequest request) {
-		OidcIdToken oidcIdToken = kakaoOidcService.validateAndDecodeIdToken(request.idToken());
+		OidcIdToken oidcIdToken = kakaoOidcTokenValidator.validateAndDecodeIdToken(request.idToken());
 
 		SocialUserProfile socialUserProfile = SocialUserProfile.from(oidcIdToken);
 		String email = socialUserProfile.email();
