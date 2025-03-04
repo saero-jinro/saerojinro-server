@@ -49,8 +49,13 @@ public class FakeUserRepository implements UserRepository {
 			.findAny();
 	}
 
+  @Override
+	public Optional<User> findById(Long userId) {{
+			return data.stream().filter(u -> u.getId() == userId).findAny();
+		}
+	}
+  
 	private boolean isValidSocialUser(User user) {
 		return user.getOauthIdentity() != null && user.getProvider() != null;
 	}
-
 }

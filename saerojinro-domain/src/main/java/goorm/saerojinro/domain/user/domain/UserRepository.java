@@ -11,4 +11,7 @@ public interface UserRepository {
 	Optional<User> findByEmail(String email);
 
 	Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider);
+
+	Optional<User> findById(Long userId);
+
 }

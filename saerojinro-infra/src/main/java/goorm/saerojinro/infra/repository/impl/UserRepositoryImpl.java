@@ -28,5 +28,9 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider) {
 		return userJpaRepository.findByOauthIdentityAndProvider(identifier, provider);
+
+  @Override
+	public Optional<User> findById(Long userId) {
+		return userJpaRepository.findById(userId);
 	}
 }
