@@ -50,6 +50,8 @@ public class User extends BaseTimeEntity implements UserDetails {
 
 	private String password;
 
+	private String profileImage;
+
 	@Column(nullable = false)
 	private String name;
 
@@ -71,28 +73,27 @@ public class User extends BaseTimeEntity implements UserDetails {
 			.build();
 	}
 
-	public static User createKakaoUser(String oauthIdentity, String name, String email){
+	public static User createKakaoUser(String oauthIdentity, String name, String email, String profileImage){
 		return User.builder()
 			.oauthIdentity(oauthIdentity)
 			.name(name)
 			.email(email)
+			.profileImage(profileImage)
 			.provider(KAKAO)
-			.role(ATTENDEE)
-			.build();
-	}
-
-	public static User createGoogleUser(String oauthIdentity, String name, String email){
-		return User.builder()
-			.oauthIdentity(oauthIdentity)
-			.name(name)
-			.email(email)
-			.provider(GOOGLE)
 			.role(ATTENDEE)
 			.build();
 	}
 
 	public void updateName(String name){
 		this.name = name;
+	}
+
+	public void updateEmail(String email){
+		this.name = email;
+	}
+
+	public void updateProfileImage(String profileImage){
+		this.profileImage = profileImage;
 	}
 
 	public void updateRole(BaseRole role){

@@ -3,6 +3,7 @@ package goorm.saerojinro.domain.user.application;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import goorm.saerojinro.common.domain.Provider;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
