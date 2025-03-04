@@ -6,16 +6,15 @@ import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
-import goorm.saerojinro.domain.notification.exception.NotificationNotFoundException;
 import mock.repository.FakeNotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NotificationQueryServiceTest {
 	private NotificationQueryService notificationQueryService;
@@ -57,7 +56,7 @@ public class NotificationQueryServiceTest {
 	@Test
 	@DisplayName("findByLectureId는 notification을 조회한다")
 	public void findByLectureId_Success() {
-		Notification notification = notificationQueryService.findByLectureId(LECTURE_ID);
+		Notification notification = notificationQueryService.findByLectureId(LECTURE_ID).getFirst();
 
 		assertEquals(1L, notification.getId());
 		assertEquals(TITLE, notification.getTitle());
@@ -65,9 +64,9 @@ public class NotificationQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("findByLectureId는 lectureId가 존재하지 않을 때 NotificationNotFoundException을 반환한다")
-	public void findByLectureId_throws_NotificationNotFoundException() {
-		assertThrows(NotificationNotFoundException.class,
-			() -> notificationQueryService.findByLectureId(100L));
+	@DisplayName("findByLectureId는 lectureId가 존재하지 않을 때 빈 리스트를 반환한다")
+	public void findByLectureId_return_Empty() {
+		List<Notification> notifications = notificationQueryService.findByLectureId(100L);
+		assertEquals(0, notifications.size());
 	}
 }

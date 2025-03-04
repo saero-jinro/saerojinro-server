@@ -6,7 +6,7 @@ import goorm.saerojinro.infra.repository.jpa.NotificationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 	}
 
 	@Override
-	public Optional<Notification> findByLectureId(Long lectureId) {
-		return jpaRepository.findByLectureIdAndDeletedAtIsNull(lectureId);
+	public List<Notification> findByLectureId(Long lectureId) {
+		return jpaRepository.findAllByLectureIdAndDeletedAtIsNullOrderByCreatedAt(lectureId);
 	}
 }

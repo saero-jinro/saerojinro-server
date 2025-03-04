@@ -3,7 +3,7 @@ package goorm.saerojinro.api.notification.application;
 import goorm.saerojinro.api.notification.presentation.exception.EmitterNotFoundException;
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.NotificationSendResponse;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
@@ -65,5 +65,14 @@ public class NotificationFacade {
 		}
 	}
 
-	public
+	public ReceivedNotificationListResponse myNotification() {
+		// TODO 현재 로그인한 유저 가져오기
+		User user = User.builder().build();
+
+		// user -> 예약한 강의 찾기 -> lectureId
+		Long lectureId = null;
+
+		List<Notification> notificationList = notificationQueryService.findByLectureId(lectureId);
+		return ReceivedNotificationListResponse.from(notificationList);
+	}
 }
