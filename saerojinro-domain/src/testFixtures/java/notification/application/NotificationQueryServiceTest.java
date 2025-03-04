@@ -35,7 +35,7 @@ public class NotificationQueryServiceTest {
 	@Test
 	@DisplayName("findByUserId는 notification을 조회한다")
 	public void findByUserId_Success() {
-		Notification notification = notificationQueryService.findByUserId(USER_ID).getFirst();
+		Notification notification = notificationQueryService.findByUserId(USER_ID).get(0);
 
 		assertEquals(1L, notification.getId());
 		assertEquals(TITLE, notification.getTitle());
