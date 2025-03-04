@@ -89,7 +89,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 	}
 
 	public void updateEmail(String email){
-		this.name = email;
+		this.email = email;
 	}
 
 	public void updateProfileImage(String profileImage){
