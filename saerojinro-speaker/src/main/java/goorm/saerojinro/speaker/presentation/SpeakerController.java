@@ -1,0 +1,20 @@
+package goorm.saerojinro.speaker.presentation;
+
+import goorm.saerojinro.speaker.api.SpeakerLectureFacade;
+import goorm.saerojinro.speaker.presentation.request.LectureCreateRequest;
+import goorm.saerojinro.speaker.presentation.response.LectureCreateResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/speakers")
+@RequiredArgsConstructor
+public class SpeakerController {
+	private final SpeakerLectureFacade speakerLectureFacade;
+
+	@PostMapping("/{speakerId}/lectures")
+	private ResponseEntity<LectureCreateResponse> createLecture(@PathVariable long speakerId, @RequestBody LectureCreateRequest request) {
+		return ResponseEntity.ok(speakerLectureFacade.createLecture(speakerId, request));
+	}
+}
