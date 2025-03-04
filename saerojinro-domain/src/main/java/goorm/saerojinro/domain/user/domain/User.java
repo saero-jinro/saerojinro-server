@@ -41,7 +41,7 @@ import lombok.NoArgsConstructor;
 public class User extends BaseTimeEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column(unique = true)
 	private String oauthIdentity;

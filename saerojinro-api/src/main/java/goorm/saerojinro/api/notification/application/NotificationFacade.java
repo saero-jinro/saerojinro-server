@@ -61,7 +61,6 @@ public class NotificationFacade {
 
 	public void sendNotificationAll(NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
-			// TODO 전체공지는 사용자를 어떻게 할지 고민
 			null,
 			request.title(),
 			request.contents()
