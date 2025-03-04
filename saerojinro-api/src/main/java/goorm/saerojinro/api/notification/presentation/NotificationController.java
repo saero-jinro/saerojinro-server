@@ -1,6 +1,6 @@
 package goorm.saerojinro.api.notification.presentation;
 
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
+import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +39,7 @@ public interface NotificationController {
 		@Parameter(
 			description = "전체 알림 request 객체 입니다",
 			required = true
-		) @Valid @RequestBody NotificationSendAllRequest sendRequest
+		) @Valid @RequestBody NotificationSendRequest sendRequest
 	);
 
 	@Operation(summary = "강의 기준 알림 전송 API", description = """
@@ -48,7 +48,11 @@ public interface NotificationController {
 		""")
 	@ApiResponses()
 	ResponseEntity<Void> sendByLecture(
-		@PathVariable Long lectureId
+		@PathVariable Long lectureId,
+		@Parameter(
+			description = "전체 알림 request 객체 입니다",
+			required = true
+		) @Valid @RequestBody NotificationSendRequest sendRequest
 	);
 
 	@Operation(summary = "개별 알림 전송 API", description = """
@@ -57,6 +61,10 @@ public interface NotificationController {
 		""")
 	@ApiResponses()
 	ResponseEntity<Void> sendByUserId(
-		@PathVariable Long userId
+		@PathVariable Long userId,
+		@Parameter(
+			description = "전체 알림 request 객체 입니다",
+			required = true
+		) @Valid @RequestBody NotificationSendRequest sendRequest
 	);
 }

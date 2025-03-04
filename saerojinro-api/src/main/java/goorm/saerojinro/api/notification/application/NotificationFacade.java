@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.notification.application;
 
 import goorm.saerojinro.api.notification.presentation.exception.EmitterNotFoundException;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.NotificationSendResponse;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
@@ -9,7 +8,6 @@ import goorm.saerojinro.domain.notification.application.NotificationCommandServi
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
-import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,15 +30,19 @@ public class NotificationFacade {
 		return emitterRepository.save(user.getId(), emitter);
 	}
 
-	public void sendNotificationWithRequest(NotificationSendRequest request) {
+	public void sendNotificationByLectureIdWithRequest(Long lectureId, NotificationSendRequest request) {
+		// TODO lectureId -> lecture -> 예약 -> 예약한 유저 리스트 -> iteration -> sendNotificationWithRequest
+	}
+
+	public void sendNotificationWithRequest(Long receiverId, NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
 			// TODO userService에서 아이디로 조회
-			User.builder().id(request.receiverId()).build(),
+			User.builder().id(receiverId).build(),
 			request.title(),
 			request.contents()
 		);
 
-		sendNotification(request.receiverId(), notification);
+		sendNotification(receiverId, notification);
 	}
 
 	public void sendNotification(Long receiverId, Notification notification) {
@@ -57,7 +59,7 @@ public class NotificationFacade {
 		}
 	}
 
-	public void sendNotificationAll(NotificationSendAllRequest request) {
+	public void sendNotificationAll(NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
 			// TODO 전체공지는 사용자를 어떻게 할지 고민
 			null,

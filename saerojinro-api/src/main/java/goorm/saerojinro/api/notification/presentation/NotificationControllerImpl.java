@@ -1,12 +1,12 @@
 package goorm.saerojinro.api.notification.presentation;
 
 import goorm.saerojinro.api.notification.application.NotificationFacade;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendAllRequest;
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,23 +33,30 @@ public class NotificationControllerImpl implements NotificationController {
 		return ResponseEntity.ok(response);
 	}
 
-	// TODO
 	@Override
 	@PostMapping("/send-all")
 	public ResponseEntity<Void> sendAll(
-		@RequestBody NotificationSendAllRequest request
+		@RequestBody NotificationSendRequest request
 	) {
 		notificationFacade.sendNotificationAll(request);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
-	public ResponseEntity<Void> sendByLecture(Long lectureId) {
-		return null;
+	@PostMapping("/send-lecture/{lectureId}")
+	public ResponseEntity<Void> sendByLecture(
+		@PathVariable Long lectureId,
+		@RequestBody NotificationSendRequest request) {
+		notificationFacade.sendNotificationByLectureIdWithRequest(lectureId, request);
+		return ResponseEntity.noContent().build();
 	}
 
 	@Override
-	public ResponseEntity<Void> sendByUserId(Long userId) {
-		return null;
+	@PostMapping("/send-user/{userId}")
+	public ResponseEntity<Void> sendByUserId(
+		@PathVariable Long userId,
+		@RequestBody NotificationSendRequest request) {
+		notificationFacade.sendNotificationWithRequest(userId, request);
+		return ResponseEntity.noContent().build();
 	}
 }
