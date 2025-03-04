@@ -71,10 +71,11 @@ public class User extends BaseTimeEntity implements UserDetails {
 			.build();
 	}
 
-	public static User createKakaoUser(String oauthIdentity, String name){
+	public static User createKakaoUser(String oauthIdentity, String name, String email){
 		return User.builder()
 			.oauthIdentity(oauthIdentity)
 			.name(name)
+			.email(email)
 			.provider(KAKAO)
 			.role(ATTENDEE)
 			.build();

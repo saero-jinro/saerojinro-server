@@ -29,7 +29,7 @@ public class AuthFacade {
 		return JwtResponse.of(accessToken, refreshToken);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public JwtResponse kakaoSocialLogin(SocialLoginRequest request) {
 		User user = kakaoOidcService.processLogin(request.idToken());
 

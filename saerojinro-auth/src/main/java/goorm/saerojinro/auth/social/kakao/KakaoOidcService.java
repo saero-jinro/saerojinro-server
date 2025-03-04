@@ -43,8 +43,10 @@ public class KakaoOidcService extends OidcService {
 	@Override
 	protected User createNewUser(String identifier, OidcUserInfo oidcUserInfo) {
 		String name = oidcUserInfo.getNickName();
+		String email = oidcUserInfo.getEmail();
+		String profileImage = oidcUserInfo.getPicture();
 
-		return User.createKakaoUser(identifier, name);
+		return User.createKakaoUser(identifier, name, email);
 	}
 }
 
