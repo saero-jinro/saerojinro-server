@@ -10,6 +10,7 @@ dependencies {
     implementation project(":saerojinro-common")
 
     testFixturesImplementation project(':saerojinro-common')
+    testFixturesImplementation 'com.auth0:java-jwt:4.4.0'
 }
 
 apply from: "../jacoco.gradle"

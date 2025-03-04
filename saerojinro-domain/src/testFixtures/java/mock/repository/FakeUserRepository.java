@@ -42,8 +42,15 @@ public class FakeUserRepository implements UserRepository {
 
 	@Override
 	public Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider) {
-		return data.stream().filter(u ->
-			u.getOauthIdentity().equals(identifier) && u.getProvider().equals(provider)
-		).findAny();
+		return data.stream()
+			.filter(u -> isValidSocialUser(u) &&
+				u.getOauthIdentity().equals(identifier) &&
+				u.getProvider().equals(provider))
+			.findAny();
 	}
+
+	private boolean isValidSocialUser(User user) {
+		return user.getOauthIdentity() != null && user.getProvider() != null;
+	}
+
 }
