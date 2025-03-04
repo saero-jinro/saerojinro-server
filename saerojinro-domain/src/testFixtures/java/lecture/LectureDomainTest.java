@@ -1,8 +1,10 @@
 package lecture;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
+	private static final User SPEAKER = User.builder()
+		.id(1L)
+		.name("Test Speaker")
+		.role(BaseRole.SPEAKER)
+		.build();
+
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
+	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
@@ -26,13 +35,14 @@ class LectureDomainTest {
 	@BeforeEach
 	void setUp() {
 		lecture = Lecture.createLecture(
+			SPEAKER,
 			TITLE,
 			CONTENTS,
+			MAX_CAPACITY,
 			START_TIME,
 			END_TIME,
 			LOCATION,
-			CATEGORY,
-			STATUS
+			CATEGORY
 		);
 	}
 
@@ -42,6 +52,7 @@ class LectureDomainTest {
 		assertNotNull(lecture, "Lecture 객체가 null이면 안 됩니다.");
 		assertEquals(TITLE, lecture.getTitle());
 		assertEquals(CONTENTS, lecture.getContents());
+		assertEquals(MAX_CAPACITY, lecture.getMaxCapacity());
 		assertEquals(START_TIME, lecture.getStartTime());
 		assertEquals(END_TIME, lecture.getEndTime());
 		assertEquals(LOCATION, lecture.getLocation());

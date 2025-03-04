@@ -37,4 +37,10 @@ public class FakeUserRepository implements UserRepository {
 	public Optional<User> findByEmail(String email) {
 		return data.stream().filter(u -> u.getEmail().equals(email)).findAny();
 	}
+
+	@Override
+	public Optional<User> findById(Long userId) {{
+			return data.stream().filter(u -> u.getId() == userId).findAny();
+		}
+	}
 }
