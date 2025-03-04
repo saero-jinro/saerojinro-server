@@ -5,7 +5,6 @@ import lombok.Builder;
 
 import java.util.List;
 
-// TODO swagger
 @Builder
 public record ReceivedNotificationListResponse(
 	List<ReceivedNotificationResponse> contents

@@ -3,7 +3,6 @@ package goorm.saerojinro.api.notification.presentation.response;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import lombok.Builder;
 
-// TODO swagger
 @Builder
 public record ReceivedNotificationResponse(
 	String title,
