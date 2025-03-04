@@ -7,5 +7,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
-	List<Lecture> findByStartDate(LocalDate day);
+	List<Lecture> findByStartTime(LocalDate day);
 }

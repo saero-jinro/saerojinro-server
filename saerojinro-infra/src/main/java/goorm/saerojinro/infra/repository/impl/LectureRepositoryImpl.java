@@ -31,8 +31,8 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findByStartDate(LocalDate day) {
-		return lectureJpaRepository.findByStartDate(day);
+	public List<Lecture> findByStartTime(LocalDate day) {
+		return lectureJpaRepository.findByStartTime(day);
 	}
 
 	@Override

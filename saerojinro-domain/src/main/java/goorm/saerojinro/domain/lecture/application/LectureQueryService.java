@@ -23,6 +23,6 @@ public class LectureQueryService {
 	}
 
 	public List<Lecture> getByDate(LocalDate day) {
-		return lectureRepository.findByStartDate(day);
+		return lectureRepository.findByStartTime(day);
 	}
 }

@@ -50,7 +50,7 @@ public class FakeLectureRepository implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findByStartDate(LocalDate day) {
+	public List<Lecture> findByStartTime(LocalDate day) {
 		return data.stream()
 			.filter(lecture -> lecture.getStartTime().toLocalDate().equals(day))
 			.toList();

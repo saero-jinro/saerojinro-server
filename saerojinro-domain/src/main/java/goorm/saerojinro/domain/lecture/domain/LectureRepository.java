@@ -11,7 +11,7 @@ public interface LectureRepository {
 
 	Optional<Lecture> findById(Long id);
 
-	List<Lecture> findByStartDate(LocalDate day);
+	List<Lecture> findByStartTime(LocalDate day);
 
 	void delete(Lecture lecture);
 }
