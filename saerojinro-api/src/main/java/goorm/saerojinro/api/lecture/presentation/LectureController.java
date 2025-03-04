@@ -4,7 +4,6 @@ import goorm.saerojinro.api.lecture.api.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +21,12 @@ public class LectureController {
 	@GetMapping
 	private ResponseEntity<List<LectureResponse>> getAllLecture() {
 		List<LectureResponse> lectures = lectureFacade.getAllLecture();
-		return new ResponseEntity<>(lectures, HttpStatus.OK);
+		return ResponseEntity.ok(lectures);
 	}
 
 	@GetMapping("/{lectureId}")
 	private ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable long lectureId) {
 		LectureDetailResponse lecture = lectureFacade.getByLectureId(lectureId);
-		return new ResponseEntity<>(lecture, HttpStatus.OK);
+		return ResponseEntity.ok(lecture);
 	}
 }
