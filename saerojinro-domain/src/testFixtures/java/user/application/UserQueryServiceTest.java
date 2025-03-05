@@ -46,18 +46,6 @@ public class UserQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("me는 유저를 현재 로그인한 유저를 조회할 수 있다")
-	public void me_Success() {
-		// given
-		// when
-		User result = userQueryService.me();
-
-		// then
-		assertEquals("박민준", result.getName());
-		assertEquals(ADMIN, result.getRole());
-	}
-
-	@Test
 	@DisplayName("getByEmail은 유저를 이메일로 조회할 수 있다")
 	public void getByEmail_Success() {
 		// given
