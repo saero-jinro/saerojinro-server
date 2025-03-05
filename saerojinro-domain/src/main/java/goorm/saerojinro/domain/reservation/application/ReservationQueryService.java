@@ -1,0 +1,33 @@
+package goorm.saerojinro.domain.reservation.application;
+
+import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.reservation.domain.Reservation;
+import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
+import goorm.saerojinro.domain.user.domain.User;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+@Getter
+@RequiredArgsConstructor
+public class ReservationQueryService {
+    
+    private final ReservationRepository reservationRepository;
+    
+    public List<Reservation> getAllReservationByUser(User user){
+        return reservationRepository.findByUser(user);
+    }
+
+    public Reservation getByUserAndLecture(User user, Lecture lecture){
+        return reservationRepository.findByUserAndLecture(user, lecture)
+                .orElseThrow(ReservationNotFoundException::new);
+    }
+
+    public boolean existsCheck(User user, Lecture lecture){
+        return reservationRepository.existByUserAndLecture(user, lecture);
+    }
+
+    
+}
