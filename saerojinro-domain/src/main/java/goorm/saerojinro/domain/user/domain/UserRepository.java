@@ -13,4 +13,6 @@ public interface UserRepository {
 	Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider);
 
 	Optional<User> findById(Long id);
+
+	void delete(User user);
 }
