@@ -26,8 +26,7 @@ public class UserCommandService {
 	public User kakaoSocialLogin(String oauthIdentity, String name, String email, String profileImage) {
 		return userRepository.findByOauthIdentityAndProvider(oauthIdentity, KAKAO)
 			.map(user -> {
-				user.updateName(name);
-				user.updateEmail(email);
+				update(user, name, email, null);
 				user.updateProfileImage(profileImage);
 				return userRepository.save(user);
 			})
