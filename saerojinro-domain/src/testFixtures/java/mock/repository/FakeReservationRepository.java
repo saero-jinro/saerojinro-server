@@ -53,4 +53,10 @@ public class FakeReservationRepository implements ReservationRepository {
                 .findFirst();
     }
 
+    @Override
+    public List<Reservation> findAllByLectureId(Long lectureId) {
+        return data.stream()
+            .filter(r -> r.getLecture().getId().equals(lectureId))
+            .toList();
+    }
 }

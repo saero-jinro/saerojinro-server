@@ -30,7 +30,10 @@ public class NotificationCommandServiceTest {
 	@Test
 	@DisplayName("save는 notification을 저장한다")
 	public void save_Success() {
+		// when
 		Long saved = notificationCommandService.save(notification);
+
+		// then
 		assertEquals(1L, saved);
 	}
 }
