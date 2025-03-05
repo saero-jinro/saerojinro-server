@@ -1,5 +1,6 @@
 package goorm.saerojinro.domain.lecture.domain;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
@@ -64,14 +65,14 @@ public class Lecture extends BaseTimeEntity {
 			.build();
 	}
 
-	public void updateLecture(User speaker,String title, String contents) {
-		isSameSpeaker(speaker);
+	public void updateLecture(User speaker, String title, String contents) {
+		validateUpdatePermission(speaker);
 		this.title = title;
 		this.contents = contents;
 	}
 
-	private void isSameSpeaker(User speaker) {
-		if(!this.speaker.getId().equals(speaker.getId())) {
+	private void validateUpdatePermission(User speaker) {
+		if (!speaker.getRole().equals(BaseRole.ADMIN) && !(this.speaker.getId().equals(speaker.getId()))) {
 			throw new SpeakerMissmatchException();
 		}
 	}

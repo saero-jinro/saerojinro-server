@@ -78,7 +78,7 @@ class LectureDomainTest {
 	}
 
 	@Test
-	@DisplayName("다른 강연자가 강의 수정시 예외를 반환한다")
+	@DisplayName("다른 강연자 or 운영자가 아닐 경우 강의 수정시 예외를 반환한다")
 	void SpeakerMissmatchException() {
 		// given
 		User wrongSpeaker = User.builder()
@@ -88,6 +88,26 @@ class LectureDomainTest {
 			.build();
 
 		// when & then
-		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {lecture.updateLecture(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");});
+		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {
+			lecture.updateLecture(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
+		});
+	}
+
+	@Test
+	@DisplayName("운영자가 강의를 수정을 할 수 있다")
+	void updateLectureByAdmin_success() {
+		// given
+		User admin = User.builder()
+			.id(999L)
+			.name("Admin")
+			.role(BaseRole.ADMIN)
+			.build();
+
+		// when
+		lecture.updateLecture(admin, "updated title", "updated contents");
+
+		//then
+		assertEquals("updated title", lecture.getTitle());
+		assertEquals("updated contents", lecture.getContents());
 	}
 }
