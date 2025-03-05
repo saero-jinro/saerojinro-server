@@ -1,11 +1,11 @@
-package goorm.saerojinro.auth.presentation;
+package goorm.saerojinro.auth.api.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
-import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
-import goorm.saerojinro.auth.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
+import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

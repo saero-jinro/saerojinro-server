@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import auth.mock.FakeKakaoOidcTokenValidator;
-import goorm.saerojinro.auth.application.AuthFacade;
-import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
-import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
+import goorm.saerojinro.auth.api.application.AuthFacade;
+import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
+import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.common.jwt.JwtProperties;
 import goorm.saerojinro.common.jwt.JwtProvider;
 import goorm.saerojinro.domain.user.application.UserCommandService;

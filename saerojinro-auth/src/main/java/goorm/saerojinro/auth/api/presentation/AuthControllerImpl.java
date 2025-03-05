@@ -1,14 +1,14 @@
-package goorm.saerojinro.auth.presentation;
+package goorm.saerojinro.auth.api.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import goorm.saerojinro.auth.application.AuthFacade;
-import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
-import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
-import goorm.saerojinro.auth.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.application.AuthFacade;
+import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
+import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
