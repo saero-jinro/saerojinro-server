@@ -15,7 +15,8 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 	private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
 	@Override
-	public SseEmitter save(Long id, SseEmitter emitter) {
+	public SseEmitter save(Long id) {
+		SseEmitter emitter = new SseEmitter(12 * 60 * 60 * 1000L);
 		emitter.onCompletion(() -> emitters.remove(id));
 		emitter.onTimeout(emitter::complete);
 		emitters.put(id, emitter);

@@ -31,8 +31,7 @@ public class NotificationFacade {
 
 	public SseEmitter subscribe() {
 		User user = userQueryService.me();
-		SseEmitter emitter = new SseEmitter();
-		return emitterRepository.save(user.getId(), emitter);
+		return emitterRepository.save(user.getId());
 	}
 
 	@Transactional
