@@ -25,6 +25,7 @@ public class NotificationDomainTest {
 	@Test
 	@DisplayName("Notification을 성공적으로 생성한다")
 	void createNotification_Success() {
+		// then
 		assertNotNull(notification, "Notification 객체가 null이면 안 됩니다.");
 		assertEquals(TITLE, notification.getTitle());
 		assertEquals(CONTENTS, notification.getContents());

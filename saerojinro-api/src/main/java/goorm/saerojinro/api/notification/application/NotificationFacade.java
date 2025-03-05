@@ -43,7 +43,8 @@ public class NotificationFacade {
 	public void sendNotificationWithRequest(Long receiverId, NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
 			// TODO userService에서 아이디로 조회
-			userQueryService.findById(receiverId),
+//			userQueryService.findById(receiverId),
+			User.builder().id(1L).build(),
 			request.title(),
 			request.contents()
 		);
