@@ -3,16 +3,21 @@ package notification.application;
 import goorm.saerojinro.api.notification.application.NotificationFacade;
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
+import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
+import goorm.saerojinro.domain.reservation.domain.Reservation;
+import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
+import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +40,9 @@ public class NotificationFacadeTest {
 	private NotificationFacade notificationFacade;
 	private NotificationRepository repository;
 	private UserRepository userRepository;
+	private ReservationRepository reservationRepository;
+
+	private User user;
 
 	private final String TITLE = "title";
 	private final String CONTENTS = "contents";
@@ -50,9 +58,13 @@ public class NotificationFacadeTest {
 		userRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
-		notificationFacade = new NotificationFacade(commandService, queryService, emitterRepository, userQueryService);
+		reservationRepository = new FakeReservationRepository();
+		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
-		userRepository.save(User.builder()
+		notificationFacade = new NotificationFacade(
+			commandService, queryService, emitterRepository, userQueryService, reservationQueryService);
+
+		user = userRepository.save(User.builder()
 			.email("email@email.com")
 			.password(passwordEncoder.encode("password1234!"))
 			.name("박민준")
@@ -77,21 +89,28 @@ public class NotificationFacadeTest {
 		assertNotNull(emitter);
 	}
 
-	// TODO ReservationService 이후
-	//	@Test
+	@Test
 	@DisplayName("sendNotificationByLectureId은 Lecture를 예약한 참가자에게 알림을 전송한다")
 	void sendNotificationByLectureId_Success() {
 		// given
+		notificationFacade.subscribe();
+		Lecture lecture = Lecture.builder().id(1L).build();
+		reservationRepository.save(Reservation.createReservation(user, lecture));
+
 		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
 			.build();
 
 		// when
-//		notificationFacade.sendNotificationByLectureId();
+		notificationFacade.sendNotificationByLectureId(1L, request);
 
 		// then
-
+		List<Notification> notifications = repository.findByUserId(user.getId());
+		Notification result = notifications.get(0);
+		assertNotNull(notifications);
+		Assertions.assertEquals(TITLE, result.getTitle());
+		Assertions.assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test

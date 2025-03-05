@@ -5,17 +5,16 @@ import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Getter
+@Service
 @RequiredArgsConstructor
 public class ReservationQueryService {
-    
     private final ReservationRepository reservationRepository;
-    
+
     public List<Reservation> getAllReservationByUser(User user){
         return reservationRepository.findByUser(user);
     }
@@ -29,5 +28,7 @@ public class ReservationQueryService {
         return reservationRepository.existByUserAndLecture(user, lecture);
     }
 
-    
+    public List<Reservation> getAllByLectureId(Long lectureId) {
+        return reservationRepository.findAllByLectureId(lectureId);
+    }
 }

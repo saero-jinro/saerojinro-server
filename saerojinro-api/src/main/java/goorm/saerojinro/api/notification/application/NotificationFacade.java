@@ -8,6 +8,8 @@ import goorm.saerojinro.domain.notification.application.NotificationCommandServi
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
+import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
+import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class NotificationFacade {
 	private final NotificationQueryService notificationQueryService;
 	private final EmitterRepository emitterRepository;
 	private final UserQueryService userQueryService;
+	private final ReservationQueryService reservationQueryService;
 
 	public SseEmitter subscribe() {
 		User user = userQueryService.me();
@@ -32,8 +35,13 @@ public class NotificationFacade {
 		return emitterRepository.save(user.getId(), emitter);
 	}
 
+	@Transactional
 	public void sendNotificationByLectureId(Long lectureId, NotificationSendRequest request) {
-		// TODO lectureId -> 예약 -> 예약한 유저 리스트 -> iteration -> sendNotificationWithRequest
+		List<Reservation> reservationList = reservationQueryService.getAllByLectureId(lectureId);
+		for (Reservation reservation : reservationList) {
+			Long receiverId = reservation.getUser().getId();
+			sendNotificationByReceiverId(receiverId, request);
+		}
 	}
 
 	@Transactional
