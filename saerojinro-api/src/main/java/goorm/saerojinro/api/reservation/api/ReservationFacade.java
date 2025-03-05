@@ -29,7 +29,7 @@ public class ReservationFacade {
         Reservation reservation = reservationCommandService.create(user, lecture);
 
         return ReservationCreateResponse.builder()
-                .reservationId(reservation.getId())
+                .id(reservation.getId())
                 .build();
     }
 
@@ -42,7 +42,7 @@ public class ReservationFacade {
         reservationCommandService.cancel(reservation);
 
         return ReservationCancelResponse.builder()
-                .reservationId(reservation.getId())
+                .id(reservation.getId())
                 .build();
     }
 

@@ -81,7 +81,7 @@ public class ReservationFacadeTest {
 
         // then
         assertNotNull(response);
-        assertTrue(response.getReservationId() > 0);
+        assertTrue(response.id() > 0);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ReservationFacadeTest {
 
         // then
         assertNotNull(cancelResponse);
-        assertThat(cancelResponse.getReservationId()).isEqualTo(createResponse.getReservationId());
+        assertThat(cancelResponse.id()).isEqualTo(createResponse.id());
     }
 
 }
