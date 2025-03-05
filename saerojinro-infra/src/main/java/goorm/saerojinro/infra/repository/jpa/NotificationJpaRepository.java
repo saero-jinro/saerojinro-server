@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface NotificationJpaRepository extends JpaRepository<Notification, Long> {
 	List<Notification> findAllByUserIdAndDeletedAtIsNullOrderByCreatedAt(Long userId);
+
+	List<Notification> findAllByUserIdIsNullAndDeletedAtIsNullOrderByCreatedAt();
 }

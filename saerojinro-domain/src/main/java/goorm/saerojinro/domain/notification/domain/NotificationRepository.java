@@ -6,4 +6,6 @@ public interface NotificationRepository {
 	Notification save(Notification notification);
 
 	List<Notification> findByUserId(Long lectureId);
+
+	List<Notification> findByUserIdIsNull();
 }
