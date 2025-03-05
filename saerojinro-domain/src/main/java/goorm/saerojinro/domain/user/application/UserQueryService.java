@@ -1,11 +1,15 @@
 package goorm.saerojinro.domain.user.application;
 
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
+import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -31,5 +35,15 @@ public class UserQueryService {
 	public User getById(Long Id){
 		return userRepository.findById(Id)
 				.orElseThrow(UserNotFoundException::new);
+	}
+
+	public User me() {
+		try {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String email = ((UserDetails)principal).getUsername();
+			return getByEmail(email);
+		} catch (Exception e) {
+			throw new UserNotAuthenticatedException();
+		}
 	}
 }

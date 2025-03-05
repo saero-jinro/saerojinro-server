@@ -138,4 +138,18 @@ public class ReservationQueryServiceTest {
         assertThat(isExist).isTrue();
     }
 
+    @Test
+    @DisplayName("getAllByLectureId 는 Lecture 에 예약한 예약 정보를 반환할 수 있다.")
+    public void getAllByLectureId_Success(){
+        // given
+
+        // when
+        List<Reservation> reservationList = reservationQueryService.getAllByLectureId(LECTURE_ID);
+
+        // then
+        assertEquals(1, reservationList.size());
+        assertEquals(1L, reservationList.get(0).getLecture().getId());
+        assertEquals(LECTURE_TITLE, reservationList.get(0).getLecture().getTitle());
+        assertEquals(LECTURE_CONTENTS, reservationList.get(0).getLecture().getContents());
+    }
 }

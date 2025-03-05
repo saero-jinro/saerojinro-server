@@ -46,6 +46,7 @@ subprojects {
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
         implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
+        testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
         testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
         testFixturesImplementation 'org.springframework.security:spring-security-test'
         testFixturesRuntimeOnly 'org.junit.platform:junit-platform-launcher'

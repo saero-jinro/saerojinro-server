@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 @Service
 @RequiredArgsConstructor
 public class ReservationQueryService {
-    
     private final ReservationRepository reservationRepository;
-    
+
     public List<Reservation> getAllReservationByUser(User user){
         return reservationRepository.findByUser(user);
     }
@@ -28,6 +29,8 @@ public class ReservationQueryService {
     public boolean existsCheck(User user, Lecture lecture){
         return reservationRepository.existByUserAndLecture(user, lecture);
     }
-
-    
+  
+    public List<Reservation> getAllByLectureId(Long lectureId) {
+        return reservationRepository.findAllByLectureId(lectureId);
+    }
 }
