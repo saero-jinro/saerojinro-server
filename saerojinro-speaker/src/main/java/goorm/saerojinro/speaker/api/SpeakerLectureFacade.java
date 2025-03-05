@@ -16,7 +16,7 @@ public class SpeakerLectureFacade {
 	private final UserQueryService userQueryService;
 
 	public LectureCreateResponse createLecture(long speakerId, LectureCreateRequest request) {
-		User speaker = userQueryService.findById(speakerId);
+		User speaker = userQueryService.getById(speakerId);
 		Lecture lecture = lectureService.createLecture(
 			speaker,
 			request.title(),
