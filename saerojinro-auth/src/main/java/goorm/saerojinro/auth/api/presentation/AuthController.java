@@ -47,7 +47,7 @@ public interface AuthController {
 
 	@Operation(summary = "AT 재발행 API", description = """
 			- Description : 이 API는 RereshToken을 입력 받아 AccessToken을 재발급 처리합니다.
-			- Assignee : 이신행
+			- Assignee : 박민준
 		""")
 	@ApiResponse(
 		responseCode = "200",
