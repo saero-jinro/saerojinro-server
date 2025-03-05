@@ -1,6 +1,7 @@
 package goorm.saerojinro.auth.api.application;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ public class AuthFacade {
 	}
 
 	private JwtResponse createToken(Long id, String email, BaseRole role) {
-		String refreshToken = jwtProvider.generateRefreshToken(email, role);
+		String refreshToken = UUID.randomUUID().toString();
 		String accessToken = jwtProvider.generateAccessToken(email, role);
 		refreshTokenService.save(id, refreshToken);
 		return JwtResponse.of(accessToken, refreshToken);

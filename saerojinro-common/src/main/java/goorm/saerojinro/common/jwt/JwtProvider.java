@@ -38,11 +38,6 @@ public class JwtProvider {
 		return makeToken(new Date(now.getTime() + Duration.ofHours(1).toMillis()), email, role);
 	}
 
-	public String generateRefreshToken(String email, BaseRole role) {
-		Date now = new Date();
-		return makeToken(new Date(now.getTime() + Duration.ofDays(1).toMillis()), email, role);
-	}
-
 	private String makeToken(Date expiry, String email, BaseRole role) {
 		Date now = new Date();
 
