@@ -49,8 +49,8 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
-	public static Lecture createLecture(User speaker, String title, String contents, Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime,
-										String location, Category category) {
+	public static Lecture createLecture(User speaker, String title, String contents, Long maxCapacity,
+										LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
 			.speaker(speaker)
 			.title(title)

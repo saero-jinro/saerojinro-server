@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
-	public Lecture createLecture(User speaker, String title, String contents, Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
+	public Lecture createLecture(User speaker, String title, String contents, Long maxCapacity,
+								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
+
 		Lecture lecture = Lecture.createLecture(speaker, title, contents, maxCapacity, startTime, endTime, location, category);
 		return lectureRepository.save(lecture);
 	}
