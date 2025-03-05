@@ -22,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public Optional<User> findByEmail(String email) {
-		return userJpaRepository.findByEmail(email);
+		return userJpaRepository.findByEmailAndDeletedAtIsNull(email);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
 
   	@Override
 	public Optional<User> findById(Long id) {
-		return userJpaRepository.findById(id);
+		return userJpaRepository.findByIdAndDeletedAtIsNull(id);
 	}
 
 	@Override

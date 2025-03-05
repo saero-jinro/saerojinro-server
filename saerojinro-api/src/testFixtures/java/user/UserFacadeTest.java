@@ -3,6 +3,7 @@ package user;
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,6 +73,7 @@ public class UserFacadeTest {
 		// when
 		userFacade.delete();
 
-		// then todo : 유저 정보 조회 후 구현하겠습니다
+		// then
+		assertNotNull(user.getDeletedAt());
 	}
 }
