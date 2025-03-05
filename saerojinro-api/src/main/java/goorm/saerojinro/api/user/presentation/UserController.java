@@ -21,10 +21,17 @@ public interface UserController {
 	@ApiResponse(
 		responseCode = "204",
 		content = @Content(schema = @Schema(implementation = UserUpdateRequest.class)))
-	ResponseEntity<Void> updateUser(
+	ResponseEntity<Void> update(
 		@Parameter(
 			description = "회원 정보 수정 request 객체 입니다.",
 			required = true
 		) @Valid @RequestBody UserUpdateRequest request
 	);
+
+	@Operation(summary = "회원 탈퇴 API", description = """
+			- Description : 이 API는 회원정보를 삭제합니다.
+			- Assignee : 박민준
+		""")
+	@ApiResponse(responseCode = "204")
+	ResponseEntity<Void> delete();
 }
