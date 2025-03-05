@@ -1,5 +1,6 @@
 package user.application;
 
+import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeUserRepository;
@@ -88,4 +90,21 @@ public class UserCommandServiceTest {
 		assertEquals(updatedProfileImage, updatedUser.getProfileImage());
 	}
 
+	@Test
+	@DisplayName("update는 User의 정보를 수정할 수 있다")
+	public void update_Success() {
+		// given
+		User user = User.builder().build();
+		String newName = "test";
+		String newEmail = "email@email.com";
+		Category newInterest = BACKEND;
+
+		// when
+		userCommandService.update(user, newName, newEmail, newInterest);
+
+		// then
+		assertEquals(newName, user.getName());
+		assertEquals(newEmail, user.getEmail());
+		assertEquals(newInterest, user.getInterest());
+	}
 }
