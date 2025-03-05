@@ -68,7 +68,7 @@ public class NotificationFacadeTest {
 	}
 
 	@Test
-	@DisplayName("subscribe")
+	@DisplayName("subscribe는 SseEmitter를 생성한다")
 	void subscribe_Success() {
 		// when
 		SseEmitter emitter = notificationFacade.subscribe();
@@ -79,8 +79,8 @@ public class NotificationFacadeTest {
 
 	// TODO ReservationService 이후
 	//	@Test
-	@DisplayName("sendNotificationByLectureIdWithRequest")
-	void sendNotificationByLectureIdWithRequest_Success() {
+	@DisplayName("sendNotificationByLectureId은 Lecture를 예약한 참가자에게 알림을 전송한다")
+	void sendNotificationByLectureId_Success() {
 		// given
 		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)
@@ -88,15 +88,15 @@ public class NotificationFacadeTest {
 			.build();
 
 		// when
-//		notificationFacade.sendNotificationByLectureIdWithRequest();
+//		notificationFacade.sendNotificationByLectureId();
 
 		// then
 
 	}
 
 	@Test
-	@DisplayName("sendNotificationWithRequest")
-	void sendNotificationWithRequest_Success() {
+	@DisplayName("sendNotificationByReceiverId는 특정 참가자에게 알림을 전송한다")
+	void sendNotificationByReceiverId_Success() {
 		// given
 		notificationFacade.subscribe();
 		Long receiverId = 1L;
@@ -106,7 +106,7 @@ public class NotificationFacadeTest {
 			.build();
 
 		// when
-		notificationFacade.sendNotificationWithRequest(receiverId, request);
+		notificationFacade.sendNotificationByReceiverId(receiverId, request);
 
 		// then
 		List<Notification> notifications = repository.findByUserId(receiverId);
@@ -117,7 +117,7 @@ public class NotificationFacadeTest {
 	}
 
 	@Test
-	@DisplayName("sendNotification")
+	@DisplayName("sendNotification는 알림을 전송한다")
 	void sendNotification_Success() {
 		// given
 		notificationFacade.subscribe();
@@ -139,7 +139,7 @@ public class NotificationFacadeTest {
 
 
 	@Test
-	@DisplayName("sendNotificationAll")
+	@DisplayName("sendNotificationAll는 모든 참가자에게 알림을 전송한다")
 	void sendNotificationAll_Success() {
 		// given
 		notificationFacade.subscribe();
@@ -160,7 +160,7 @@ public class NotificationFacadeTest {
 	}
 
 	@Test
-	@DisplayName("myNotification")
+	@DisplayName("myNotification은 현재 로그인한 유저가 받은 알림을 조회한다")
 	void myNotification_Success() {
 		// given
 		notificationFacade.subscribe();
