@@ -80,7 +80,7 @@ public class SpeakerLectureFacadeTest {
 			.build();
 
 		// when
-		LectureCreateResponse response = speakerLectureFacade.createLecture(VALID_SPEAKER_ID, request);
+		LectureCreateResponse response = speakerLectureFacade.create(VALID_SPEAKER_ID, request);
 
 		// then
 		assertNotNull(response);
@@ -101,7 +101,7 @@ public class SpeakerLectureFacadeTest {
 			.category(CATEGORY)
 			.build();
 
-		LectureCreateResponse createResponse = speakerLectureFacade.createLecture(VALID_SPEAKER_ID, createRequest);
+		LectureCreateResponse createResponse = speakerLectureFacade.create(VALID_SPEAKER_ID, createRequest);
 		Long lectureId = createResponse.lectureId();
 
 		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
@@ -110,11 +110,11 @@ public class SpeakerLectureFacadeTest {
 			.build();
 
 		// when
-		speakerLectureFacade.updateLecture(VALID_SPEAKER_ID, lectureId, updateRequest);
+		speakerLectureFacade.update(VALID_SPEAKER_ID, lectureId, updateRequest);
 
 		// 강연자가 일치하지 않을 경우 예외 반환
 		Assertions.assertThrows(SpeakerMissmatchException.class, () ->
-			speakerLectureFacade.updateLecture(2L, lectureId, updateRequest)
+			speakerLectureFacade.update(2L, lectureId, updateRequest)
 		);
 
 		// then

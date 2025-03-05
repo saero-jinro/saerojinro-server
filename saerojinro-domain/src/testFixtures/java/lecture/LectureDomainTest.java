@@ -36,7 +36,7 @@ class LectureDomainTest {
 
 	@BeforeEach
 	void setUp() {
-		lecture = Lecture.createLecture(
+		lecture = Lecture.create(
 			SPEAKER,
 			TITLE,
 			CONTENTS,
@@ -70,7 +70,7 @@ class LectureDomainTest {
 		String newContents = "Updated Contents";
 
 		// when
-		lecture.updateLecture(SPEAKER, newTitle, newContents);
+		lecture.update(SPEAKER, newTitle, newContents);
 
 		// then
 		assertEquals(newTitle, lecture.getTitle());
@@ -89,7 +89,7 @@ class LectureDomainTest {
 
 		// when & then
 		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {
-			lecture.updateLecture(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
+			lecture.update(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
 		});
 	}
 
@@ -104,7 +104,7 @@ class LectureDomainTest {
 			.build();
 
 		// when
-		lecture.updateLecture(admin, "updated title", "updated contents");
+		lecture.update(admin, "updated title", "updated contents");
 
 		//then
 		assertEquals("updated title", lecture.getTitle());

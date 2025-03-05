@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
-	public Lecture createLecture(User speaker, String title, String contents, Long maxCapacity,
+	public Lecture create(User speaker, String title, String contents, Long maxCapacity,
 								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
-		Lecture lecture = Lecture.createLecture(speaker, title, contents, maxCapacity, startTime, endTime, location, category);
+		Lecture lecture = Lecture.create(speaker, title, contents, maxCapacity, startTime, endTime, location, category);
 		return lectureRepository.save(lecture);
 	}
 
-	public void updateLecture(User speaker, Long lectureId, String title, String contents) {
+	public void update(User speaker, Long lectureId, String title, String contents) {
 		Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
 
-		lecture.updateLecture(speaker, title, contents);
+		lecture.update(speaker, title, contents);
 	}
 }

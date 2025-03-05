@@ -50,7 +50,7 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
-	public static Lecture createLecture(User speaker, String title, String contents, Long maxCapacity,
+	public static Lecture create(User speaker, String title, String contents, Long maxCapacity,
 										LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
 			.speaker(speaker)
@@ -65,7 +65,7 @@ public class Lecture extends BaseTimeEntity {
 			.build();
 	}
 
-	public void updateLecture(User speaker, String title, String contents) {
+	public void update(User speaker, String title, String contents) {
 		validateUpdatePermission(speaker);
 		this.title = title;
 		this.contents = contents;

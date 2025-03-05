@@ -51,7 +51,7 @@ public class LectureCommandServiceTest {
 	@DisplayName("정상적으로 강의를 생성한다")
 	void createLecture_success() {
 		// when
-		Lecture createdLecture = lectureCommandService.createLecture(
+		Lecture createdLecture = lectureCommandService.create(
 			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
@@ -74,13 +74,13 @@ public class LectureCommandServiceTest {
 	@DisplayName("정상적으로 강의를 수정한다")
 	void updateLecture_success() {
 		//given
-		Lecture createdLecture = lectureCommandService.createLecture(
+		Lecture createdLecture = lectureCommandService.create(
 			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when
 		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
-		lectureCommandService.updateLecture(VALID_SPEAKER, findLecture.getId(), "updated title", "updated contents");
+		lectureCommandService.update(VALID_SPEAKER, findLecture.getId(), "updated title", "updated contents");
 
 		// then
  		assertNotNull(createdLecture);

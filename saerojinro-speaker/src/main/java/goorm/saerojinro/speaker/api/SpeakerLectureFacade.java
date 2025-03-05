@@ -16,9 +16,9 @@ public class SpeakerLectureFacade {
 	private final LectureCommandService lectureCommandService;
 	private final UserQueryService userQueryService;
 
-	public LectureCreateResponse createLecture(long speakerId, LectureCreateRequest request) {
+	public LectureCreateResponse create(long speakerId, LectureCreateRequest request) {
 		User speaker = userQueryService.getById(speakerId);
-		Lecture lecture = lectureCommandService.createLecture(
+		Lecture lecture = lectureCommandService.create(
 			speaker,
 			request.title(),
 			request.contents(),
@@ -31,9 +31,9 @@ public class SpeakerLectureFacade {
 		return LectureCreateResponse.from(lecture);
 	}
 
-	public void updateLecture(Long speakerId, Long lectureId, LectureUpdateRequest request) {
+	public void update(Long speakerId, Long lectureId, LectureUpdateRequest request) {
 		User speaker = userQueryService.getById(speakerId);
-		lectureCommandService.updateLecture(
+		lectureCommandService.update(
 			speaker,
 			lectureId,
 			request.title(),
