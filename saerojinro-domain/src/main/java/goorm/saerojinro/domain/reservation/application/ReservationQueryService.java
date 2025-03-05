@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Getter
+import org.springframework.stereotype.Service;
+
+@Service
 @RequiredArgsConstructor
 public class ReservationQueryService {
-    
     private final ReservationRepository reservationRepository;
     
     public List<Reservation> getAllReservationByUser(User user){
@@ -28,6 +29,4 @@ public class ReservationQueryService {
     public boolean existsCheck(User user, Lecture lecture){
         return reservationRepository.existByUserAndLecture(user, lecture);
     }
-
-    
 }
