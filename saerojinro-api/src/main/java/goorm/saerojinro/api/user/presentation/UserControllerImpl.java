@@ -1,6 +1,7 @@
 package goorm.saerojinro.api.user.presentation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,15 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@PatchMapping
-	public ResponseEntity<Void> updateUser(UserUpdateRequest request) {
+	public ResponseEntity<Void> update(UserUpdateRequest request) {
 		userFacade.update(request);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	@DeleteMapping
+	public ResponseEntity<Void> delete() {
+		userFacade.delete();
 		return ResponseEntity.noContent().build();
 	}
 }

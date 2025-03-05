@@ -2,7 +2,6 @@ package goorm.saerojinro.domain.user.domain;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
-import static goorm.saerojinro.common.domain.Provider.GOOGLE;
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;

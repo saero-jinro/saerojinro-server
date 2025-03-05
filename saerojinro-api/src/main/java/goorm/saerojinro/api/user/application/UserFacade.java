@@ -20,4 +20,10 @@ public class UserFacade {
 		User user = userQueryService.me();
 		userCommandService.update(user, request.name(), request.email(), request.interest());
 	}
+
+	@Transactional
+	public void delete() {
+		User user = userQueryService.me();
+		userCommandService.delete(user);
+	}
 }

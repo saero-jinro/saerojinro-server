@@ -3,6 +3,7 @@ package user;
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,8 +49,8 @@ public class UserFacadeTest {
 	}
 
 	@Test
-	@DisplayName("updateUser는 유저의 정보를 수정한다")
-	public void updateUser_Success() {
+	@DisplayName("update는 유저의 정보를 수정한다")
+	public void update_Success() {
 		// given
 		UserUpdateRequest request = UserUpdateRequest.builder()
 			.email("update@email.com")
@@ -64,5 +65,15 @@ public class UserFacadeTest {
 		assertEquals("update@email.com", user.getEmail());
 		assertEquals("박준", user.getName());
 		assertEquals(BACKEND, user.getInterest());
+	}
+
+	@Test
+	@DisplayName("delete는 현재 로그인 된 유저 정보를 삭제한다.")
+	public void delete_Success() {
+		// when
+		userFacade.delete();
+
+		// then
+		assertNotNull(user.getDeletedAt());
 	}
 }

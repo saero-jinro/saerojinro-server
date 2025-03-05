@@ -41,4 +41,8 @@ public class UserCommandService {
 		user.updateEmail(email);
 		user.updateInterest(category);
 	}
+
+	public void delete(User user) {
+		user.delete();
+	}
 }
