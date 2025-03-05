@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum LectureDomainExceptionCode implements ExceptionCode {
 	LECTURE_NOT_FOUND(NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
+	SPEAKER_MISS_MATCH(FORBIDDEN, "강의 생성한 강연자와 다른 강연자입니다."),
 	;
 
 	private final HttpStatus status;

@@ -3,6 +3,7 @@ package goorm.saerojinro.domain.lecture.domain;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
+import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
