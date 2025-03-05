@@ -5,7 +5,9 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 import goorm.saerojinro.common.domain.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 
+@Builder
 public record UserUpdateRequest(
 	@Schema(description = "이름", example = "박민준", requiredMode = REQUIRED)
 	String name,

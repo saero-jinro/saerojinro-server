@@ -122,4 +122,16 @@ public class UserQueryServiceTest {
 		assertThatThrownBy(() -> userQueryService.getById(nonExistingUserId))
 				.isInstanceOf(UserNotFoundException.class);
 	}
+
+	@Test
+	@DisplayName("me는 현재 로그인 되어있는 사용자의 객체를 가져온다.")
+	public void me_Success() {
+		// when
+		User result = userQueryService.me();
+
+		// then
+		assertEquals("박민준", result.getName());
+		assertEquals("email@email.com", result.getEmail());
+		assertEquals(ADMIN, result.getRole());
+	}
 }
