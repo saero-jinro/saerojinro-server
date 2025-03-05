@@ -24,6 +24,6 @@ public class UserFacade {
 	@Transactional
 	public void delete() {
 		User user = userQueryService.me();
-		user.delete();
+		userCommandService.delete(user);
 	}
 }

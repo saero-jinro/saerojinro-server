@@ -43,6 +43,6 @@ public class UserCommandService {
 	}
 
 	public void delete(User user) {
-		userRepository.delete(user);
+		user.delete();
 	}
 }

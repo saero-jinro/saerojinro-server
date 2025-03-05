@@ -3,6 +3,7 @@ package user.application;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +19,11 @@ import mock.repository.FakeUserRepository;
 public class UserCommandServiceTest {
 	private UserCommandService userCommandService;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	private FakeUserRepository fakeUserRepository;
 	private User user;
 
 	@BeforeEach
 	public void init() {
-		fakeUserRepository = new FakeUserRepository();
+		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		userCommandService = new UserCommandService(
 			fakeUserRepository
@@ -124,6 +124,6 @@ public class UserCommandServiceTest {
 		userCommandService.delete(user);
 
 		// then
-		assertThat(fakeUserRepository.findByEmail(email)).isEmpty();
+		assertNotNull(user.getDeletedAt());
 	}
 }
