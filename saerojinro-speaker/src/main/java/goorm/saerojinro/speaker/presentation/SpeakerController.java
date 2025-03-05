@@ -17,4 +17,12 @@ public class SpeakerController {
 	private ResponseEntity<LectureCreateResponse> createLecture(@PathVariable long speakerId, @RequestBody LectureCreateRequest request) {
 		return ResponseEntity.ok(speakerLectureFacade.createLecture(speakerId, request));
 	}
+
+	@PatchMapping("/{id}/lectures/{lectureId}")
+	private ResponseEntity<Void> updateLecture(@PathVariable(name = "id") Long speakerId,
+											   @PathVariable Long lectureId,
+											   @RequestBody LectureUpdateRequest request) {
+		speakerLectureFacade.updatedLecture(speakerId, lectureId, request);
+		return ResponseEntity.noContent().build();
+	}
 }

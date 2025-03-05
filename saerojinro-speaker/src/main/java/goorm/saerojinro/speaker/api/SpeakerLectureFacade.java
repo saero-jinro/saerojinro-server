@@ -29,4 +29,14 @@ public class SpeakerLectureFacade {
 		);
 		return LectureCreateResponse.from(lecture);
 	}
+
+	public void updatedLecture(Long speakerId, Long lectureId, LectureUpdateRequest request) {
+		User speaker = userQueryService.getById(speakerId);
+		lectureCommandService.updateLecture(
+			speaker,
+			lectureId,
+			request.title(),
+			request.contents()
+		);
+	}
 }

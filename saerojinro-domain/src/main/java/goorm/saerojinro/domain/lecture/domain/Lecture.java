@@ -62,4 +62,16 @@ public class Lecture extends BaseTimeEntity {
 			.lectureStatus(LectureStatus.PENDING_APPROVAL)
 			.build();
 	}
+
+	public void updateLecture(User speaker,String title, String contents) {
+		isSameSpeaker(speaker);
+		this.title = title;
+		this.contents = contents;
+	}
+
+	private void isSameSpeaker(User speaker) {
+		if(!this.speaker.getId().equals(speaker.getId())) {
+			throw new SpeakerMissmatchException();
+		}
+	}
 }
