@@ -22,10 +22,9 @@ public class UserQueryService {
 
 	public User login(String email, String password) {
 		User user = getByEmail(email);
-		if(!user.isPasswordMatched(password, bCryptPasswordEncoder)) {
+		if (!user.isPasswordMatched(password, bCryptPasswordEncoder)) {
 			throw new InvalidPasswordException();
 		}
-
 		return user;
 	}
 
