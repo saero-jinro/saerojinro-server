@@ -28,7 +28,8 @@ public class UserQueryService {
 		return user;
 	}
 
-	public User findById(Long userId) {
-		return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+	public User getById(Long Id){
+		return userRepository.findById(Id)
+				.orElseThrow(UserNotFoundException::new);
 	}
 }
