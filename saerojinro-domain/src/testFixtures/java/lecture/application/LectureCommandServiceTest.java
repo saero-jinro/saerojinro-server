@@ -23,7 +23,6 @@ public class LectureCommandServiceTest {
 	private FakeLectureRepository lectureRepository;
 	private FakeUserRepository userRepository;
 
-	private static final Long VALID_SPEAKER_ID = 1L;
 	private static final String TITLE = "Lecture Title";
 	private static final String CONTENTS = "Lecture Contents";
 	private static final Long MAX_CAPACITY = 100L;
@@ -34,8 +33,8 @@ public class LectureCommandServiceTest {
 	private static final LectureStatus EXPECTED_STATUS = LectureStatus.PENDING_APPROVAL;
 
 	private static final User VALID_SPEAKER = User.builder()
-		.id(VALID_SPEAKER_ID)
-		.name("Test Speaker")
+		.id(1L)
+		.name("Speaker")
 		.role(SPEAKER)
 		.build();
 
@@ -43,7 +42,7 @@ public class LectureCommandServiceTest {
 	void setUp() {
 		lectureRepository = new FakeLectureRepository();
 		userRepository = new FakeUserRepository();
-		lectureCommandService = new LectureCommandService(lectureRepository, userRepository);
+		lectureCommandService = new LectureCommandService(lectureRepository);
 
 		userRepository.save(VALID_SPEAKER);
 	}
@@ -53,7 +52,7 @@ public class LectureCommandServiceTest {
 	void createLecture_success() {
 		// when
 		Lecture createdLecture = lectureCommandService.createLecture(
-			VALID_SPEAKER_ID, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// then
@@ -68,35 +67,6 @@ public class LectureCommandServiceTest {
 		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
 
 		assertNotNull(createdLecture.getSpeaker(), "강연자 정보는 null이면 안 됩니다.");
-		assertEquals(VALID_SPEAKER_ID, createdLecture.getSpeaker().getId());
-	}
-
-	@Test
-	@DisplayName("존재하지 않는 강연자 ID로 강의를 생성하면 예외가 발생한다")
-	void createLecture_userNotFound() {
-		Long invalidSpeakerId = 999L;
-		assertThrows(UserNotFoundException.class, () ->
-			lectureCommandService.createLecture(
-				invalidSpeakerId, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
-			)
-		);
-	}
-
-	@Test
-	@DisplayName("강연자 역할이 아닌 사용자가 강의 생성 요청 시 예외가 발생한다")
-	void createLecture_invalidUserRole() {
-		User nonSpeaker = User.builder()
-			.id(2L)
-			.name("Not a Speaker")
-			.role(ATTENDEE)
-			.build();
-		userRepository.save(nonSpeaker);
-
-		Long speakerId = 2L;
-		assertThrows(InvalidUserRoleException.class, () ->
-			lectureCommandService.createLecture(
-				speakerId, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
-			)
-		);
+		assertEquals(VALID_SPEAKER.getId(), createdLecture.getSpeaker().getId());
 	}
 }
