@@ -4,7 +4,9 @@ import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
 import goorm.saerojinro.domain.user.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,5 +60,34 @@ class LectureDomainTest {
 		assertEquals(LOCATION, lecture.getLocation());
 		assertEquals(CATEGORY, lecture.getCategory());
 		assertEquals(STATUS, lecture.getLectureStatus());
+	}
+
+	@Test
+	@DisplayName("Lecture를 성공적으로 수정한다")
+	void updateLecture_success() {
+		// given
+		String newTitle = "Updated Title";
+		String newContents = "Updated Contents";
+
+		// when
+		lecture.updateLecture(SPEAKER, newTitle, newContents);
+
+		// then
+		assertEquals(newTitle, lecture.getTitle());
+		assertEquals(newContents, lecture.getContents());
+	}
+
+	@Test
+	@DisplayName("다른 강연자가 강의 수정시 예외를 반환한다")
+	void SpeakerMissmatchException() {
+		// given
+		User wrongSpeaker = User.builder()
+			.id(2L)
+			.name("Wrong Speaker")
+			.role(BaseRole.SPEAKER)
+			.build();
+
+		// when & then
+		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {lecture.updateLecture(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");});
 	}
 }
