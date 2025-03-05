@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import goorm.saerojinro.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.reissue.domain.RefreshTokenRepository;
-import goorm.saerojinro.domain.reissue.exception.RefreshTokenMismatchException;
 import goorm.saerojinro.domain.reissue.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -13,13 +12,9 @@ import lombok.RequiredArgsConstructor;
 public class RefreshTokenService {
 	private final RefreshTokenRepository refreshTokenRepository;
 
-	public void validate(Long id, String token) {
-		RefreshToken refreshToken = refreshTokenRepository.findById(id)
+	public RefreshToken getByRefreshToken(String token) {
+		return refreshTokenRepository.findByRefreshToken(token)
 			.orElseThrow(RefreshTokenNotFoundException::new);
-
-		if(!refreshToken.validateRefreshToken(token)){
-			throw new RefreshTokenMismatchException();
-		}
 	}
 
 	public void save(Long id, String refreshToken) {

@@ -15,8 +15,8 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 	private final RedisRefreshTokenRepository redisRefreshTokenRepository;
 
 	@Override
-	public Optional<RefreshToken> findById(Long id) {
-		return redisRefreshTokenRepository.findById(id);
+	public Optional<RefreshToken> findByRefreshToken(String refreshToken) {
+		return redisRefreshTokenRepository.findByRefreshToken(refreshToken);
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import goorm.saerojinro.auth.social.kakao.KakaoOidcTokenValidator;
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.jwt.JwtProvider;
 import goorm.saerojinro.domain.reissue.application.RefreshTokenService;
+import goorm.saerojinro.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -33,11 +34,7 @@ public class AuthFacade {
 	public JwtResponse emailLogin(EmailLoginRequest request) {
 		User user = userQueryService.login(request.email(), request.password());
 
-		String accessToken = jwtProvider.generateAccessToken(user.getEmail(), user.getRole());
-		String refreshToken = jwtProvider.generateRefreshToken(user.getEmail(), user.getRole());
-
-		refreshTokenService.save(user.getId(), refreshToken);
-		return JwtResponse.of(accessToken, refreshToken);
+		return createToken(user.getId(), user.getEmail(), user.getRole());
 	}
 
 	@Transactional
@@ -54,22 +51,20 @@ public class AuthFacade {
 			socialUserProfile.profileImage()
 		);
 
-		BaseRole role = user.getRole();
-		String accessToken = jwtProvider.generateAccessToken(email, role);
-		String refreshToken = jwtProvider.generateRefreshToken(email, role);
-
-		refreshTokenService.save(user.getId(), refreshToken);
-		return JwtResponse.of(accessToken, refreshToken);
+		return createToken(user.getId(), user.getEmail(), user.getRole());
 	}
 
+	@Transactional(readOnly = true)
 	public JwtResponse reissue(ReissueRequest request) {
-		User user = userQueryService.me();
-		Long id = user.getId();
-		refreshTokenService.validate(id, request.refreshToken());
+		RefreshToken refreshToken = refreshTokenService.getByRefreshToken(request.refreshToken());
 
-		String email = user.getEmail();
-		BaseRole role = user.getRole();
-		String refreshToken = jwtProvider.generateAccessToken(email, role);
+		User user = userQueryService.getById(refreshToken.getId());
+
+		return createToken(user.getId(), user.getEmail(), user.getRole());
+	}
+
+	private JwtResponse createToken(Long id, String email, BaseRole role) {
+		String refreshToken = jwtProvider.generateRefreshToken(email, role);
 		String accessToken = jwtProvider.generateAccessToken(email, role);
 		refreshTokenService.save(id, refreshToken);
 		return JwtResponse.of(accessToken, refreshToken);

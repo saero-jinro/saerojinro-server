@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import goorm.saerojinro.domain.reissue.domain.RefreshToken;
 
 public interface RedisRefreshTokenRepository extends CrudRepository<RefreshToken, String> {
-	Optional<RefreshToken> findById(Long id);
+	Optional<RefreshToken> findByRefreshToken(String refreshToken);
 }

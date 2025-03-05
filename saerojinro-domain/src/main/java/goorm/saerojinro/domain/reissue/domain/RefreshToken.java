@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +18,7 @@ public class RefreshToken {
 	@Id
 	private Long id;
 
+	@Indexed
 	private String refreshToken;
 
 	public static RefreshToken of(Long id, String refreshToken) {
@@ -25,9 +26,5 @@ public class RefreshToken {
 			.id(id)
 			.refreshToken(refreshToken)
 			.build();
-	}
-
-	public boolean validateRefreshToken(String refreshToken) {
-		return Objects.equals(this.refreshToken, refreshToken);
 	}
 }
