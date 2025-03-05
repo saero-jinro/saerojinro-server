@@ -4,6 +4,7 @@ import goorm.saerojinro.api.notification.presentation.exception.EmitterNotFoundE
 import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.NotificationSendResponse;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
@@ -34,17 +35,12 @@ public class NotificationFacade {
 
 	public void sendNotificationByLectureIdWithRequest(Long lectureId, NotificationSendRequest request) {
 		// TODO lectureId -> 예약 -> 예약한 유저 리스트 -> iteration -> sendNotificationWithRequest
-
-
-
 	}
 
 	@Transactional
 	public void sendNotificationWithRequest(Long receiverId, NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
-			// TODO userService에서 아이디로 조회
-//			userQueryService.findById(receiverId),
-			User.builder().id(1L).build(),
+			userQueryService.getById(receiverId),
 			request.title(),
 			request.contents()
 		);
@@ -89,7 +85,6 @@ public class NotificationFacade {
 
 	@Transactional(readOnly = true)
 	public ReceivedNotificationListResponse myNotification() {
-		// TODO 현재 로그인한 유저 가져오기
 		User user = userQueryService.me();
 		List<Notification> notificationList = notificationQueryService.findByUserId(user.getId());
 		return ReceivedNotificationListResponse.from(notificationList);
