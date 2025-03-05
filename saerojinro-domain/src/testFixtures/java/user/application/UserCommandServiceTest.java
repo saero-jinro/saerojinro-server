@@ -36,11 +36,56 @@ public class UserCommandServiceTest {
 		String name = "admin";
 
 		// when
-		User user = userCommandService.createAdmin(email, password, name);
+		user = userCommandService.createAdmin(email, password, name);
 
 		// then
 		assertEquals(email, user.getEmail());
 		assertTrue(bCryptPasswordEncoder.matches(password, user.getPassword()));
 		assertEquals(name, user.getName());
 	}
+
+	@Test
+	@DisplayName("kakaoSocialLogin은 신규 유저 생성이 가능하다.")
+	void kakaoSocialLogin_CreateNewUser() {
+		// given
+		String oauthIdentity = "kakao_12345";
+		String name = "박민준";
+		String email = "minjun@kakao.com";
+		String profileImage = "http://kakao.com/profile.png";
+
+		// when
+		user = userCommandService.kakaoSocialLogin(oauthIdentity, name, email, profileImage);
+
+		// then
+		assertEquals(oauthIdentity, user.getOauthIdentity());
+		assertEquals(name, user.getName());
+		assertEquals(email, user.getEmail());
+		assertEquals(profileImage, user.getProfileImage());
+	}
+
+	@Test
+	@DisplayName("kakaoSocialLogin은 기존 유저 정보 업데이트가 가능하다.")
+	void kakaoSocialLogin_UpdateExistingUser() {
+		// given
+		String oauthIdentity = "kakao_12345";
+		String originalName = "박민준";
+		String originalEmail = "minjun@kakao.com";
+		String originalProfileImage = "http://kakao.com/old_profile.png";
+
+		userCommandService.kakaoSocialLogin(oauthIdentity, originalName, originalEmail, originalProfileImage);
+
+		String updatedName = "민준박";
+		String updatedEmail = "minjun.new@kakao.com";
+		String updatedProfileImage = "http://kakao.com/new_profile.png";
+
+		// when
+		User updatedUser = userCommandService.kakaoSocialLogin(oauthIdentity, updatedName, updatedEmail, updatedProfileImage);
+
+		// then
+		assertEquals(oauthIdentity, updatedUser.getOauthIdentity());
+		assertEquals(updatedName, updatedUser.getName());
+		assertEquals(updatedEmail, updatedUser.getEmail());
+		assertEquals(updatedProfileImage, updatedUser.getProfileImage());
+	}
+
 }

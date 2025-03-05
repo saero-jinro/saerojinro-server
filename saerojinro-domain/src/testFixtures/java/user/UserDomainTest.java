@@ -4,7 +4,6 @@ import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static goorm.saerojinro.common.domain.Provider.GOOGLE;
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,6 +24,7 @@ public class UserDomainTest {
 	private static final String PASSWORD = "$2a$10$ViIAGtB9Y/9cE//3WY6i4e6RQVHbJhQQDWshsFlElNnyz88.8EOu2";
 	private static final String NAME = "홍길동";
 	private static final String EMAIL = "valid@kgu.ac.kr";
+	private static final String PROFILE_IMAGE = "profileImage.png";
 	private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
 	@BeforeEach
@@ -51,7 +51,7 @@ public class UserDomainTest {
 		String oauthIdentity = "kakao-12345";
 
 		// when
-		user = User.createKakaoUser(oauthIdentity, NAME);
+		user = User.createKakaoUser(oauthIdentity, NAME, EMAIL, PROFILE_IMAGE);
 
 		// then
 		assertNotNull(user);
@@ -59,24 +59,6 @@ public class UserDomainTest {
 		assertEquals(NAME, user.getName());
 		assertEquals(ATTENDEE, user.getRole());
 		assertEquals(KAKAO, user.getProvider());
-	}
-
-	@Test
-	@DisplayName("createGoogleUser는 GOOGLE USER를 생성할 수 있다.")
-	void createUserWithGoogleOidc() {
-		// given
-		String oauthIdentity = "google-12345";
-
-		// when
-		user = User.createGoogleUser(oauthIdentity, NAME, EMAIL);
-
-		// then
-		assertNotNull(user);
-		assertEquals(oauthIdentity, user.getOauthIdentity());
-		assertEquals(NAME, user.getName());
-		assertEquals(EMAIL, user.getEmail());
-		assertEquals(ATTENDEE, user.getRole());
-		assertEquals(GOOGLE, user.getProvider());
 	}
 
 	@Test
@@ -90,6 +72,30 @@ public class UserDomainTest {
 
 		// then
 		assertEquals(newName, user.getName());
+	}
+
+	@Test
+	@DisplayName("updateEmail은 유저 이메일을 변경할 수 있다.")
+	public void updateEmail_Success() {
+		// given
+		String newEmail = "newEmail@gmail.com";
+
+		// when
+		user.updateEmail(newEmail);
+
+		// then
+		assertEquals(newEmail, user.getEmail());
+	}
+
+	@Test
+	@DisplayName("updateProfileImage는 유저 프로필 사진을 변경할 수 있다.")
+	public void updateProfileImage_Success() {
+		// given
+		// when
+		user.updateProfileImage(PROFILE_IMAGE);
+
+		// then
+		assertEquals(PROFILE_IMAGE, user.getProfileImage());
 	}
 
 	@Test

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import goorm.saerojinro.auth.application.AuthFacade;
 import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
+import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.auth.presentation.response.JwtResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,13 @@ public class AuthControllerImpl implements AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> emailLogin(EmailLoginRequest request) {
 		JwtResponse response = authFacade.emailLogin(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@PostMapping("/kakao/login")
+	public ResponseEntity<JwtResponse> kakaoSocialLogin(SocialLoginRequest request) {
+		JwtResponse response = authFacade.kakaoSocialLogin(request);
 		return ResponseEntity.ok(response);
 	}
 }

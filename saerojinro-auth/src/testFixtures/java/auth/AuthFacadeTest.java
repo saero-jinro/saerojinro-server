@@ -8,10 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import auth.mock.FakeKakaoOidcTokenValidator;
 import goorm.saerojinro.auth.application.AuthFacade;
 import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
+import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.common.jwt.JwtProperties;
 import goorm.saerojinro.common.jwt.JwtProvider;
+import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeUserRepository;
@@ -25,7 +28,9 @@ public class AuthFacadeTest {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		authFacade = new AuthFacade(
 			new UserQueryService(fakeUserRepository, bCryptPasswordEncoder),
-			new JwtProvider(new JwtProperties("testIssuer", "testSecretKey"))
+			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder),
+			new JwtProvider(new JwtProperties("testIssuer", "testSecretKey")),
+			new FakeKakaoOidcTokenValidator()
 		);
 
 		fakeUserRepository.save(User.builder()
@@ -35,6 +40,10 @@ public class AuthFacadeTest {
 			.role(ADMIN)
 			.build()
 		);
+
+		fakeUserRepository.save(User.createKakaoUser(
+			"kakao_123456", "test", "test@kakao.com", "http://example.com/test.png"
+		));
 	}
 
 	@Test
@@ -52,6 +61,17 @@ public class AuthFacadeTest {
 				.password(password)
 				.build()
 			)
+		).doesNotThrowAnyException();
+	}
+
+	@Test
+	@DisplayName("kakaoSocailLogin은 kakao 로그인 시 토큰을 발급한다.")
+	public void kakaoSocailLogin_Success() {
+		// given
+		SocialLoginRequest request = new SocialLoginRequest("test");
+
+		// when
+		assertThatCode(() -> authFacade.kakaoSocialLogin(request)
 		).doesNotThrowAnyException();
 	}
 }
