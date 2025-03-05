@@ -110,11 +110,11 @@ public class SpeakerLectureFacadeTest {
 			.build();
 
 		// when
-		speakerLectureFacade.updatedLecture(VALID_SPEAKER_ID, lectureId, updateRequest);
+		speakerLectureFacade.updateLecture(VALID_SPEAKER_ID, lectureId, updateRequest);
 
 		// 강연자가 일치하지 않을 경우 예외 반환
 		Assertions.assertThrows(SpeakerMissmatchException.class, () ->
-			speakerLectureFacade.updatedLecture(2L, lectureId, updateRequest)
+			speakerLectureFacade.updateLecture(2L, lectureId, updateRequest)
 		);
 
 		// then

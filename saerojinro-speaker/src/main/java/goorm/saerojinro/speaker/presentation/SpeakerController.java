@@ -24,7 +24,7 @@ public class SpeakerController {
 	private ResponseEntity<Void> updateLecture(@PathVariable(name = "id") Long speakerId,
 											   @PathVariable Long lectureId,
 											   @RequestBody LectureUpdateRequest request) {
-		speakerLectureFacade.updatedLecture(speakerId, lectureId, request);
+		speakerLectureFacade.updateLecture(speakerId, lectureId, request);
 		return ResponseEntity.noContent().build();
 	}
 }

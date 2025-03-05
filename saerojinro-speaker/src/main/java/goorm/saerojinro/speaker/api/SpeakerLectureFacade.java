@@ -31,7 +31,7 @@ public class SpeakerLectureFacade {
 		return LectureCreateResponse.from(lecture);
 	}
 
-	public void updatedLecture(Long speakerId, Long lectureId, LectureUpdateRequest request) {
+	public void updateLecture(Long speakerId, Long lectureId, LectureUpdateRequest request) {
 		User speaker = userQueryService.getById(speakerId);
 		lectureCommandService.updateLecture(
 			speaker,
