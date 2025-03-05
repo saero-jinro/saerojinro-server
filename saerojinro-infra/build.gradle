@@ -8,5 +8,6 @@ jar {
 
 dependencies {
     implementation project(":saerojinro-domain")
+    implementation project(":saerojinro-common")
     implementation 'org.apache.commons:commons-collections4:4.4'
 }

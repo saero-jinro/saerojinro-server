@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import goorm.saerojinro.common.domain.Provider;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import mock.TestEntityUtils;
@@ -21,6 +22,7 @@ public class FakeUserRepository implements UserRepository {
 			.id(sequence.getAndIncrement())
 			.oauthIdentity(user.getOauthIdentity())
 			.email(user.getEmail())
+			.profileImage(user.getProfileImage())
 			.password(user.getPassword())
 			.name(user.getName())
 			.role(user.getRole())
@@ -39,8 +41,21 @@ public class FakeUserRepository implements UserRepository {
 	}
 
 	@Override
+	public Optional<User> findByOauthIdentityAndProvider(String identifier, Provider provider) {
+		return data.stream()
+			.filter(u -> isValidSocialUser(u) &&
+				u.getOauthIdentity().equals(identifier) &&
+				u.getProvider().equals(provider))
+			.findAny();
+	}
+
+  @Override
 	public Optional<User> findById(Long userId) {{
 			return data.stream().filter(u -> u.getId() == userId).findAny();
 		}
+	}
+  
+	private boolean isValidSocialUser(User user) {
+		return user.getOauthIdentity() != null && user.getProvider() != null;
 	}
 }
