@@ -4,6 +4,7 @@ import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -107,5 +108,30 @@ public class UserQueryServiceTest {
 		// when
 		assertThatThrownBy(() -> userQueryService.login(email, password))
 			.isInstanceOf(InvalidPasswordException.class);
+	}
+
+	@Test
+	@DisplayName("getById 는 유저를 유저 아아디로 조회할 수 있다.")
+	public void getById_Success(){
+		// given
+		String email = "email@email.com";
+		User user = userQueryService.getByEmail(email);
+
+		// when
+		User findUser = userQueryService.getById(user.getId());
+
+		// then
+		Assertions.assertThat(findUser).isEqualTo(user);
+	}
+
+	@Test
+	@DisplayName("getById 는 해당 아이디를 가진 유저가 존재하지 않으면 UserNotFoundException을 발생한다.")
+	public void getById_Failed(){
+		// given
+		Long nonExistingUserId = 999L;
+
+		// when
+		assertThatThrownBy(() -> userQueryService.getById(nonExistingUserId))
+				.isInstanceOf(UserNotFoundException.class);
 	}
 }
