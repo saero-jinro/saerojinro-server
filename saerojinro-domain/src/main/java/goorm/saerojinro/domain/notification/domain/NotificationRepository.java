@@ -1,9 +1,11 @@
 package goorm.saerojinro.domain.notification.domain;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface NotificationRepository {
 	Notification save(Notification notification);
 
-	Optional<Notification> findByLectureId(Long lectureId);
+	List<Notification> findByUserId(Long lectureId);
+
+	List<Notification> findByUserIdIsNull();
 }

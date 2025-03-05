@@ -6,7 +6,6 @@ import goorm.saerojinro.domain.notification.domain.NotificationRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeNotificationRepository implements NotificationRepository {
@@ -17,7 +16,7 @@ public class FakeNotificationRepository implements NotificationRepository {
 	public Notification save(Notification notification) {
 		Notification build = Notification.builder()
 			.id(sequence.incrementAndGet())
-			.lecture(notification.getLecture())
+			.user(notification.getUser())
 			.title(notification.getTitle())
 			.contents(notification.getContents())
 			.build();
@@ -27,9 +26,16 @@ public class FakeNotificationRepository implements NotificationRepository {
 	}
 
 	@Override
-	public Optional<Notification> findByLectureId(Long lectureId) {
+	public List<Notification> findByUserId(Long lectureId) {
 		return data.stream()
-			.filter(n -> n.getLecture().getId().equals(lectureId))
-			.findAny();
+			.filter(n -> n.getUser().getId().equals(lectureId))
+			.toList();
+	}
+
+	@Override
+	public List<Notification> findByUserIdIsNull() {
+		return data.stream()
+			.filter(n -> n.getUser() == null)
+			.toList();
 	}
 }

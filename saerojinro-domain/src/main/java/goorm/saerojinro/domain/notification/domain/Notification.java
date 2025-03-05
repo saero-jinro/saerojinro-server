@@ -1,7 +1,7 @@
 package goorm.saerojinro.domain.notification.domain;
 
 import goorm.saerojinro.common.domain.BaseTimeEntity;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,8 +30,8 @@ public class Notification extends BaseTimeEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lecture_id", nullable = false, updatable = false)
-	private Lecture lecture;
+	@JoinColumn(name = "user_id", updatable = false)
+	private User user;
 
 	@Column(nullable = false)
 	private String title;
@@ -39,9 +39,9 @@ public class Notification extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String contents;
 
-	public static Notification createNotification(Lecture lecture, String title, String contents) {
+	public static Notification createNotification(User user, String title, String contents) {
 		return Notification.builder()
-			.lecture(lecture)
+			.user(user)
 			.title(title)
 			.contents(contents)
 			.build();

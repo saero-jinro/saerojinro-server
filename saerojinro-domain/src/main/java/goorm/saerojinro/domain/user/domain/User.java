@@ -10,7 +10,6 @@ import static lombok.AccessLevel.PROTECTED;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,7 +40,7 @@ import lombok.NoArgsConstructor;
 public class User extends BaseTimeEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column(unique = true)
 	private String oauthIdentity;
