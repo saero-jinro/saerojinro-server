@@ -54,7 +54,12 @@ public class FakeUserRepository implements UserRepository {
 			return data.stream().filter(u -> u.getId() == userId).findAny();
 		}
 	}
-  
+
+	@Override
+	public void delete(User user) {
+		data.remove(user);
+	}
+
 	private boolean isValidSocialUser(User user) {
 		return user.getOauthIdentity() != null && user.getProvider() != null;
 	}
