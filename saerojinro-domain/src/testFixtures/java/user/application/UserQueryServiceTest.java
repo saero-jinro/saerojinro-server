@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
+import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import mock.repository.FakeUserRepository;
 
@@ -133,5 +134,17 @@ public class UserQueryServiceTest {
 		assertEquals("박민준", result.getName());
 		assertEquals("email@email.com", result.getEmail());
 		assertEquals(ADMIN, result.getRole());
+	}
+
+	@Test
+	@DisplayName("me는 현재 로그인이 안되어있는 상태에서 호출 시 UserNotAuthenticatiedException을 발생시킨다")
+	public void me_Throws_NotAuthenticated_ThrowsException() {
+		// given
+		SecurityContextHolder.clearContext();
+
+		// when
+		// then
+		assertThatThrownBy(() -> userQueryService.me())
+			.isInstanceOf(UserNotAuthenticatedException.class);
 	}
 }
