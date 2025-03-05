@@ -1,8 +1,11 @@
 package goorm.saerojinro.domain.reissue.domain;
 
+import java.util.Objects;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +25,9 @@ public class RefreshToken {
 			.id(id)
 			.refreshToken(refreshToken)
 			.build();
+	}
+
+	public boolean validateRefreshToken(String refreshToken) {
+		return Objects.equals(this.refreshToken, refreshToken);
 	}
 }

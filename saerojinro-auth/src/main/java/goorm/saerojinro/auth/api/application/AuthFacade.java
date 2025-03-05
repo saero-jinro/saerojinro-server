@@ -1,10 +1,13 @@
 package goorm.saerojinro.auth.api.application;
 
+import java.time.Duration;
+
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
+import goorm.saerojinro.auth.api.presentation.request.ReissueRequest;
 import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
 import goorm.saerojinro.auth.social.dto.SocialUserProfile;
@@ -59,7 +62,16 @@ public class AuthFacade {
 		return JwtResponse.of(accessToken, refreshToken);
 	}
 
-	public JwtResponse reissue() {
+	public JwtResponse reissue(ReissueRequest request) {
+		User user = userQueryService.me();
+		Long id = user.getId();
+		refreshTokenService.validate(id, request.refreshToken());
 
+		String email = user.getEmail();
+		BaseRole role = user.getRole();
+		String refreshToken = jwtProvider.generateAccessToken(email, role);
+		String accessToken = jwtProvider.generateAccessToken(email, role);
+		refreshTokenService.save(id, refreshToken);
+		return JwtResponse.of(accessToken, refreshToken);
 	}
 }
