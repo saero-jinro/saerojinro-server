@@ -35,8 +35,10 @@ public class NotificationQueryServiceTest {
 	@Test
 	@DisplayName("findByUserId는 notification을 조회한다")
 	public void findByUserId_Success() {
+		// when
 		Notification notification = notificationQueryService.findByUserId(USER_ID).get(0);
 
+		// then
 		assertEquals(1L, notification.getId());
 		assertEquals(TITLE, notification.getTitle());
 		assertEquals(CONTENTS, notification.getContents());
@@ -45,7 +47,10 @@ public class NotificationQueryServiceTest {
 	@Test
 	@DisplayName("findByUserId는 userId가 존재하지 않을 때 빈 리스트를 반환한다")
 	public void findByUserId_return_Empty() {
+		// when
 		List<Notification> notifications = notificationQueryService.findByUserId(100L);
+
+		// then
 		assertEquals(0, notifications.size());
 	}
 }

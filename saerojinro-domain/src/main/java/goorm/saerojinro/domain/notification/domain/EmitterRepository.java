@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 public interface EmitterRepository {
-	SseEmitter save(Long id, SseEmitter emitter);
+	SseEmitter save(Long id);
 
 	Optional<SseEmitter> findById(Long id);
 

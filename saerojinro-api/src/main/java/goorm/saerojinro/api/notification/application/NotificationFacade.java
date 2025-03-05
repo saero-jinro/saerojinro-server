@@ -8,6 +8,9 @@ import goorm.saerojinro.domain.notification.application.NotificationCommandServi
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
+import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
+import goorm.saerojinro.domain.reservation.domain.Reservation;
+import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,23 +26,27 @@ public class NotificationFacade {
 	private final NotificationCommandService notificationCommandService;
 	private final NotificationQueryService notificationQueryService;
 	private final EmitterRepository emitterRepository;
+	private final UserQueryService userQueryService;
+	private final ReservationQueryService reservationQueryService;
 
 	public SseEmitter subscribe() {
-		// TODO 현재 로그인한 유저 가져오기
-		User user = User.builder().id(1L).build();
-		SseEmitter emitter = new SseEmitter();
-		return emitterRepository.save(user.getId(), emitter);
-	}
-
-	public void sendNotificationByLectureIdWithRequest(Long lectureId, NotificationSendRequest request) {
-		// TODO lectureId -> lecture -> 예약 -> 예약한 유저 리스트 -> iteration -> sendNotificationWithRequest
+		User user = userQueryService.me();
+		return emitterRepository.save(user.getId());
 	}
 
 	@Transactional
-	public void sendNotificationWithRequest(Long receiverId, NotificationSendRequest request) {
+	public void sendNotificationByLectureId(Long lectureId, NotificationSendRequest request) {
+		List<Reservation> reservationList = reservationQueryService.getAllByLectureId(lectureId);
+		for (Reservation reservation : reservationList) {
+			Long receiverId = reservation.getUser().getId();
+			sendNotificationByReceiverId(receiverId, request);
+		}
+	}
+
+	@Transactional
+	public void sendNotificationByReceiverId(Long receiverId, NotificationSendRequest request) {
 		Notification notification = Notification.createNotification(
-			// TODO userService에서 아이디로 조회
-			User.builder().id(receiverId).build(),
+			userQueryService.getById(receiverId),
 			request.title(),
 			request.contents()
 		);
@@ -84,9 +91,7 @@ public class NotificationFacade {
 
 	@Transactional(readOnly = true)
 	public ReceivedNotificationListResponse myNotification() {
-		// TODO 현재 로그인한 유저 가져오기
-		User user = User.builder().id(1L).build();
-
+		User user = userQueryService.me();
 		List<Notification> notificationList = notificationQueryService.findByUserId(user.getId());
 		return ReceivedNotificationListResponse.from(notificationList);
 	}

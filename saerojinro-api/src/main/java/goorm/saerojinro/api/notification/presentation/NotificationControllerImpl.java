@@ -47,7 +47,7 @@ public class NotificationControllerImpl implements NotificationController {
 	public ResponseEntity<Void> sendByLecture(
 		@PathVariable Long lectureId,
 		@RequestBody NotificationSendRequest request) {
-		notificationFacade.sendNotificationByLectureIdWithRequest(lectureId, request);
+		notificationFacade.sendNotificationByLectureId(lectureId, request);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -56,7 +56,7 @@ public class NotificationControllerImpl implements NotificationController {
 	public ResponseEntity<Void> sendByUserId(
 		@PathVariable Long userId,
 		@RequestBody NotificationSendRequest request) {
-		notificationFacade.sendNotificationWithRequest(userId, request);
+		notificationFacade.sendNotificationByReceiverId(userId, request);
 		return ResponseEntity.noContent().build();
 	}
 }

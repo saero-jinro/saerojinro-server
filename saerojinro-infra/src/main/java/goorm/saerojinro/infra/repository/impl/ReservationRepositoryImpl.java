@@ -40,4 +40,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public void delete(Reservation reservation) {
         reservationJpaRepository.delete(reservation);
     }
+
+    @Override
+    public List<Reservation> findAllByLectureId(Long lectureId) {
+        return reservationJpaRepository.findAllByLectureId(lectureId);
+    }
 }
