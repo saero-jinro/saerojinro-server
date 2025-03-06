@@ -23,7 +23,7 @@ public class Lecture extends BaseTimeEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "speaker_id", nullable = false, insertable = false)
+	@JoinColumn(name = "speaker_id", nullable = false)
 	private User speaker;
 
 	@Column(nullable = false, unique = true)
@@ -44,9 +44,11 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String location;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Category category;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
