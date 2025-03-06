@@ -135,6 +135,6 @@ public class AuthFacadeTest {
 
 		// then
 		assertTrue(fakeRefreshTokenRepository.findByRefreshToken("REFRESH_TOKEN").isEmpty());
-		assertTrue(fakeBlackListRepository.existsById("test-access-token"));
+		assertTrue(fakeBlackListRepository.isBlackListed("test-access-token"));
 	}
 }

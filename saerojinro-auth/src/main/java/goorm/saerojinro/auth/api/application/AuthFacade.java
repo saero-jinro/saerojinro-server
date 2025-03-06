@@ -78,6 +78,7 @@ public class AuthFacade {
 		User user = userQueryService.me();
 		refreshTokenService.deleteById(user.getId());
 		String accessToken = jwtProvider.extractAccessToken(request);
-		blackListService.add(accessToken);
+		Long ttlInSecond = jwtProvider.getRemainingExpiration(accessToken);
+		blackListService.add(accessToken, ttlInSecond);
 	}
 }

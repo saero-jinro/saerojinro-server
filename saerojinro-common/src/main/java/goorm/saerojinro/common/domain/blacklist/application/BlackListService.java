@@ -2,7 +2,6 @@ package goorm.saerojinro.common.domain.blacklist.application;
 
 import org.springframework.stereotype.Service;
 
-import goorm.saerojinro.common.domain.blacklist.domain.BlackList;
 import goorm.saerojinro.common.domain.blacklist.domain.BlackListRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -11,12 +10,11 @@ import lombok.RequiredArgsConstructor;
 public class BlackListService {
 	private final BlackListRepository blackListRepository;
 
-	public void add(String accessToken) {
-		BlackList blackList = BlackList.of(accessToken);
-		blackListRepository.save(blackList);
+	public void add(String accessToken, Long ttlInSecond) {
+		blackListRepository.add(accessToken, ttlInSecond);
 	}
 
 	public boolean isBlackListed(String accessToken) {
-		return blackListRepository.existsById(accessToken);
+		return blackListRepository.isBlackListed(accessToken);
 	}
 }

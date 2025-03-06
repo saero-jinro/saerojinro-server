@@ -1,7 +1,7 @@
 package goorm.saerojinro.common.domain.blacklist.domain;
 
 public interface BlackListRepository {
-	void save(BlackList blackList);
+	void add(String accessToken, Long ttlInSecond);
 
-	boolean existsById(String accessToken);
+	boolean isBlackListed(String accessToken);
 }

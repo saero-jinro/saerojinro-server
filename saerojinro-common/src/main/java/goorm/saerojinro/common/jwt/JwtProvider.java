@@ -116,4 +116,10 @@ public class JwtProvider {
 			.parseClaimsJws(token)
 			.getBody();
 	}
+
+	public Long getRemainingExpiration(String accessToken) {
+		Claims claims = getClaims(accessToken);
+		Date expiration = claims.getExpiration();
+		return (expiration.getTime() - System.currentTimeMillis()) / 1000;
+	}
 }
