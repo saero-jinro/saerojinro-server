@@ -1,14 +1,15 @@
-package goorm.saerojinro.auth.presentation;
+package goorm.saerojinro.auth.api.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import goorm.saerojinro.auth.application.AuthFacade;
-import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
-import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
-import goorm.saerojinro.auth.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.application.AuthFacade;
+import goorm.saerojinro.auth.api.presentation.request.ReissueRequest;
+import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
+import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,6 +29,13 @@ public class AuthControllerImpl implements AuthController {
 	@PostMapping("/kakao/login")
 	public ResponseEntity<JwtResponse> kakaoSocialLogin(SocialLoginRequest request) {
 		JwtResponse response = authFacade.kakaoSocialLogin(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@PostMapping("/reissue")
+	public ResponseEntity<JwtResponse> reissue(ReissueRequest request) {
+		JwtResponse response = authFacade.reissue(request);
 		return ResponseEntity.ok(response);
 	}
 }

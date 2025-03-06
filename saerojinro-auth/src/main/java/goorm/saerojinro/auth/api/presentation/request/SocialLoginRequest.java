@@ -1,4 +1,4 @@
-package goorm.saerojinro.auth.presentation.request;
+package goorm.saerojinro.auth.api.presentation.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 

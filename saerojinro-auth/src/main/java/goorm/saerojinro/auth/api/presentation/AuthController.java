@@ -1,11 +1,12 @@
-package goorm.saerojinro.auth.presentation;
+package goorm.saerojinro.auth.api.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import goorm.saerojinro.auth.presentation.request.EmailLoginRequest;
-import goorm.saerojinro.auth.presentation.request.SocialLoginRequest;
-import goorm.saerojinro.auth.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.ReissueRequest;
+import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
+import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
+import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,8 +40,22 @@ public interface AuthController {
 		content = @Content(schema = @Schema(implementation = JwtResponse.class)))
 	ResponseEntity<JwtResponse> kakaoSocialLogin(
 		@Parameter(
-			description = "이메일 로그인 request 객체 입니다.",
+			description = "소셜 로그인 request 객체 입니다.",
 			required = true
 		) @Valid @RequestBody SocialLoginRequest request
+	);
+
+	@Operation(summary = "AT 재발행 API", description = """
+			- Description : 이 API는 RereshToken을 입력 받아 AccessToken을 재발급 처리합니다.
+			- Assignee : 박민준
+		""")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = JwtResponse.class)))
+	ResponseEntity<JwtResponse> reissue(
+		@Parameter(
+			description = "Refresh Token을 request 객체에 담으면 Access Token이 재발급 됩니다.",
+			required = true
+		) @Valid @RequestBody ReissueRequest request
 	);
 }

@@ -38,11 +38,6 @@ public class JwtProvider {
 		return makeToken(new Date(now.getTime() + Duration.ofHours(1).toMillis()), email, role);
 	}
 
-	public String generateRefreshToken(String email, BaseRole role) {
-		Date now = new Date();
-		return makeToken(new Date(now.getTime() + Duration.ofDays(1).toMillis()), email, role);
-	}
-
 	private String makeToken(Date expiry, String email, BaseRole role) {
 		Date now = new Date();
 
@@ -98,8 +93,8 @@ public class JwtProvider {
 
 		return switch (role) {
 			case "ADMIN" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			case "PAID_USER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_PAID_USER"));
-			case "USER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+			case "SPEAKER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_SPEAKER"));
+			case "ATTENDEE" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_ATTENDEE"));
 			default -> throw new JwtInvalidException();
 		};
 	}
