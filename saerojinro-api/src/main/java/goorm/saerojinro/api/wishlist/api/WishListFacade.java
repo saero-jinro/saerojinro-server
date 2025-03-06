@@ -22,26 +22,33 @@ public class WishListFacade {
     private final LectureQueryService lectureQueryService;
 
     public WishListResponse getAllWishList(Long userId){
-        User user = userQueryService.getById(userId);
+        User user = getUser(userId);
 
         List<WishList> wishLists = wishListQueryService.getAllByUser(user);
         return WishListResponse.from(wishLists);
     }
     public WishListCreateResponse create(Long userId, Long lectureId){
-        User user = userQueryService.getById(userId);
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
+        User user = getUser(userId);
+        Lecture lecture = getLecture(lectureId);
 
         WishList wishList = wishListCommandService.create(user, lecture);
         return WishListCreateResponse.from(wishList);
     }
 
     public WishListDeleteResponse delete(Long userId, Long lectureId){
-        User user = userQueryService.getById(userId);
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
+        User user = getUser(userId);
+        Lecture lecture = getLecture(lectureId);
 
         WishList wishList = wishListQueryService.getByUserAndLecture(user, lecture);
         wishListCommandService.delete(wishList);
         return WishListDeleteResponse.from(wishList);
     }
 
+    private User getUser(Long userId) {
+        return userQueryService.getById(userId);
+    }
+
+    private Lecture getLecture(Long lectureId) {
+        return lectureQueryService.getByLectureId(lectureId);
+    }
 }
