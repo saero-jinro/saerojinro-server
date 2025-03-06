@@ -1,19 +1,22 @@
 package goorm.saerojinro.api.lecture.presentation.response;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.user.domain.User;
 import lombok.Builder;
 
 @Builder
 public record LectureResponse(
 	String title,
-	User speaker
-	// TODO 썸네일 필요시 추가 ?
+	Category category,
+
+	//speaker
+	String speakerName
 ) {
 	public static LectureResponse from(Lecture lecture) {
 		return LectureResponse.builder()
 			.title(lecture.getTitle())
-			.speaker(lecture.getSpeaker())
+			.category(lecture.getCategory())
+			.speakerName(lecture.getSpeaker().getName())
 			.build();
 	}
 }
