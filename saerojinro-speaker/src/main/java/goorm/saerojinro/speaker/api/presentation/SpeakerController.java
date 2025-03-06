@@ -47,7 +47,7 @@ public interface SpeakerController {
 		description = "강의를 삭제합니다",
 		responses = {
 			@ApiResponse(
-				responseCode = "200"
+				responseCode = "204"
 			)
 		}
 	)
