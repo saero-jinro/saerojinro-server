@@ -1,7 +1,5 @@
 package goorm.saerojinro.domain.reissue.domain;
 
-import java.util.Objects;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
