@@ -27,8 +27,8 @@ public class WishListRepositoryImpl implements WishListRepository {
     }
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture) {
-        return wishListJpaRepository.existByUserAndLecture(user, lecture);
+    public boolean existsByUserAndLecture(User user, Lecture lecture) {
+        return wishListJpaRepository.existsByUserAndLecture(user, lecture);
     }
 
     @Override
