@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
-import goorm.saerojinro.domain.reissue.domain.RefreshTokenRepository;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshTokenRepository;
 
 public class FakeRefreshTokenRepository implements RefreshTokenRepository {
 	private final Map<Long, RefreshToken> data = new ConcurrentHashMap<>();

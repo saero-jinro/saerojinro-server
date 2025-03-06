@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.reissue.domain;
+package goorm.saerojinro.common.domain.reissue.domain;
 
 import java.util.Optional;
 

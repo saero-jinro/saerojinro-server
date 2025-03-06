@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.reissue.exception;
+package goorm.saerojinro.common.domain.reissue.exception;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 

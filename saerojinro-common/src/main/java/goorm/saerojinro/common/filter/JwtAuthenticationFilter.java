@@ -6,6 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import goorm.saerojinro.common.domain.blacklist.application.BlackListService;
+import goorm.saerojinro.common.domain.blacklist.exception.BlackListedTokenException;
 import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.common.exception.ExceptionResponse;
 import goorm.saerojinro.common.jwt.JwtProvider;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtProvider jwtProvider;
+	private final BlackListService blackListService;
 
 	@Override
 	protected void doFilterInternal(
@@ -25,6 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	) throws ServletException, IOException {
 		try {
 			String token = jwtProvider.extractAccessToken(request);
+			if (blackListService.isBlackListed(token)) {
+				throw new BlackListedTokenException();
+			}
 			if (jwtProvider.validateToken(token)) {
 				Authentication authentication = jwtProvider.getAuthentication(token);
 				SecurityContextHolder.getContext().setAuthentication(authentication);

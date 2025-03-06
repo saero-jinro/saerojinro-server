@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
-import goorm.saerojinro.domain.reissue.domain.RefreshTokenRepository;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshTokenRepository;
 import goorm.saerojinro.infra.repository.redis.RedisRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 
