@@ -34,24 +34,6 @@ public class NotificationControllerImpl implements NotificationController {
 	}
 
 	@Override
-	@PostMapping("/send-all")
-	public ResponseEntity<Void> sendAll(
-		@RequestBody NotificationSendRequest request
-	) {
-		notificationFacade.sendNotificationAll(request);
-		return ResponseEntity.noContent().build();
-	}
-
-	@Override
-	@PostMapping("/send-lecture/{lectureId}")
-	public ResponseEntity<Void> sendByLecture(
-		@PathVariable Long lectureId,
-		@RequestBody NotificationSendRequest request) {
-		notificationFacade.sendNotificationByLectureId(lectureId, request);
-		return ResponseEntity.noContent().build();
-	}
-
-	@Override
 	@PostMapping("/send-user/{userId}")
 	public ResponseEntity<Void> sendByUserId(
 		@PathVariable Long userId,

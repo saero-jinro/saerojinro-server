@@ -36,32 +36,6 @@ public interface NotificationController {
 		content = @Content(schema = @Schema(implementation = ReceivedNotificationListResponse.class)))
 	ResponseEntity<ReceivedNotificationListResponse> myNotifications();
 
-	// TODO 추후 Admin 모듈로 분리 예정
-	@Operation(summary = "전체 알림 전송 API", description = """
-			- Description : 이 API는 모든 사용자에게 알림을 전송합니다
-			- Assignee : 이신행
-		""")
-	@ApiResponse(responseCode = "204")
-	ResponseEntity<Void> sendAll(
-		@Parameter(
-			description = "전체 알림 request 객체 입니다",
-			required = true
-		) @Valid @RequestBody NotificationSendRequest sendRequest
-	);
-
-	@Operation(summary = "강의 기준 알림 전송 API", description = """
-			- Description : 이 API는 강의를 예약한 사용자에게 알림을 전송합니다
-			- Assignee : 이신행
-		""")
-	@ApiResponse(responseCode = "204")
-	ResponseEntity<Void> sendByLecture(
-		@PathVariable Long lectureId,
-		@Parameter(
-			description = "전체 알림 request 객체 입니다",
-			required = true
-		) @Valid @RequestBody NotificationSendRequest sendRequest
-	);
-
 	@Operation(summary = "개별 알림 전송 API", description = """
 			- Description : 이 API는 특정 사용자에게 알림을 전송합니다
 			- Assignee : 이신행
