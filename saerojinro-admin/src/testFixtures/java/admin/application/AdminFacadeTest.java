@@ -1,5 +1,6 @@
 package admin.application;
 
+import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,13 +10,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import goorm.saerojinro.admin.api.application.AdminFacade;
 import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
+import goorm.saerojinro.admin.api.presentation.request.RoleUpdateRequest;
 import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
+import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeUserRepository;
 
 public class AdminFacadeTest {
 	private AdminFacade adminFacade;
+	private User user;
 
 	@BeforeEach
 	public void init() {
@@ -25,11 +30,19 @@ public class AdminFacadeTest {
 			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder),
 			new UserQueryService(fakeUserRepository, bCryptPasswordEncoder)
 		);
+
+		user = fakeUserRepository.save(
+			User.createKakaoUser(
+				"identity",
+				"name",
+				"email@email.com",
+				"profile.img")
+		);
 	}
 
 	@Test
 	@DisplayName("createAdmin은 새로운 관리자를 등록한다.")
-	public void createAdmin() {
+	public void createAdmin_Success() {
 		// given
 		AdminCreateRequest request = new AdminCreateRequest(
 			"password", "name", "email"
@@ -40,5 +53,21 @@ public class AdminFacadeTest {
 
 		// then
 		assertEquals(1L, response.id());
+	}
+
+	@Test
+	@DisplayName("updateRole은 유저의 권한을 수정한다.")
+	public void updateRole_Success() {
+		// given
+		BaseRole updatedRole = SPEAKER;
+		RoleUpdateRequest request = RoleUpdateRequest.builder()
+			.permission(updatedRole)
+			.build();
+
+		// when
+		adminFacade.updateRole(user.getId(), request);
+
+		// then
+		assertEquals(updatedRole, user.getRole());
 	}
 }
