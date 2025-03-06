@@ -21,4 +21,9 @@ public class FakeRefreshTokenRepository implements RefreshTokenRepository {
 	public void save(RefreshToken refreshToken) {
 		data.put(refreshToken.getId(), refreshToken); // userId 기반 저장
 	}
+
+	@Override
+	public void deleteById(Long id) {
+		data.remove(id);
+	}
 }
