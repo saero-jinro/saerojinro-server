@@ -24,35 +24,48 @@ public class NotificationEventHandler {
 		}
 	}
 
-	// TODO 전체 공지나 강의 공지는 사용자에게서 내용을 받아와야함
 	private void broadcastNotice(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of(event.title(), event.contents());
-		notificationFacade.sendNotificationAll(request);
+		notificationFacade.sendNotificationAll(makeNotice(event));
 	}
 
 	private void lectureNotice(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of(event.title(), event.contents());
-		notificationFacade.sendNotificationByLectureId(event.lectureId(), request);
+		notificationFacade.sendNotificationByLectureId(event.lectureId(), makeNotice(event));
 	}
 
-	// TODO 생성에 대한 알림은 내부에서 만들거어서 보낼 수 있음
 	private void speakerCreated(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of("", "");
+		NotificationSendRequest request = NotificationSendRequest.of(
+			"강연자 승인 요청",
+			"강연자 승인 요청이 발생했습니다"
+		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
 
 	private void speakerApproved(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of("", "");
+		NotificationSendRequest request = NotificationSendRequest.of(
+			"강연자 승인",
+			"강연자 승인이 완료되어 강연자 권한을 획득했습니다"
+		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
 
 	private void lectureCreated(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of("", "");
+		NotificationSendRequest request = NotificationSendRequest.of(
+			"강의 등록 승인 요청",
+			"강의 등록 승인 요청이 발생했습니다"
+		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
 
 	private void lectureApproved(CommonEvent event) {
-		NotificationSendRequest request = NotificationSendRequest.of("", "");
+		NotificationSendRequest request = NotificationSendRequest.of(
+			"강의 등록 승인",
+			"강의 등록 승인이 완료되었습니다"
+		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
+	}
+
+	private NotificationSendRequest makeNotice(CommonEvent event) {
+		String title = "[" + event.eventType().getDescription() + "]" + event.title();
+		return NotificationSendRequest.of(title, event.contents());
 	}
 }

@@ -1,7 +1,9 @@
 package goorm.saerojinro.common.event;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public enum EventType {
 	BROADCAST_NOTICE("전체 공지"),
