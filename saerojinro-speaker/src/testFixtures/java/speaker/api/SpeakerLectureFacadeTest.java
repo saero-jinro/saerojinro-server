@@ -6,7 +6,9 @@ import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
+import goorm.saerojinro.domain.lecture.enums.LectureStatus;
+import goorm.saerojinro.domain.lecture.exception.LectureDeleteNotAuthorizedException;
+import goorm.saerojinro.domain.lecture.exception.LectureUpdateNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.speaker.api.application.SpeakerLectureFacade;
@@ -113,7 +115,7 @@ public class SpeakerLectureFacadeTest {
 		speakerLectureFacade.update(VALID_SPEAKER_ID, lectureId, updateRequest);
 
 		// 강연자가 일치하지 않을 경우 예외 반환
-		Assertions.assertThrows(SpeakerMissmatchException.class, () ->
+		Assertions.assertThrows(LectureUpdateNotAuthorizedException.class, () ->
 			speakerLectureFacade.update(2L, lectureId, updateRequest)
 		);
 
@@ -128,5 +130,38 @@ public class SpeakerLectureFacadeTest {
 		assertEquals(LOCATION, updatedLecture.getLocation());
 		assertEquals(CATEGORY, updatedLecture.getCategory());
 		assertEquals(VALID_SPEAKER.getId(), updatedLecture.getSpeaker().getId());
+	}
+
+	@Test
+	@DisplayName("정상적으로 강의를 삭제한다")
+	void deleteLecture_success() {
+		// given
+		LectureCreateRequest createRequest = LectureCreateRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.build();
+
+		LectureCreateResponse createResponse = speakerLectureFacade.create(VALID_SPEAKER_ID, createRequest);
+		Long lectureId = createResponse.lectureId();
+
+		// when
+		speakerLectureFacade.delete(VALID_SPEAKER_ID, lectureId);
+
+		// 강연자가 일치하지 않을 경우 예외 반환
+		Assertions.assertThrows(LectureDeleteNotAuthorizedException.class, () ->
+			speakerLectureFacade.delete((2L), createResponse.lectureId()
+			));
+
+
+		// then
+		Lecture deletedLecture = lectureRepository.findById(lectureId)
+			.orElseThrow();
+
+		assertEquals(LectureStatus.PENDING_DELETION, deletedLecture.getLectureStatus());
 	}
 }

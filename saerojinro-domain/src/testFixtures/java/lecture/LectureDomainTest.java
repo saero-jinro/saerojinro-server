@@ -4,7 +4,8 @@ import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
+import goorm.saerojinro.domain.lecture.exception.LectureDeleteNotAuthorizedException;
+import goorm.saerojinro.domain.lecture.exception.LectureUpdateNotAuthorizedException;
 import goorm.saerojinro.domain.user.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +14,13 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static goorm.saerojinro.common.domain.BaseRole.*;
+import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final User SPEAKER = User.builder()
+	private static final User TEST_SPEAKER = User.builder()
 		.id(1L)
 		.name("Test Speaker")
 		.role(BaseRole.SPEAKER)
@@ -30,14 +33,14 @@ class LectureDomainTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
-	private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
+	private static final LectureStatus STATUS = PENDING_APPROVAL;
 
 	private Lecture lecture;
 
 	@BeforeEach
 	void setUp() {
 		lecture = Lecture.create(
-			SPEAKER,
+			TEST_SPEAKER,
 			TITLE,
 			CONTENTS,
 			MAX_CAPACITY,
@@ -70,7 +73,7 @@ class LectureDomainTest {
 		String newContents = "Updated Contents";
 
 		// when
-		lecture.update(SPEAKER, newTitle, newContents);
+		lecture.update(TEST_SPEAKER, newTitle, newContents);
 
 		// then
 		assertEquals(newTitle, lecture.getTitle());
@@ -79,7 +82,7 @@ class LectureDomainTest {
 
 	@Test
 	@DisplayName("다른 강연자 or 운영자가 아닐 경우 강의 수정시 예외를 반환한다")
-	void SpeakerMissmatchException() {
+	void LectureUpdateNotAuthorizedException() {
 		// given
 		User wrongSpeaker = User.builder()
 			.id(2L)
@@ -88,7 +91,7 @@ class LectureDomainTest {
 			.build();
 
 		// when & then
-		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {
+		Assertions.assertThrows(LectureUpdateNotAuthorizedException.class, () -> {
 			lecture.update(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
 		});
 	}
@@ -100,7 +103,7 @@ class LectureDomainTest {
 		User admin = User.builder()
 			.id(999L)
 			.name("Admin")
-			.role(BaseRole.ADMIN)
+			.role(ADMIN)
 			.build();
 
 		// when
@@ -109,5 +112,53 @@ class LectureDomainTest {
 		//then
 		assertEquals("updated title", lecture.getTitle());
 		assertEquals("updated contents", lecture.getContents());
+	}
+
+	@Test
+	@DisplayName("운영자가 강의 삭제시 삭제 완료 상태로 변경된다")
+	void deleteLectureByAdmin_success() {
+		// given
+		User admin = User.builder()
+			.id(999L)
+			.name("Admin")
+			.role(ADMIN)
+			.build();
+
+		// when
+		lecture.requestDelete(admin);
+
+		//then
+		assertEquals(DELETED, lecture.getLectureStatus());
+	}
+
+	@Test
+	@DisplayName("강연자 본인이 강의 삭제시 삭제 대기 상태로 변경된다")
+	void deleteLectureByLecture_success() {
+		// given
+		User rightSpeaker = User.builder()
+			.id(1L)
+			.name("Right Speaker")
+			.role(SPEAKER)
+			.build();
+
+		// when
+		lecture.requestDelete(rightSpeaker);
+
+		//then
+		assertEquals(PENDING_DELETION, lecture.getLectureStatus());
+	}
+
+	@Test
+	@DisplayName("강연자 본인이 아닐시 예외가 발생한다")
+	void LectureDeleteNotAuthorizedException() {
+		// given
+		User wrongSpeaker = User.builder()
+			.id(2L)
+			.name("Wrong Speaker")
+			.role(SPEAKER)
+			.build();
+
+		// when & then
+		Assertions.assertThrows(LectureDeleteNotAuthorizedException.class, (() -> lecture.requestDelete(wrongSpeaker)));
 	}
 }
