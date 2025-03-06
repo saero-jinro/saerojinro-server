@@ -3,8 +3,7 @@ package goorm.saerojinro.domain.lecture.domain;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
-import goorm.saerojinro.domain.lecture.exception.LectureDeleteNotAuthorizedException;
-import goorm.saerojinro.domain.lecture.exception.LectureUpdateNotAuthorizedException;
+import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -88,13 +87,13 @@ public class Lecture extends BaseTimeEntity {
 		} else if (this.speaker.getId().equals(user.getId())) {
 			this.lectureStatus = PENDING_DELETION;
 		} else {
-			throw new LectureDeleteNotAuthorizedException();
+			throw new LectureNotAuthorizedException();
 		}
 	}
 
 	private void validateUpdatePermission(User speaker) {
 		if (!speaker.getRole().equals(ADMIN) && !(this.speaker.getId().equals(speaker.getId()))) {
-			throw new LectureUpdateNotAuthorizedException();
+			throw new LectureNotAuthorizedException();
 		}
 	}
 }

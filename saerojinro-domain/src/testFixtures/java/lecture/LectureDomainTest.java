@@ -4,8 +4,7 @@ import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.exception.LectureDeleteNotAuthorizedException;
-import goorm.saerojinro.domain.lecture.exception.LectureUpdateNotAuthorizedException;
+import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
 import goorm.saerojinro.domain.user.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,7 +90,7 @@ class LectureDomainTest {
 			.build();
 
 		// when & then
-		Assertions.assertThrows(LectureUpdateNotAuthorizedException.class, () -> {
+		Assertions.assertThrows(LectureNotAuthorizedException.class, () -> {
 			lecture.update(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
 		});
 	}
@@ -159,6 +158,6 @@ class LectureDomainTest {
 			.build();
 
 		// when & then
-		Assertions.assertThrows(LectureDeleteNotAuthorizedException.class, (() -> lecture.requestDelete(wrongSpeaker)));
+		Assertions.assertThrows(LectureNotAuthorizedException.class, (() -> lecture.requestDelete(wrongSpeaker)));
 	}
 }

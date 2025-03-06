@@ -7,8 +7,7 @@ import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
-import goorm.saerojinro.domain.lecture.exception.LectureDeleteNotAuthorizedException;
-import goorm.saerojinro.domain.lecture.exception.LectureUpdateNotAuthorizedException;
+import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.speaker.api.application.SpeakerLectureFacade;
@@ -115,7 +114,7 @@ public class SpeakerLectureFacadeTest {
 		speakerLectureFacade.update(VALID_SPEAKER_ID, lectureId, updateRequest);
 
 		// 강연자가 일치하지 않을 경우 예외 반환
-		Assertions.assertThrows(LectureUpdateNotAuthorizedException.class, () ->
+		Assertions.assertThrows(LectureNotAuthorizedException.class, () ->
 			speakerLectureFacade.update(2L, lectureId, updateRequest)
 		);
 
@@ -153,7 +152,7 @@ public class SpeakerLectureFacadeTest {
 		speakerLectureFacade.delete(VALID_SPEAKER_ID, lectureId);
 
 		// 강연자가 일치하지 않을 경우 예외 반환
-		Assertions.assertThrows(LectureDeleteNotAuthorizedException.class, () ->
+		Assertions.assertThrows(LectureNotAuthorizedException.class, () ->
 			speakerLectureFacade.delete((2L), createResponse.lectureId()
 			));
 
