@@ -1,6 +1,5 @@
 package notification.application;
 
-import goorm.saerojinro.admin.notification.application.NotificationAdminEventHandler;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
@@ -18,6 +17,8 @@ import goorm.saerojinro.infra.notification.application.NotificationFacade;
 import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
+import goorm.saerojinro.speaker.notification.application.NotificationSpeakerEventHandler;
+import goorm.saerojinro.speaker.notification.presentation.NotificationSpeakerController;
 import mock.repository.FakeNotificationRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
@@ -43,8 +44,8 @@ import static goorm.saerojinro.common.event.EventType.SPEAKER_CREATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class NotificationEventHandlerTest {
-	private NotificationAdminEventHandler notificationEventHandler;
+public class NotificationSpeakerEventHandlerTest {
+	private NotificationSpeakerEventHandler notificationEventHandler;
 	private NotificationRepository repository;
 	private CommonEvent event;
 	private final String TITLE = "title";
@@ -68,7 +69,7 @@ public class NotificationEventHandlerTest {
 		NotificationFacade notificationFacade = new NotificationFacade(
 			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
 
-		notificationEventHandler = new NotificationAdminEventHandler(notificationFacade);
+		notificationEventHandler = new NotificationSpeakerEventHandler(notificationFacade);
 
 		User userEntity = userRepository.save(User.builder()
 			.email("email@email.com")
