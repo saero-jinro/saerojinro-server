@@ -93,8 +93,8 @@ public class JwtProvider {
 
 		return switch (role) {
 			case "ADMIN" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			case "PAID_USER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_PAID_USER"));
-			case "USER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+			case "SPEAKER" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_SPEAKER"));
+			case "ATTENDEE" -> Collections.singleton(new SimpleGrantedAuthority("ROLE_ATTENDEE"));
 			default -> throw new JwtInvalidException();
 		};
 	}
