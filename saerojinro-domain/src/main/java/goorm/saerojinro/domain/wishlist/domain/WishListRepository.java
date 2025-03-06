@@ -12,7 +12,7 @@ public interface WishListRepository {
 
     Optional<WishList> findByUserAndLecture(User user, Lecture lecture);
 
-    boolean existByUserAndLecture(User user, Lecture lecture);
+    boolean existsByUserAndLecture(User user, Lecture lecture);
 
     WishList save(WishList wishList);
 

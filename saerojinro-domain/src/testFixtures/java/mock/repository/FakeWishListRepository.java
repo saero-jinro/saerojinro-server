@@ -31,7 +31,7 @@ public class FakeWishListRepository implements WishListRepository {
     }
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture) {
+    public boolean existsByUserAndLecture(User user, Lecture lecture) {
         return findByUserAndLecture(user, lecture).isPresent();
     }
 

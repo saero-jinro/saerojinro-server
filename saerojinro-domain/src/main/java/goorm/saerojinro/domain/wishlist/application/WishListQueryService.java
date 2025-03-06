@@ -25,6 +25,6 @@ public class WishListQueryService {
     }
 
     public boolean existCheck(User user, Lecture lecture){
-        return wishListRepository.existByUserAndLecture(user, lecture);
+        return wishListRepository.existsByUserAndLecture(user, lecture);
     }
 }

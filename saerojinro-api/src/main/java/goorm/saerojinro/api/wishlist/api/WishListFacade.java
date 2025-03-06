@@ -11,44 +11,47 @@ import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class WishListFacade {
-    private final WishListQueryService wishListQueryService;
-    private final WishListCommandService wishListCommandService;
-    private final UserQueryService userQueryService;
-    private final LectureQueryService lectureQueryService;
+	private final WishListQueryService wishListQueryService;
+	private final WishListCommandService wishListCommandService;
+	private final UserQueryService userQueryService;
+	private final LectureQueryService lectureQueryService;
 
-    public WishListResponse getAllWishList(Long userId){
-        User user = getUser(userId);
+	public WishListResponse getAllWishList(Long userId) {
+		User user = getUser(userId);
 
-        List<WishList> wishLists = wishListQueryService.getAllByUser(user);
-        return WishListResponse.from(wishLists);
-    }
-    public WishListCreateResponse create(Long userId, Long lectureId){
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+		List<WishList> wishLists = wishListQueryService.getAllByUser(user);
+		return WishListResponse.from(wishLists);
+	}
 
-        WishList wishList = wishListCommandService.create(user, lecture);
-        return WishListCreateResponse.from(wishList);
-    }
+	public WishListCreateResponse create(Long userId, Long lectureId) {
+		User user = getUser(userId);
+		Lecture lecture = getLecture(lectureId);
 
-    public WishListDeleteResponse delete(Long userId, Long lectureId){
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+		WishList wishList = wishListCommandService.create(user, lecture);
+		return WishListCreateResponse.from(wishList);
+	}
 
-        WishList wishList = wishListQueryService.getByUserAndLecture(user, lecture);
-        wishListCommandService.delete(wishList);
-        return WishListDeleteResponse.from(wishList);
-    }
+	public WishListDeleteResponse delete(Long userId, Long lectureId) {
+		User user = getUser(userId);
+		Lecture lecture = getLecture(lectureId);
 
-    private User getUser(Long userId) {
-        return userQueryService.getById(userId);
-    }
+		WishList wishList = wishListQueryService.getByUserAndLecture(user, lecture);
+		wishListCommandService.delete(wishList);
+		return WishListDeleteResponse.from(wishList);
+	}
 
-    private Lecture getLecture(Long lectureId) {
-        return lectureQueryService.getByLectureId(lectureId);
-    }
+	private User getUser(Long userId) {
+		return userQueryService.getById(userId);
+	}
+
+	private Lecture getLecture(Long lectureId) {
+		return lectureQueryService.getByLectureId(lectureId);
+	}
 }

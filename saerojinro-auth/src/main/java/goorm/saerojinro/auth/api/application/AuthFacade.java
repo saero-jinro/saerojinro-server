@@ -1,6 +1,5 @@
 package goorm.saerojinro.auth.api.application;
 
-import java.time.Duration;
 import java.util.UUID;
 
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
