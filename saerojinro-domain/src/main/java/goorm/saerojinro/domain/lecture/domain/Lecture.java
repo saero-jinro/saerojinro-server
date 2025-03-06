@@ -1,8 +1,10 @@
 package goorm.saerojinro.domain.lecture.domain;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
+import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,8 +50,8 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
-	public static Lecture createLecture(User speaker, String title, String contents, Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime,
-										String location, Category category) {
+	public static Lecture create(User speaker, String title, String contents, Long maxCapacity,
+										LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
 			.speaker(speaker)
 			.title(title)
@@ -61,5 +63,17 @@ public class Lecture extends BaseTimeEntity {
 			.category(category)
 			.lectureStatus(LectureStatus.PENDING_APPROVAL)
 			.build();
+	}
+
+	public void update(User speaker, String title, String contents) {
+		validateUpdatePermission(speaker);
+		this.title = title;
+		this.contents = contents;
+	}
+
+	private void validateUpdatePermission(User speaker) {
+		if (!speaker.getRole().equals(BaseRole.ADMIN) && !(this.speaker.getId().equals(speaker.getId()))) {
+			throw new SpeakerMissmatchException();
+		}
 	}
 }

@@ -4,7 +4,9 @@ import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
 import goorm.saerojinro.domain.user.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ class LectureDomainTest {
 
 	@BeforeEach
 	void setUp() {
-		lecture = Lecture.createLecture(
+		lecture = Lecture.create(
 			SPEAKER,
 			TITLE,
 			CONTENTS,
@@ -58,5 +60,54 @@ class LectureDomainTest {
 		assertEquals(LOCATION, lecture.getLocation());
 		assertEquals(CATEGORY, lecture.getCategory());
 		assertEquals(STATUS, lecture.getLectureStatus());
+	}
+
+	@Test
+	@DisplayName("Lecture를 성공적으로 수정한다")
+	void updateLecture_success() {
+		// given
+		String newTitle = "Updated Title";
+		String newContents = "Updated Contents";
+
+		// when
+		lecture.update(SPEAKER, newTitle, newContents);
+
+		// then
+		assertEquals(newTitle, lecture.getTitle());
+		assertEquals(newContents, lecture.getContents());
+	}
+
+	@Test
+	@DisplayName("다른 강연자 or 운영자가 아닐 경우 강의 수정시 예외를 반환한다")
+	void SpeakerMissmatchException() {
+		// given
+		User wrongSpeaker = User.builder()
+			.id(2L)
+			.name("Wrong Speaker")
+			.role(BaseRole.SPEAKER)
+			.build();
+
+		// when & then
+		Assertions.assertThrows(SpeakerMissmatchException.class, () -> {
+			lecture.update(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
+		});
+	}
+
+	@Test
+	@DisplayName("운영자가 강의를 수정을 할 수 있다")
+	void updateLectureByAdmin_success() {
+		// given
+		User admin = User.builder()
+			.id(999L)
+			.name("Admin")
+			.role(BaseRole.ADMIN)
+			.build();
+
+		// when
+		lecture.update(admin, "updated title", "updated contents");
+
+		//then
+		assertEquals("updated title", lecture.getTitle());
+		assertEquals("updated contents", lecture.getContents());
 	}
 }

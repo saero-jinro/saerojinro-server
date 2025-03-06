@@ -34,7 +34,7 @@ public class LectureQueryServiceTest {
 			.role(BaseRole.SPEAKER)
 			.build();
 
-		Lecture lecture1 = Lecture.createLecture(
+		Lecture lecture1 = Lecture.create(
 			SPEAKER,
 			"Lecture One",
 			"Content One",
@@ -45,7 +45,7 @@ public class LectureQueryServiceTest {
 			Category.BACKEND
 		);
 
-		Lecture lecture2 = Lecture.createLecture(
+		Lecture lecture2 = Lecture.create(
 			SPEAKER,
 			"Lecture Two",
 			"Content Two",
