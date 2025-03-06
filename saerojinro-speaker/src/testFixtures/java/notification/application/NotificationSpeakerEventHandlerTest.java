@@ -18,7 +18,6 @@ import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import goorm.saerojinro.speaker.notification.application.NotificationSpeakerEventHandler;
-import goorm.saerojinro.speaker.notification.presentation.NotificationSpeakerController;
 import mock.repository.FakeNotificationRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
@@ -35,11 +34,9 @@ import java.util.List;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.event.EventType.BROADCAST_NOTICE;
-import static goorm.saerojinro.common.event.EventType.LECTURE_APPROVED;
 import static goorm.saerojinro.common.event.EventType.LECTURE_CREATE;
 import static goorm.saerojinro.common.event.EventType.LECTURE_DELETE;
 import static goorm.saerojinro.common.event.EventType.LECTURE_NOTICE;
-import static goorm.saerojinro.common.event.EventType.SPEAKER_APPROVED;
 import static goorm.saerojinro.common.event.EventType.SPEAKER_CREATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -105,51 +102,23 @@ public class NotificationSpeakerEventHandlerTest {
 		CommonEvent event2 = CommonEvent.builder().eventType(LECTURE_NOTICE)
 			.lectureId(1L).title(TITLE).userId(1L).build();
 		CommonEvent event3 = CommonEvent.builder().eventType(SPEAKER_CREATE).userId(1L).build();
-		CommonEvent event4 = CommonEvent.builder().eventType(SPEAKER_APPROVED).userId(1L).build();
 		CommonEvent event5 = CommonEvent.builder().eventType(LECTURE_CREATE).userId(1L).build();
-		CommonEvent event6 = CommonEvent.builder().eventType(LECTURE_APPROVED).userId(1L).build();
 		CommonEvent event7 = CommonEvent.builder().eventType(LECTURE_DELETE).userId(1L).build();
 
+
 		// when
-		notificationEventHandler.handleEvent(event);
 		notificationEventHandler.handleEvent(event2);
 		notificationEventHandler.handleEvent(event3);
-		notificationEventHandler.handleEvent(event4);
 		notificationEventHandler.handleEvent(event5);
-		notificationEventHandler.handleEvent(event6);
 		notificationEventHandler.handleEvent(event7);
 
 		// then
-		List<Notification> all = repository.findByUserIdIsNull();
-		assertEquals(1, all.size());
-		assertNotNull(all);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, all.get(0).getTitle());
-
 		List<Notification> my = repository.findByUserId(1L);
-		assertEquals(6, my.size());
+		assertEquals(4, my.size());
 		assertEquals("[" + event2.eventType().getDescription() + "]" + TITLE, my.get(0).getTitle());
 		assertEquals("강연자 승인 요청", my.get(1).getTitle());
-		assertEquals("강연자 승인", my.get(2).getTitle());
-		assertEquals("강의 등록 요청", my.get(3).getTitle());
-		assertEquals("강의 등록 승인", my.get(4).getTitle());
-		assertEquals("강의 등록 승인", my.get(4).getTitle());
-		assertEquals("강의 삭제 요청", my.get(5).getTitle());
-	}
-
-	@Test
-	@DisplayName("broadcastNotice는 전체 알림을 전송할 수 있다.")
-	void broadcastNotice_Success() {
-		// given
-
-		// when
-		notificationEventHandler.broadcastNotice(event);
-
-		// then
-		List<Notification> notifications = repository.findByUserIdIsNull();
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
+		assertEquals("강의 등록 요청", my.get(2).getTitle());
+		assertEquals("강의 삭제 요청", my.get(3).getTitle());
 	}
 
 	@Test
@@ -187,23 +156,6 @@ public class NotificationSpeakerEventHandlerTest {
 	}
 
 	@Test
-	@DisplayName("speakerApproved는 강연자 생성 승인 알림을 전송할 수 있다.")
-	void speakerApproved_Success() {
-		// given
-
-		// when
-		notificationEventHandler.speakerApproved(event);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(1L);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-
-		assertEquals("강연자 승인", result.getTitle());
-		assertEquals("강연자 승인이 완료되어 강연자 권한을 획득했습니다", result.getContents());
-	}
-
-	@Test
 	@DisplayName("lectureCreated는 강의 생성 알림을 전송할 수 있다.")
 	void lectureCreated_Success() {
 		// given
@@ -218,22 +170,6 @@ public class NotificationSpeakerEventHandlerTest {
 
 		assertEquals("강의 등록 요청", result.getTitle());
 		assertEquals("강의 등록 요청이 발생했습니다", result.getContents());
-	}
-
-	@Test
-	@DisplayName("lectureApproved는 강의 생성 승인 알림을 전송할 수 있다.")
-	void lectureApproved_Success() {
-		// given
-		// when
-		notificationEventHandler.lectureApproved(event);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(1L);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-
-		assertEquals("강의 등록 승인", result.getTitle());
-		assertEquals("강의 등록 승인이 완료되었습니다", result.getContents());
 	}
 
 	@Test

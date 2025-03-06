@@ -21,7 +21,7 @@ public class NotificationAdminEventHandler {
 			case SPEAKER_APPROVED -> speakerApproved(event);
 			case LECTURE_CREATE -> lectureCreated(event);
 			case LECTURE_APPROVED -> lectureApproved(event);
-			case LECTURE_DELETE -> lectureDelete(event);
+			case LECTURE_DELETE -> lectureDeleted(event);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class NotificationAdminEventHandler {
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
 
-	private void lectureDelete(CommonEvent event) {
+	private void lectureDeleted(CommonEvent event) {
 		NotificationSendRequest request = NotificationSendRequest.of(
 			"강의 삭제 요청",
 			"강의 삭제 요청이 발생했습니다"
