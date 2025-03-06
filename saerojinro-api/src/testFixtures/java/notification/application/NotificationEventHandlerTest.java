@@ -1,8 +1,8 @@
 package notification.application;
 
 import goorm.saerojinro.api.notification.application.NotificationEventHandler;
-import goorm.saerojinro.api.notification.application.NotificationFacade;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
+import goorm.saerojinro.infra.notification.application.NotificationFacade;
+import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;

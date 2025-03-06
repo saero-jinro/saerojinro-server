@@ -1,4 +1,4 @@
-package goorm.saerojinro.api.notification.presentation.exception;
+package goorm.saerojinro.infra.notification.exception;
 
 import goorm.saerojinro.common.exception.CustomException;
 

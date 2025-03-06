@@ -1,8 +1,8 @@
 package goorm.saerojinro.api.notification.presentation;
 
-import goorm.saerojinro.api.notification.application.NotificationFacade;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
-import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.infra.notification.application.NotificationFacade;
+import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.infra.notification.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

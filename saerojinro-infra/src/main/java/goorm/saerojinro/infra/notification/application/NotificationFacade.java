@@ -1,8 +1,7 @@
-package goorm.saerojinro.api.notification.application;
+package goorm.saerojinro.infra.notification.application;
 
-import goorm.saerojinro.api.notification.presentation.exception.EmitterNotFoundException;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
-import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.infra.notification.exception.EmitterNotFoundException;
+import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
@@ -11,8 +10,9 @@ import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.infra.notification.response.ReceivedNotificationListResponse;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
-import goorm.saerojinro.infra.notification.sse.response.NotificationSendResponse;
+import goorm.saerojinro.infra.notification.response.NotificationSendResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
