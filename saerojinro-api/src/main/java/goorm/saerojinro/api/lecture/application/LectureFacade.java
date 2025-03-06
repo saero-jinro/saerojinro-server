@@ -28,8 +28,8 @@ public class LectureFacade {
 		return LectureDetailResponse.from(lecture);
 	}
 
-	public LectureListResponse getByDate(LocalDate day) {
-		List<LectureResponse> responses = lectureService.getByDate(day).stream()
+	public LectureListResponse getByDate(LocalDate localDate) {
+		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
 			.map(LectureResponse::from)
 			.toList();
 		return LectureListResponse.from(responses);

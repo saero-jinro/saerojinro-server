@@ -6,7 +6,7 @@ import goorm.saerojinro.infra.repository.jpa.LectureJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +31,8 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findByStartTime(LocalDate day) {
-		return lectureJpaRepository.findByStartTime(day);
+	public List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end){
+		return lectureJpaRepository.findByStartTimeBetween(start,end);
 	}
 
 	@Override

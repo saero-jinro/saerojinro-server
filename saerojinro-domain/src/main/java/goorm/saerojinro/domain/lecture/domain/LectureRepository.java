@@ -1,6 +1,6 @@
 package goorm.saerojinro.domain.lecture.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ public interface LectureRepository {
 
 	Optional<Lecture> findById(Long id);
 
-	List<Lecture> findByStartTime(LocalDate day);
+	List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 
 	void delete(Lecture lecture);
 }
