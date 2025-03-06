@@ -11,7 +11,9 @@ import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
+
 import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,7 +85,7 @@ public class LectureCommandServiceTest {
 		lectureCommandService.update(VALID_SPEAKER, findLecture.getId(), "updated title", "updated contents");
 
 		// then
- 		assertNotNull(createdLecture);
+		assertNotNull(createdLecture);
 
 		assertEquals(createdLecture.getId(), 1L);
 		assertEquals("updated title", createdLecture.getTitle());
@@ -95,5 +97,23 @@ public class LectureCommandServiceTest {
 		assertEquals(CATEGORY, createdLecture.getCategory());
 		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
 		assertEquals(createdLecture.getSpeaker(), VALID_SPEAKER);
+	}
+
+	@Test
+	@DisplayName("정상적으로 강의를 삭제한다")
+	void deleteLecture_success() {
+		//given
+		Lecture createdLecture = lectureCommandService.create(
+			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+		);
+
+		// when
+		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
+		lectureCommandService.delete(VALID_SPEAKER, findLecture.getId());
+
+		// then
+		assertNotNull(findLecture);
+
+		assertEquals(LectureStatus.PENDING_DELETION, findLecture.getLectureStatus());
 	}
 }

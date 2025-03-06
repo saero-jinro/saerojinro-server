@@ -40,4 +40,9 @@ public class SpeakerLectureFacade {
 			request.contents()
 		);
 	}
+
+	public void delete(Long speakerId, Long lectureId) {
+		User speaker = userQueryService.getById(speakerId);
+		lectureCommandService.delete(speaker, lectureId);
+	}
 }
