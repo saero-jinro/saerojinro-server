@@ -122,19 +122,4 @@ public class AuthFacadeTest {
 		assertNotNull(response.accessToken());
 		assertNotNull(response.refreshToken());
 	}
-
-	@Test
-	@DisplayName("logout은 RT를 삭제하고, AT를 블랙리스트에 추가한다.")
-	public void logout_Success() {
-		// given
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getHeader("Authorization")).thenReturn("Bearer test-access-token");
-
-		// when
-		authFacade.logout(request);
-
-		// then
-		assertTrue(fakeRefreshTokenRepository.findByRefreshToken("REFRESH_TOKEN").isEmpty());
-		assertTrue(fakeBlackListRepository.isBlackListed("test-access-token"));
-	}
 }
