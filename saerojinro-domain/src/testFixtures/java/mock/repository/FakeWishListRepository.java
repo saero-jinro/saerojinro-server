@@ -1,0 +1,52 @@
+package mock.repository;
+
+import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.wishlist.domain.WishList;
+import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
+public class FakeWishListRepository implements WishListRepository {
+    private final List<WishList> data = Collections.synchronizedList(new ArrayList<>());
+    private final AtomicLong sequence = new AtomicLong(1);
+
+    @Override
+    public List<WishList> findAllByUser(User user) {
+        return data.stream()
+                .filter( w -> w.getUser().getId().equals(user.getId()))
+                .toList();
+    }
+
+    @Override
+    public Optional<WishList> findByUserAndLecture(User user, Lecture lecture) {
+        return data.stream()
+                .filter( w -> w.getUser().getId().equals(user.getId()) &&
+                        w.getLecture().getId().equals(lecture.getId()))
+                .findFirst();
+    }
+
+    @Override
+    public boolean existByUserAndLecture(User user, Lecture lecture) {
+        return findByUserAndLecture(user, lecture).isPresent();
+    }
+
+    @Override
+    public WishList save(WishList wishList) {
+        WishList newWishList = WishList.builder()
+                .id(sequence.incrementAndGet())
+                .user(wishList.getUser())
+                .lecture(wishList.getLecture())
+                .build();
+
+        data.add(newWishList);
+        return newWishList;
+    }
+
+    @Override
+    public void delete(WishList wishList) { data.remove(wishList); }
+}
