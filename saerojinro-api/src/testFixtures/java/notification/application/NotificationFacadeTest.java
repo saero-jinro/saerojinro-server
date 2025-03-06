@@ -15,11 +15,11 @@ import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
+import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class NotificationFacadeTest {
 	private NotificationFacade notificationFacade;
 	private NotificationRepository repository;
-	private UserRepository userRepository;
 	private ReservationRepository reservationRepository;
 
 	private User user;
@@ -55,14 +54,16 @@ public class NotificationFacadeTest {
 		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		userRepository = new FakeUserRepository();
+		UserRepository userRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
 		reservationRepository = new FakeReservationRepository();
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
+		NotificationSseSender sseSender = new NotificationSseSender();
+
 		notificationFacade = new NotificationFacade(
-			commandService, queryService, emitterRepository, userQueryService, reservationQueryService);
+			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
 
 		user = userRepository.save(User.builder()
 			.email("email@email.com")
@@ -109,8 +110,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserId(user.getId());
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test
@@ -131,29 +132,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserId(receiverId);
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
-	}
-
-	@Test
-	@DisplayName("sendNotification는 알림을 전송한다")
-	void sendNotification_Success() {
-		// given
-		notificationFacade.subscribe();
-		Long receiverId = 1L;
-		Notification notification = Notification.createNotification(
-			userRepository.findById(1L).get(), TITLE, CONTENTS
-		);
-
-		// when
-		notificationFacade.sendNotification(receiverId, notification);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(receiverId);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 
@@ -174,8 +154,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserIdIsNull();
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test
@@ -184,10 +164,11 @@ public class NotificationFacadeTest {
 		// given
 		notificationFacade.subscribe();
 		Long receiverId = 1L;
-		Notification notification = Notification.createNotification(
-			userRepository.findById(1L).get(), TITLE, CONTENTS
-		);
-		notificationFacade.sendNotification(receiverId, notification);
+		NotificationSendRequest notification = NotificationSendRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.build();
+		notificationFacade.sendNotificationByReceiverId(receiverId, notification);
 
 		// when
 		ReceivedNotificationListResponse response = notificationFacade.myNotification();

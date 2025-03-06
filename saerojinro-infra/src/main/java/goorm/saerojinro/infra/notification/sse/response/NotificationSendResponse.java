@@ -1,4 +1,4 @@
-package goorm.saerojinro.api.notification.presentation.response;
+package goorm.saerojinro.infra.notification.sse.response;
 
 import goorm.saerojinro.domain.notification.domain.Notification;
 import lombok.Builder;

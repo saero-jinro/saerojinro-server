@@ -19,4 +19,10 @@ public record NotificationSendRequest(
 	@NotBlank
 	String contents
 ) {
+	public static NotificationSendRequest of(String title, String contents) {
+		return NotificationSendRequest.builder()
+			.title(title)
+			.contents(contents)
+			.build();
+	}
 }
