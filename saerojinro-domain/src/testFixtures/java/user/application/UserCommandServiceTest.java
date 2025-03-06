@@ -1,5 +1,6 @@
 package user.application;
 
+import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -125,5 +127,24 @@ public class UserCommandServiceTest {
 
 		// then
 		assertNotNull(user.getDeletedAt());
+	}
+
+	@Test
+	@DisplayName("updateRole은 유저의 권한을 수정한다.")
+	public void updateRole_Success() {
+		// given
+		String oauthIdentity = "kakao_12345";
+		String name = "박민준";
+		String email = "minjun@kakao.com";
+		String profileImage = "http://kakao.com/profile.png";
+
+		BaseRole updateRole = SPEAKER;
+		user = userCommandService.kakaoSocialLogin(oauthIdentity, name, email, profileImage);
+
+		// when
+		userCommandService.updateRole(user, updateRole);
+
+		// then
+		assertEquals(user.getRole(), updateRole);
 	}
 }
