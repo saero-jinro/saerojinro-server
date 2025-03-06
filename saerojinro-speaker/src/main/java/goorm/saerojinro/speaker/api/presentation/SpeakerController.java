@@ -1,8 +1,8 @@
-package goorm.saerojinro.speaker.presentation;
+package goorm.saerojinro.speaker.api.presentation;
 
-import goorm.saerojinro.speaker.presentation.request.LectureCreateRequest;
-import goorm.saerojinro.speaker.presentation.request.LectureUpdateRequest;
-import goorm.saerojinro.speaker.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.speaker.api.presentation.request.LectureUpdateRequest;
+import goorm.saerojinro.speaker.api.presentation.request.LectureCreateRequest;
+import goorm.saerojinro.speaker.api.presentation.response.LectureCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

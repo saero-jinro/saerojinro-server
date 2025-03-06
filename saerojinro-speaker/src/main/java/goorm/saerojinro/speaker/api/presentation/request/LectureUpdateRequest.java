@@ -1,4 +1,4 @@
-package goorm.saerojinro.speaker.presentation.request;
+package goorm.saerojinro.speaker.api.presentation.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

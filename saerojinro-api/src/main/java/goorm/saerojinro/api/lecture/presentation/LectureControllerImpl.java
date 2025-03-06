@@ -1,6 +1,6 @@
 package goorm.saerojinro.api.lecture.presentation;
 
-import goorm.saerojinro.api.lecture.api.LectureFacade;
+import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import lombok.RequiredArgsConstructor;

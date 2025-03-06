@@ -1,4 +1,4 @@
-package goorm.saerojinro.speaker.presentation.response;
+package goorm.saerojinro.speaker.api.presentation.response;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import lombok.Builder;

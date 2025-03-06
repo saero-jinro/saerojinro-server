@@ -1,4 +1,4 @@
-package goorm.saerojinro.api.lecture.api;
+package goorm.saerojinro.api.lecture.application;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
