@@ -26,12 +26,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class JwtProvider {
 	private final JwtProperties jwtProperties;
+	private final static String HEADER_AUTHORIZATION = "Authorization";
+	private final static String TOKEN_PREFIX = "Bearer ";
 
 	public String generateAccessToken(String email, BaseRole role) {
 		Date now = new Date();
@@ -99,9 +102,12 @@ public class JwtProvider {
 		};
 	}
 
-	public String getUserId(String token) {
-		Claims claims = getClaims(token);
-		return claims.getSubject();
+	public String extractAccessToken(HttpServletRequest request) {
+		String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
+		if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
+			return authorizationHeader.substring(TOKEN_PREFIX.length());
+		}
+		return null;
 	}
 
 	private Claims getClaims(String token) {
@@ -109,5 +115,11 @@ public class JwtProvider {
 			.setSigningKey(jwtProperties.getSecretKey())
 			.parseClaimsJws(token)
 			.getBody();
+	}
+
+	public Long getRemainingExpiration(String accessToken) {
+		Claims claims = getClaims(accessToken);
+		Date expiration = claims.getExpiration();
+		return (expiration.getTime() - System.currentTimeMillis()) / 1000;
 	}
 }

@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import goorm.saerojinro.common.domain.blacklist.application.BlackListService;
 import goorm.saerojinro.common.filter.JwtAuthenticationFilter;
 import goorm.saerojinro.common.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 	private final JwtProvider jwtProvider;
+	private final BlackListService blackListService;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -94,7 +96,7 @@ public class SecurityConfig {
 	}
 
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
-		return new JwtAuthenticationFilter(jwtProvider);
+		return new JwtAuthenticationFilter(jwtProvider, blackListService);
 	}
 
 	@Bean

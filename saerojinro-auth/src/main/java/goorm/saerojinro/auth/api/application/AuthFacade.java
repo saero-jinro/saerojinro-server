@@ -14,11 +14,13 @@ import goorm.saerojinro.auth.social.dto.SocialUserProfile;
 import goorm.saerojinro.auth.social.kakao.KakaoOidcTokenValidator;
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.jwt.JwtProvider;
-import goorm.saerojinro.domain.reissue.application.RefreshTokenService;
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.blacklist.application.BlackListService;
+import goorm.saerojinro.common.domain.reissue.application.RefreshTokenService;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -29,6 +31,7 @@ public class AuthFacade {
 	private final JwtProvider jwtProvider;
 	private final KakaoOidcTokenValidator kakaoOidcTokenValidator;
 	private final RefreshTokenService refreshTokenService;
+	private final BlackListService blackListService;
 
 	@Transactional(readOnly = true)
 	public JwtResponse emailLogin(EmailLoginRequest request) {
@@ -68,5 +71,14 @@ public class AuthFacade {
 		String accessToken = jwtProvider.generateAccessToken(email, role);
 		refreshTokenService.save(id, refreshToken);
 		return JwtResponse.of(accessToken, refreshToken);
+	}
+
+	@Transactional(readOnly = true)
+	public void logout(HttpServletRequest request) {
+		User user = userQueryService.me();
+		refreshTokenService.deleteById(user.getId());
+		String accessToken = jwtProvider.extractAccessToken(request);
+		Long ttlInSecond = jwtProvider.getRemainingExpiration(accessToken);
+		blackListService.add(accessToken, ttlInSecond);
 	}
 }

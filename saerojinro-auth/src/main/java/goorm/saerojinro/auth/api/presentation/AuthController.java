@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Tag(name = "Auth", description = "로그인 API")
@@ -57,5 +58,14 @@ public interface AuthController {
 			description = "Refresh Token을 request 객체에 담으면 Access Token이 재발급 됩니다.",
 			required = true
 		) @Valid @RequestBody ReissueRequest request
+	);
+
+	@Operation(summary = "로그아웃 API", description = """
+			- Description : 이 API는 로그인 되었던 유저의 토큰을 삭제합니다.
+			- Assignee : 박민준
+		""")
+	@ApiResponse(responseCode = "204")
+	ResponseEntity<Void> logout(
+		@Parameter(hidden = true) HttpServletRequest request
 	);
 }

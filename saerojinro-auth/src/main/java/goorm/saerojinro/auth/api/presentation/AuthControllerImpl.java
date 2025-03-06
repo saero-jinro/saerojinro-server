@@ -10,6 +10,7 @@ import goorm.saerojinro.auth.api.presentation.request.ReissueRequest;
 import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
 import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -37,5 +38,12 @@ public class AuthControllerImpl implements AuthController {
 	public ResponseEntity<JwtResponse> reissue(ReissueRequest request) {
 		JwtResponse response = authFacade.reissue(request);
 		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(HttpServletRequest request) {
+		authFacade.logout(request);
+		return ResponseEntity.noContent().build();
 	}
 }

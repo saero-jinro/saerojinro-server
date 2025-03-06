@@ -1,10 +1,10 @@
-package goorm.saerojinro.domain.reissue.application;
+package goorm.saerojinro.common.domain.reissue.application;
 
 import org.springframework.stereotype.Service;
 
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
-import goorm.saerojinro.domain.reissue.domain.RefreshTokenRepository;
-import goorm.saerojinro.domain.reissue.exception.RefreshTokenNotFoundException;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshTokenRepository;
+import goorm.saerojinro.common.domain.reissue.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,5 +19,9 @@ public class RefreshTokenService {
 
 	public void save(Long id, String refreshToken) {
 		refreshTokenRepository.save(RefreshToken.of(id, refreshToken));
+	}
+
+	public void deleteById(Long id) {
+		refreshTokenRepository.deleteById(id);
 	}
 }
