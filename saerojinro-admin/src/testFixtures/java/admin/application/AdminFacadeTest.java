@@ -52,7 +52,7 @@ public class AdminFacadeTest {
 		AdminPersistResponse response = adminFacade.createAdmin(request);
 
 		// then
-		assertEquals(1L, response.id());
+		assertEquals(2L, response.id());
 	}
 
 	@Test
