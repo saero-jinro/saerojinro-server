@@ -20,7 +20,6 @@ import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,8 +110,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserId(user.getId());
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test
@@ -133,8 +132,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserId(receiverId);
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 
@@ -155,8 +154,8 @@ public class NotificationFacadeTest {
 		List<Notification> notifications = repository.findByUserIdIsNull();
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		Assertions.assertEquals(TITLE, result.getTitle());
-		Assertions.assertEquals(CONTENTS, result.getContents());
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test

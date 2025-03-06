@@ -28,6 +28,7 @@ public class FakeNotificationRepository implements NotificationRepository {
 	@Override
 	public List<Notification> findByUserId(Long userId) {
 		return data.stream()
+			.filter(n -> n.getUser() != null)
 			.filter(n -> n.getUser().getId().equals(userId))
 			.toList();
 	}
