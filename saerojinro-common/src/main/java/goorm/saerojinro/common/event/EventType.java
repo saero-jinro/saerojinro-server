@@ -11,7 +11,8 @@ public enum EventType {
 	SPEAKER_CREATE("강연자 권한 요청"),
 	SPEAKER_APPROVED("강연자 권한 승인"),
 	LECTURE_CREATE("강의 승인 요청"),
-	LECTURE_APPROVE("강의 승인 완료"),
+	LECTURE_APPROVED("강의 승인 완료"),
+	LECTURE_DELETE("강의 삭제 요청")
 	;
 
 	private final String description;

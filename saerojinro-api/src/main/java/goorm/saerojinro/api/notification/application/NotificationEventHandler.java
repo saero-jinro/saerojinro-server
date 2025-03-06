@@ -20,7 +20,8 @@ public class NotificationEventHandler {
 			case SPEAKER_CREATE -> speakerCreated(event);
 			case SPEAKER_APPROVED -> speakerApproved(event);
 			case LECTURE_CREATE -> lectureCreated(event);
-			case LECTURE_APPROVE -> lectureApproved(event);
+			case LECTURE_APPROVED -> lectureApproved(event);
+			case LECTURE_DELETE -> lectureDelete(event);
 		}
 	}
 
@@ -50,8 +51,8 @@ public class NotificationEventHandler {
 
 	public void lectureCreated(CommonEvent event) {
 		NotificationSendRequest request = NotificationSendRequest.of(
-			"강의 등록 승인 요청",
-			"강의 등록 승인 요청이 발생했습니다"
+			"강의 등록 요청",
+			"강의 등록 요청이 발생했습니다"
 		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
@@ -60,6 +61,14 @@ public class NotificationEventHandler {
 		NotificationSendRequest request = NotificationSendRequest.of(
 			"강의 등록 승인",
 			"강의 등록 승인이 완료되었습니다"
+		);
+		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
+	}
+
+	private void lectureDelete(CommonEvent event) {
+		NotificationSendRequest request = NotificationSendRequest.of(
+			"강의 삭제 요청",
+			"강의 삭제 요청이 발생했습니다"
 		);
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}

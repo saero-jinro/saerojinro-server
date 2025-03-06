@@ -34,8 +34,9 @@ import java.util.List;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.event.EventType.BROADCAST_NOTICE;
-import static goorm.saerojinro.common.event.EventType.LECTURE_APPROVE;
+import static goorm.saerojinro.common.event.EventType.LECTURE_APPROVED;
 import static goorm.saerojinro.common.event.EventType.LECTURE_CREATE;
+import static goorm.saerojinro.common.event.EventType.LECTURE_DELETE;
 import static goorm.saerojinro.common.event.EventType.LECTURE_NOTICE;
 import static goorm.saerojinro.common.event.EventType.SPEAKER_APPROVED;
 import static goorm.saerojinro.common.event.EventType.SPEAKER_CREATE;
@@ -105,7 +106,8 @@ public class NotificationEventHandlerTest {
 		CommonEvent event3 = CommonEvent.builder().eventType(SPEAKER_CREATE).userId(1L).build();
 		CommonEvent event4 = CommonEvent.builder().eventType(SPEAKER_APPROVED).userId(1L).build();
 		CommonEvent event5 = CommonEvent.builder().eventType(LECTURE_CREATE).userId(1L).build();
-		CommonEvent event6 = CommonEvent.builder().eventType(LECTURE_APPROVE).userId(1L).build();
+		CommonEvent event6 = CommonEvent.builder().eventType(LECTURE_APPROVED).userId(1L).build();
+		CommonEvent event7 = CommonEvent.builder().eventType(LECTURE_DELETE).userId(1L).build();
 
 		// when
 		notificationEventHandler.handleEvent(event);
@@ -114,6 +116,7 @@ public class NotificationEventHandlerTest {
 		notificationEventHandler.handleEvent(event4);
 		notificationEventHandler.handleEvent(event5);
 		notificationEventHandler.handleEvent(event6);
+		notificationEventHandler.handleEvent(event7);
 
 		// then
 		List<Notification> all = repository.findByUserIdIsNull();
@@ -122,12 +125,14 @@ public class NotificationEventHandlerTest {
 		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, all.get(0).getTitle());
 
 		List<Notification> my = repository.findByUserId(1L);
-		assertEquals(5, my.size());
+		assertEquals(6, my.size());
 		assertEquals("[" + event2.eventType().getDescription() + "]" + TITLE, my.get(0).getTitle());
 		assertEquals("강연자 승인 요청", my.get(1).getTitle());
 		assertEquals("강연자 승인", my.get(2).getTitle());
-		assertEquals("강의 등록 승인 요청", my.get(3).getTitle());
+		assertEquals("강의 등록 요청", my.get(3).getTitle());
 		assertEquals("강의 등록 승인", my.get(4).getTitle());
+		assertEquals("강의 등록 승인", my.get(4).getTitle());
+		assertEquals("강의 삭제 요청", my.get(5).getTitle());
 	}
 
 	@Test
@@ -210,8 +215,8 @@ public class NotificationEventHandlerTest {
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
 
-		assertEquals("강의 등록 승인 요청", result.getTitle());
-		assertEquals("강의 등록 승인 요청이 발생했습니다", result.getContents());
+		assertEquals("강의 등록 요청", result.getTitle());
+		assertEquals("강의 등록 요청이 발생했습니다", result.getContents());
 	}
 
 	@Test
