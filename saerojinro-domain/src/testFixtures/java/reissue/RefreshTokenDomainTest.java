@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
 
 public class RefreshTokenDomainTest {
 	@Test

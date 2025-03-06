@@ -1,6 +1,6 @@
-package goorm.saerojinro.domain.reissue.exception;
+package goorm.saerojinro.common.domain.reissue.exception;
 
-import static goorm.saerojinro.domain.reissue.exception.ReissueExceptionCode.REFRESH_TOKEN_NOT_FOUND;
+import static goorm.saerojinro.common.domain.reissue.exception.ReissueExceptionCode.REFRESH_TOKEN_NOT_FOUND;
 
 import goorm.saerojinro.common.exception.CustomException;
 

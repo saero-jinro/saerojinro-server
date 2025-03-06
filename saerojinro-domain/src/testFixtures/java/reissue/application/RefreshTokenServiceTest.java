@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import goorm.saerojinro.domain.reissue.application.RefreshTokenService;
-import goorm.saerojinro.domain.reissue.domain.RefreshToken;
+import goorm.saerojinro.common.domain.reissue.application.RefreshTokenService;
+import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
 import mock.repository.FakeRefreshTokenRepository;
 
 public class RefreshTokenServiceTest {
