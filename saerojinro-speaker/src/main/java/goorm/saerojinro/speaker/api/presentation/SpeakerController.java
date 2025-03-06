@@ -25,7 +25,8 @@ public interface SpeakerController {
 		}
 	)
 	ResponseEntity<LectureCreateResponse> create(@PathVariable(name = "id") Long speakerId,
-														@RequestBody LectureCreateRequest request);
+												 @RequestBody LectureCreateRequest request
+	);
 
 	@Operation(
 		summary = "강의 수정",
@@ -37,6 +38,20 @@ public interface SpeakerController {
 		}
 	)
 	ResponseEntity<Void> update(@PathVariable(name = "id") Long speakerId,
-									   @PathVariable Long lectureId,
-									   @RequestBody LectureUpdateRequest request);
+								@PathVariable Long lectureId,
+								@RequestBody LectureUpdateRequest request
+	);
+
+	@Operation(
+		summary = "강의 삭제",
+		description = "강의를 삭제합니다",
+		responses = {
+			@ApiResponse(
+				responseCode = "200"
+			)
+		}
+	)
+	ResponseEntity<Void> delete(@PathVariable(name = "id") Long speakerId,
+								@PathVariable Long lectureId
+	);
 }

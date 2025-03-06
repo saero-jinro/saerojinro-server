@@ -16,15 +16,23 @@ public class SpeakerControllerImpl implements SpeakerController {
 
 	@PostMapping("/{id}/lectures")
 	public ResponseEntity<LectureCreateResponse> create(@PathVariable(name = "id") Long speakerId,
-																@RequestBody LectureCreateRequest request) {
+														@RequestBody LectureCreateRequest request) {
 		return ResponseEntity.ok(speakerLectureFacade.create(speakerId, request));
 	}
 
 	@PatchMapping("/{id}/lectures/{lectureId}")
 	public ResponseEntity<Void> update(@PathVariable(name = "id") Long speakerId,
-											   @PathVariable Long lectureId,
-											   @RequestBody LectureUpdateRequest request) {
+									   @PathVariable Long lectureId,
+									   @RequestBody LectureUpdateRequest request) {
 		speakerLectureFacade.update(speakerId, lectureId, request);
+		return ResponseEntity.noContent().build();
+	}
+
+
+	@DeleteMapping("/{id}/lectures/{lectureId}")
+	public ResponseEntity<Void> delete(@PathVariable(name = "id") Long speakerId,
+									   @PathVariable Long lectureId) {
+		speakerLectureFacade.delete(speakerId, lectureId);
 		return ResponseEntity.noContent().build();
 	}
 }

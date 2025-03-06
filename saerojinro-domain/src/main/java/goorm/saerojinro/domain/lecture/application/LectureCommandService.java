@@ -28,4 +28,9 @@ public class LectureCommandService {
 
 		lecture.update(speaker, title, contents);
 	}
+
+	public void delete(User speaker, Long lectureId) {
+		Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
+		lecture.requestDelete(speaker);
+	}
 }
