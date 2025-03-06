@@ -41,14 +41,14 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findByUser(User user) {
         return data.stream()
-                .filter( r -> r.getUser().getId() == user.getId())
+                .filter( r -> r.getUser().getId().equals(user.getId()))
                 .toList();
     }
 
     @Override
     public Optional<Reservation> findByUserAndLecture(User user, Lecture lecture) {
         return data.stream()
-                .filter( r -> r.getUser().getId() == user.getId() &&
+                .filter( r -> r.getUser().getId().equals(user.getId()) &&
                         r.getLecture().getId().equals(lecture.getId()))
                 .findFirst();
     }

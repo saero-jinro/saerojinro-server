@@ -28,9 +28,7 @@ public class ReservationFacade {
 
         Reservation reservation = reservationCommandService.create(user, lecture);
 
-        return ReservationCreateResponse.builder()
-                .id(reservation.getId())
-                .build();
+        return ReservationCreateResponse.from(reservation);
     }
 
     @Transactional
@@ -41,9 +39,7 @@ public class ReservationFacade {
         Reservation reservation = reservationQueryService.getByUserAndLecture(user, lecture);
         reservationCommandService.cancel(reservation);
 
-        return ReservationCancelResponse.builder()
-                .id(reservation.getId())
-                .build();
+        return ReservationCancelResponse.from(reservation);
     }
 
     private User getUser(Long userId) {

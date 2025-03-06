@@ -18,7 +18,7 @@ public interface ReservationController {
         description = "유저 ID와 강의 ID를 통해 예약을 생성합니다.",
         responses = {
             @ApiResponse(
-                responseCode = "200",
+                responseCode = "201",
                 content = @Content(schema = @Schema(implementation = ReservationCreateResponse.class))
             )
         }
@@ -32,7 +32,7 @@ public interface ReservationController {
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                content = @Content(schema = @Schema(implementation = ReservationCreateResponse.class))
+                content = @Content(schema = @Schema(implementation = ReservationCancelResponse.class))
             )
         }
     )
