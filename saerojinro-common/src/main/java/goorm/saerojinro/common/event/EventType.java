@@ -1,0 +1,15 @@
+package goorm.saerojinro.common.event;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public enum EventType {
+	BROADCAST_NOTICE("전체공지"),
+	LECTURE_NOTICE("강의공지"),
+	SPEAKER_CREATE("강연자 권한 요청"),
+	LECTURE_CREATE("강의 승인 요청"),
+	LECTURE_APPROVE("강의 승인 완료"),
+	;
+
+	private final String description;
+}
