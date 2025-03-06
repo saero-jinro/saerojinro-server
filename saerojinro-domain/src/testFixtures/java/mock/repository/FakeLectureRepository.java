@@ -4,6 +4,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,15 +45,21 @@ public class FakeLectureRepository implements LectureRepository {
 			.findFirst();
 	}
 
+
 	@Override
 	public void delete(Lecture lecture) {
 		data.removeIf(l -> l.getId().equals(lecture.getId()));
 	}
 
 	@Override
-	public List<Lecture> findByStartTime(LocalDate day) {
+	public List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end) {
 		return data.stream()
-			.filter(lecture -> lecture.getStartTime().toLocalDate().equals(day))
+			.filter(lecture -> {
+				LocalDateTime lectureTime = lecture.getStartTime();
+				boolean isAfterOrEqualStart = !lectureTime.isBefore(start);
+				boolean isBeforeEnd         = lectureTime.isBefore(end);
+				return isAfterOrEqualStart && isBeforeEnd;
+			})
 			.toList();
 	}
 }

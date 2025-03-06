@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,7 +23,9 @@ public class LectureQueryService {
 		return lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
 	}
 
-	public List<Lecture> getByDate(LocalDate day) {
-		return lectureRepository.findByStartTime(day);
+	public List<Lecture> getByDate(LocalDate localDate) {
+		LocalDateTime start = localDate.atStartOfDay();
+		LocalDateTime end   = localDate.plusDays(1).atStartOfDay();
+		return lectureRepository.findByStartTimeBetween(start, end);
 	}
 }
