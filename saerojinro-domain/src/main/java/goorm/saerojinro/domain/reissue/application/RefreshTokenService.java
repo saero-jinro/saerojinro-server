@@ -20,4 +20,8 @@ public class RefreshTokenService {
 	public void save(Long id, String refreshToken) {
 		refreshTokenRepository.save(RefreshToken.of(id, refreshToken));
 	}
+
+	public void deleteById(Long id) {
+		refreshTokenRepository.deleteById(id);
+	}
 }

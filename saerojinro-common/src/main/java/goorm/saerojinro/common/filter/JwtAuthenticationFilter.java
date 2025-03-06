@@ -18,16 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtProvider jwtProvider;
-	private final static String HEADER_AUTHORIZATION = "Authorization";
-	private final static String TOKEN_PREFIX = "Bearer ";
 
 	@Override
 	protected void doFilterInternal(
 		HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
 	) throws ServletException, IOException {
 		try {
-			String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
-			String token = getAccessToken(authorizationHeader);
+			String token = jwtProvider.extractAccessToken(request);
 			if (jwtProvider.validateToken(token)) {
 				Authentication authentication = jwtProvider.getAuthentication(token);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -53,10 +50,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		response.getWriter().write(jsonResponse);
 	}
 
-	private String getAccessToken(String authorizationHeader) {
-		if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
-			return authorizationHeader.substring(TOKEN_PREFIX.length());
-		}
-		return null;
-	}
+
 }

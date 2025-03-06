@@ -23,4 +23,9 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 	public void save(RefreshToken refreshToken) {
 		redisRefreshTokenRepository.save(refreshToken);
 	}
+
+	@Override
+	public void deleteById(Long id) {
+		redisRefreshTokenRepository.deleteById(id);
+	}
 }

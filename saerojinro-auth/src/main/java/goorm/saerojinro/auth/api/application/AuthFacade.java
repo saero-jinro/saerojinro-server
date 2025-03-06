@@ -19,6 +19,7 @@ import goorm.saerojinro.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -68,5 +69,14 @@ public class AuthFacade {
 		String accessToken = jwtProvider.generateAccessToken(email, role);
 		refreshTokenService.save(id, refreshToken);
 		return JwtResponse.of(accessToken, refreshToken);
+	}
+
+	@Transactional(readOnly = true)
+	public void logout(HttpServletRequest request) {
+		User user = userQueryService.me();
+		refreshTokenService.deleteById(user.getId());
+		String accessToken = jwtProvider.extractAccessToken(request);
+
+
 	}
 }

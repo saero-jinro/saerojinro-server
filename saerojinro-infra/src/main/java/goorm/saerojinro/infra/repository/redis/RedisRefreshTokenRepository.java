@@ -8,4 +8,6 @@ import goorm.saerojinro.domain.reissue.domain.RefreshToken;
 
 public interface RedisRefreshTokenRepository extends CrudRepository<RefreshToken, String> {
 	Optional<RefreshToken> findByRefreshToken(String refreshToken);
+
+	void deleteById(Long id);
 }
