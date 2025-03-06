@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	) throws ServletException, IOException {
 		try {
 			String token = jwtProvider.extractAccessToken(request);
-			if (blackListService.isBlackListed(token)) {
+			if (token != null && blackListService.isBlackListed(token)) {
 				throw new BlackListedTokenException();
 			}
 			if (jwtProvider.validateToken(token)) {
