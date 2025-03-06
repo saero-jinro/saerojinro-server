@@ -11,6 +11,7 @@ import goorm.saerojinro.admin.api.application.AdminFacade;
 import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
 import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import goorm.saerojinro.domain.user.application.UserCommandService;
+import goorm.saerojinro.domain.user.application.UserQueryService;
 import mock.repository.FakeUserRepository;
 
 public class AdminFacadeTest {
@@ -19,8 +20,10 @@ public class AdminFacadeTest {
 	@BeforeEach
 	public void init() {
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		adminFacade = new AdminFacade(
-			new UserCommandService(fakeUserRepository, new BCryptPasswordEncoder())
+			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder),
+			new UserQueryService(fakeUserRepository, bCryptPasswordEncoder)
 		);
 	}
 
