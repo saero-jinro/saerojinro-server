@@ -80,15 +80,15 @@ public class ReservationQueryServiceTest {
         User user = createUser(USER_ID);
 
         //when
-        List<Reservation> findReservation = reservationQueryService.getAllReservationByUser(
+        List<Reservation> findReservations = reservationQueryService.getAllReservationByUser(
                 user);
 
         //then
-        assertThat(findReservation)
+        assertThat(findReservations)
                 .isNotNull()
                 .hasSize(1);
 
-        Reservation reservation = findReservation.get(0);
+        Reservation reservation = findReservations.get(0);
         assertThat(reservation.getUser().getId()).isEqualTo(USER_ID);
         assertThat(reservation.getLecture().getId()).isEqualTo(LECTURE_ID);
 

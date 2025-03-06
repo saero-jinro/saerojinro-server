@@ -8,7 +8,7 @@ import lombok.Getter;
 public record ReservationCreateResponse(
         Long id
 ){
-    private static ReservationCreateResponse from(Reservation reservation){
+    public static ReservationCreateResponse from(Reservation reservation){
         return ReservationCreateResponse.builder()
                 .id(reservation.getId())
                 .build();
