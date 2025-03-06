@@ -1,4 +1,4 @@
-package goorm.saerojinro.admin.presentation.response;
+package goorm.saerojinro.admin.api.presentation.response;
 
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.Builder;

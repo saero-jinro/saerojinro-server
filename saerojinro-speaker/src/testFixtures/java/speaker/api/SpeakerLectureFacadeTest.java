@@ -9,10 +9,10 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.SpeakerMissmatchException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import goorm.saerojinro.speaker.api.SpeakerLectureFacade;
-import goorm.saerojinro.speaker.presentation.request.LectureCreateRequest;
-import goorm.saerojinro.speaker.presentation.request.LectureUpdateRequest;
-import goorm.saerojinro.speaker.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.speaker.api.application.SpeakerLectureFacade;
+import goorm.saerojinro.speaker.api.presentation.request.LectureCreateRequest;
+import goorm.saerojinro.speaker.api.presentation.request.LectureUpdateRequest;
+import goorm.saerojinro.speaker.api.presentation.response.LectureCreateResponse;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
 

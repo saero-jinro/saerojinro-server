@@ -1,10 +1,10 @@
-package goorm.saerojinro.admin.presentation;
+package goorm.saerojinro.admin.api.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import goorm.saerojinro.admin.presentation.request.AdminCreateRequest;
-import goorm.saerojinro.admin.presentation.response.AdminPersistResponse;
+import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
+import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

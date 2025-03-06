@@ -7,9 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import goorm.saerojinro.admin.api.AdminFacade;
-import goorm.saerojinro.admin.presentation.request.AdminCreateRequest;
-import goorm.saerojinro.admin.presentation.response.AdminPersistResponse;
+import goorm.saerojinro.admin.api.application.AdminFacade;
+import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
+import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import mock.repository.FakeUserRepository;
 

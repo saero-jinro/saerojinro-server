@@ -5,7 +5,7 @@ import static goorm.saerojinro.common.domain.Category.*;
 import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import goorm.saerojinro.api.lecture.api.LectureFacade;
+import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;

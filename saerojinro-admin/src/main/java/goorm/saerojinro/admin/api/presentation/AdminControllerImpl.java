@@ -1,4 +1,4 @@
-package goorm.saerojinro.admin.presentation;
+package goorm.saerojinro.admin.api.presentation;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import goorm.saerojinro.admin.api.AdminFacade;
-import goorm.saerojinro.admin.presentation.request.AdminCreateRequest;
-import goorm.saerojinro.admin.presentation.response.AdminPersistResponse;
+import goorm.saerojinro.admin.api.application.AdminFacade;
+import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
+import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController

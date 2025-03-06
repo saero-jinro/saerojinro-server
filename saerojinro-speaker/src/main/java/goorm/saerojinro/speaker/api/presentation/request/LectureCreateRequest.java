@@ -1,4 +1,4 @@
-package goorm.saerojinro.speaker.presentation.request;
+package goorm.saerojinro.speaker.api.presentation.request;
 
 import goorm.saerojinro.common.domain.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
