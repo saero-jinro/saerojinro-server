@@ -81,7 +81,7 @@ public class LectureFacadeTest {
 		assertEquals(2, response.lectures().size());
 
 		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertNotNull(response.lectures().get(0).speaker());
+		assertEquals("Speaker", response.lectures().get(0).speakerName());
 	}
 
 	@Test
