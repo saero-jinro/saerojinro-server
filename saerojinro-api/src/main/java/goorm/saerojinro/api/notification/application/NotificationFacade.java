@@ -14,13 +14,13 @@ import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.notification.sse.response.NotificationSendResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class NotificationFacade {
 	private final NotificationCommandService notificationCommandService;
