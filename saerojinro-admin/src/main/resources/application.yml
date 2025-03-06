@@ -26,3 +26,15 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+docs:
+  api-docs-url: ${API_DOCS_URL:http://localhost:8080/swagger-ui/index.html}
+  auth-docs-url: ${AUTH_DOCS_URL:http://localhost:8083/swagger-ui/index.html}
+  speaker-docs-url: ${SPEAKER_DOCS_URL:http://localhost:8081/swagger-ui/index.html}
