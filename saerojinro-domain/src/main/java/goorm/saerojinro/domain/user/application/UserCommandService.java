@@ -5,6 +5,7 @@ import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.common.domain.Provider;
 import goorm.saerojinro.domain.user.domain.User;
@@ -44,5 +45,9 @@ public class UserCommandService {
 
 	public void delete(User user) {
 		user.delete();
+	}
+
+	public void updateRole(User user, BaseRole role) {
+		user.updateRole(role);
 	}
 }
