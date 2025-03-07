@@ -33,9 +33,6 @@ public class NotificationFacadeTest {
 
 	private User user;
 
-	private final String TITLE = "title";
-	private final String CONTENTS = "contents";
-
 	@BeforeEach
 	public void init() {
 		repository = new FakeNotificationRepository();
@@ -78,6 +75,9 @@ public class NotificationFacadeTest {
 	@DisplayName("myNotification은 현재 로그인한 유저가 받은 알림을 조회한다")
 	void myNotification_Success() {
 		// given
+		String TITLE = "title";
+		String CONTENTS = "contents";
+
 		repository.save(Notification.builder()
 			.title(TITLE)
 			.contents(CONTENTS)

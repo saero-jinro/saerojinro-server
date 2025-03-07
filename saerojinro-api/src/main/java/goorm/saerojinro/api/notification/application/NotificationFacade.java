@@ -1,11 +1,10 @@
 package goorm.saerojinro.api.notification.application;
 
+import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
-import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
