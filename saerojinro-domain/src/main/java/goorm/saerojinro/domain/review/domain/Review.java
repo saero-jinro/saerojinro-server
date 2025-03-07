@@ -31,7 +31,7 @@ public class Review extends BaseTimeEntity {
     @Column(nullable = false)
     private Double rating;
 
-    public static Review createReview(User user, Lecture lecture, String content, Double rating){
+    public static Review create(User user, Lecture lecture, String content, Double rating){
         return Review.builder()
                 .user(user)
                 .lecture(lecture)
