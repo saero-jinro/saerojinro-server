@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.notification.domain.NotificationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
+import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
 import mock.repository.FakeUserRepository;
@@ -32,9 +33,6 @@ public class NotificationFacadeTest {
 
 	private User user;
 
-	private final String TITLE = "title";
-	private final String CONTENTS = "contents";
-
 	@BeforeEach
 	public void init() {
 		repository = new FakeNotificationRepository();
@@ -44,8 +42,9 @@ public class NotificationFacadeTest {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		UserRepository userRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
+		NotificationSseSender sseSender = new NotificationSseSender(emitterRepository);
 
-		notificationFacade = new NotificationFacade(emitterRepository, queryService, userQueryService);
+		notificationFacade = new NotificationFacade(sseSender, queryService, userQueryService);
 
 		user = userRepository.save(User.builder()
 			.email("email@email.com")
@@ -76,6 +75,9 @@ public class NotificationFacadeTest {
 	@DisplayName("myNotification은 현재 로그인한 유저가 받은 알림을 조회한다")
 	void myNotification_Success() {
 		// given
+		String TITLE = "title";
+		String CONTENTS = "contents";
+
 		repository.save(Notification.builder()
 			.title(TITLE)
 			.contents(CONTENTS)

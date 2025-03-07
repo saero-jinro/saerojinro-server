@@ -5,6 +5,7 @@ import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
 import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.notification.application.EmitterQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
@@ -62,9 +63,10 @@ public class NotificationAdminEventHandlerTest {
 		ReservationRepository reservationRepository = new FakeReservationRepository();
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
-		NotificationSseSender sseSender = new NotificationSseSender();
+		NotificationSseSender sseSender = new NotificationSseSender(emitterRepository);
+		EmitterQueryService emitterQueryService = new EmitterQueryService(emitterRepository);
 		NotificationAdminFacade notificationFacade = new NotificationAdminFacade(
-			commandService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+			emitterQueryService, commandService, userQueryService, reservationQueryService, sseSender);
 
 		notificationEventHandler = new NotificationAdminEventHandler(notificationFacade);
 
