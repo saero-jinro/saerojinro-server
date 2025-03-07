@@ -4,11 +4,13 @@ import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Tag(name = "Notification", description = "강연자 알림 API")
 public interface NotificationSpeakerController {
 
 	@Operation(summary = "강의 기준 알림 전송 API", description = """
