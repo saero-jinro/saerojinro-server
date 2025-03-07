@@ -1,6 +1,6 @@
 package goorm.saerojinro.admin.notification.presentation;
 
-import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

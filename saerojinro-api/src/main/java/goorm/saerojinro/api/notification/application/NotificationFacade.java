@@ -5,7 +5,7 @@ import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import goorm.saerojinro.infra.notification.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class NotificationFacade {
 	private final EmitterRepository emitterRepository;
 	private final NotificationQueryService notificationQueryService;
 	private final UserQueryService userQueryService;
-	
+
 	public SseEmitter subscribe() {
 		User user = userQueryService.me();
 		return emitterRepository.save(user.getId());

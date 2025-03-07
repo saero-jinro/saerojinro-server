@@ -1,4 +1,4 @@
-package goorm.saerojinro.infra.notification.exception;
+package goorm.saerojinro.admin.notification.exception;
 
 import goorm.saerojinro.common.exception.ExceptionCode;
 import lombok.AllArgsConstructor;

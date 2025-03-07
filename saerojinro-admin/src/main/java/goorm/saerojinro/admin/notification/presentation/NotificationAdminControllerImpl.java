@@ -1,7 +1,7 @@
 package goorm.saerojinro.admin.notification.presentation;
 
 import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
-import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

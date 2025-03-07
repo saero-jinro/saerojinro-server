@@ -1,4 +1,4 @@
-package goorm.saerojinro.infra.notification.request;
+package goorm.saerojinro.admin.notification.presentation.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

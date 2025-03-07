@@ -1,7 +1,7 @@
 package goorm.saerojinro.admin.notification.application;
 
 import goorm.saerojinro.common.event.CommonEvent;
-import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

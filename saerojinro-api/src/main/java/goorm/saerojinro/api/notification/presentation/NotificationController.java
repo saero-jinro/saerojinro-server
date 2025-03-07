@@ -1,6 +1,6 @@
 package goorm.saerojinro.api.notification.presentation;
 
-import goorm.saerojinro.infra.notification.response.ReceivedNotificationListResponse;
+import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
