@@ -55,7 +55,7 @@ public class ReviewQueryServiceTest {
                 .lectureStatus(STATUS)
                 .build();
 
-        Review review = Review.createReview(user,lecture, CONTENT, RATING);
+        Review review = Review.create(user,lecture, CONTENT, RATING);
         reviewRepository.save(review);
     }
 

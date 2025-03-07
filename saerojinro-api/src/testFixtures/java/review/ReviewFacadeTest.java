@@ -4,9 +4,7 @@ import goorm.saerojinro.api.review.application.ReviewFacade;
 import goorm.saerojinro.api.review.presentation.request.ReviewCreateRequest;
 import goorm.saerojinro.api.review.presentation.request.ReviewUpdateRequest;
 import goorm.saerojinro.api.review.presentation.response.ReviewCreateResponse;
-import goorm.saerojinro.api.review.presentation.response.ReviewDeleteResponse;
 import goorm.saerojinro.api.review.presentation.response.ReviewListResponse;
-import goorm.saerojinro.api.review.presentation.response.ReviewUpdateResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -37,8 +35,11 @@ import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 
 public class ReviewFacadeTest {
     private ReviewFacade reviewFacade;
+
     private User user;
-    private Lecture lecture;
+
+    private final String CONTENT = "Excellent lecture!";
+    private final Double RATING = 5.0;
 
     private static final Long LECTURE_ID = 1L;
     private static final String LECTURE_TITLE = "Title";
@@ -63,7 +64,7 @@ public class ReviewFacadeTest {
         FakeUserRepository userRepository = new FakeUserRepository();
         UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
-        reviewFacade = new ReviewFacade(reviewQueryService, reviewCommandService, lectureQueryService, userQueryService);
+        reviewFacade = new ReviewFacade(reviewQueryService, reviewCommandService, lectureQueryService, userQueryService, reservationQueryService);
 
         user = userRepository.save(
                 User.builder()
@@ -79,8 +80,7 @@ public class ReviewFacadeTest {
                 new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
         );
 
-        // 테스트용 강의 생성: 강의 시작 및 종료 시간이 현재 시간 기준 과거로 설정되어, 강의 종료 검증을 통과함.
-        lecture = lectureRepository.save(
+        Lecture lecture = lectureRepository.save(
                 Lecture.builder()
                         .id(LECTURE_ID)
                         .title(LECTURE_TITLE)
@@ -99,76 +99,90 @@ public class ReviewFacadeTest {
 
     @Test
     @DisplayName("전체 리뷰 조회 테스트")
-    public void testGetAllReview() {
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Great lecture!", 5.0);
+    public void getAllReview_Success() {
+        // given
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
 
-        ReviewListResponse listResponse = reviewFacade.getAllReview();
+        // when
+        ReviewListResponse Response = reviewFacade.getAllReview();
 
-        Assertions.assertThat(listResponse.reviews()).hasSize(1);
-        Review reviewFromList = listResponse.reviews().get(0);
+        // then
+        Assertions.assertThat(Response.reviews()).hasSize(1);
+        Review reviewFromList = Response.reviews().get(0);
         Assertions.assertThat(reviewFromList.getId()).isEqualTo(createResponse.id());
         Assertions.assertThat(reviewFromList.getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test
     @DisplayName("강의별 리뷰 조회 테스트")
-    public void testGetByLecture() {
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Informative lecture", 4.5);
+    public void getByLecture_Success() {
+        // given
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
         reviewFacade.create(LECTURE_ID, createRequest);
 
-        ReviewListResponse listResponse = reviewFacade.getByLecture(LECTURE_ID);
+        // when
+        ReviewListResponse Response = reviewFacade.getByLecture(LECTURE_ID);
 
-        Assertions.assertThat(listResponse.reviews()).hasSize(1);
-        Assertions.assertThat(listResponse.reviews().get(0).getLecture().getId()).isEqualTo(LECTURE_ID);
-        Assertions.assertThat(listResponse.reviews().get(0).getUser().getId()).isEqualTo(user.getId());
+        // then
+        Assertions.assertThat(Response.reviews()).hasSize(1);
+        Assertions.assertThat(Response.reviews().get(0).getLecture().getId()).isEqualTo(LECTURE_ID);
+        Assertions.assertThat(Response.reviews().get(0).getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test
     @DisplayName("리뷰 생성 테스트")
-    public void testCreateReview() {
-        String content = "Excellent lecture!";
-        double rating = 5.0;
-        ReviewCreateRequest request = new ReviewCreateRequest(user.getId(), content, rating);
+    public void create_Success() {
+        // given
+        ReviewCreateRequest request = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
 
+        // when
         ReviewCreateResponse response = reviewFacade.create(LECTURE_ID, request);
 
+        // then
         Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response.content()).isEqualTo(content);
-        Assertions.assertThat(response.rating()).isEqualTo(rating);
+        Assertions.assertThat(response.content()).isEqualTo(CONTENT);
+        Assertions.assertThat(response.rating()).isEqualTo(RATING);
         Assertions.assertThat(response.lectureId()).isEqualTo(LECTURE_ID);
         Assertions.assertThat(response.userId()).isEqualTo(user.getId());
     }
 
     @Test
     @DisplayName("리뷰 수정 테스트")
-    public void testUpdateReview() {
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Original content", 3.0);
+    public void update_Success(){
+        // given
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
         ReviewUpdateRequest updateRequest = new ReviewUpdateRequest("Updated content", 4.0);
-        ReviewUpdateResponse updateResponse = reviewFacade.update(reviewId, updateRequest);
 
-        Assertions.assertThat(updateResponse).isNotNull();
-        Assertions.assertThat(updateResponse.content()).isEqualTo("Updated content");
-        Assertions.assertThat(updateResponse.rating()).isEqualTo(4.0);
-        Assertions.assertThat(updateResponse.userId()).isEqualTo(user.getId());
+        // when
+        reviewFacade.update(reviewId, updateRequest);
+
+        // then
+        ReviewListResponse listResponse = reviewFacade.getAllReview();
+        Assertions.assertThat(listResponse.reviews()).hasSize(1);
+
+        Review updatedReview = listResponse.reviews().get(0);
+        Assertions.assertThat(updatedReview.getContent()).isEqualTo("Updated content");
+        Assertions.assertThat(updatedReview.getRating()).isEqualTo(4.0);
+        Assertions.assertThat(updatedReview.getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test
     @DisplayName("리뷰 삭제 테스트")
-    public void testDeleteReview() {
+    public void delete_Success() {
+        // given
         ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
-        ReviewDeleteResponse deleteResponse = reviewFacade.delete(reviewId);
+        // when
+        reviewFacade.delete(reviewId);
 
-        Assertions.assertThat(deleteResponse).isNotNull();
-        Assertions.assertThat(deleteResponse.id()).isEqualTo(reviewId);
-
-        ReviewListResponse listResponse = reviewFacade.getAllReview();
-        Assertions.assertThat(listResponse.reviews()).isEmpty();
+        // then
+        ReviewListResponse response = reviewFacade.getAllReview();
+        Assertions.assertThat(response.reviews()).isEmpty();
     }
 }

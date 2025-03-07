@@ -48,12 +48,12 @@ public class ReviewDomainTest {
                 .lectureStatus(STATUS)
                 .build();
 
-        review = Review.createReview(user,lecture, CONTENT, RATING);
+        review = Review.create(user,lecture, CONTENT, RATING);
     }
 
     @Test
     @DisplayName("createReview 는 새로운 리뷰 객체를 생성 합니다.")
-    public void createReview_Success(){
+    public void create_Success(){
         // then
         Assertions.assertNotNull(review);
         assertThat(review.getUser().getId()).isEqualTo(USER_ID);
