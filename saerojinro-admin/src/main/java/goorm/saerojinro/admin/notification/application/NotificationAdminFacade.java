@@ -1,13 +1,13 @@
 package goorm.saerojinro.admin.notification.application;
 
+import goorm.saerojinro.admin.notification.exception.EmitterNotFoundException;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
+import goorm.saerojinro.domain.notification.application.EmitterQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
-import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
-import goorm.saerojinro.admin.notification.exception.EmitterNotFoundException;
-import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.response.NotificationSendResponse;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class NotificationAdminFacade {
+	private final EmitterQueryService emitterQueryService;
 	private final NotificationCommandService notificationCommandService;
-	private final EmitterRepository emitterRepository;
 	private final UserQueryService userQueryService;
 	private final ReservationQueryService reservationQueryService;
 	private final NotificationSseSender sseSender;
@@ -43,7 +43,7 @@ public class NotificationAdminFacade {
 			request.contents()
 		);
 
-		SseEmitter emitter = emitterRepository.findById(receiverId)
+		SseEmitter emitter = emitterQueryService.findById(receiverId)
 			.orElseThrow(EmitterNotFoundException::new);
 
 		notificationCommandService.save(notification);
@@ -62,7 +62,7 @@ public class NotificationAdminFacade {
 		notificationCommandService.save(notification);
 		NotificationSendResponse message = NotificationSendResponse.from(notification);
 
-		List<SseEmitter> all = emitterRepository.findAll();
+		List<SseEmitter> all = emitterQueryService.findAll();
 		for (SseEmitter emitter : all) {
 			sseSender.sendNotification(emitter, message);
 		}

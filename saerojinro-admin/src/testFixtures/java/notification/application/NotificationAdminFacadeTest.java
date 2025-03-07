@@ -3,6 +3,7 @@ package notification.application;
 import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
 import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.notification.application.EmitterQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
@@ -56,10 +57,11 @@ public class NotificationAdminFacadeTest {
 		reservationRepository = new FakeReservationRepository();
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
-		NotificationSseSender sseSender = new NotificationSseSender();
+		NotificationSseSender sseSender = new NotificationSseSender(emitterRepository);
+		EmitterQueryService emitterQueryService = new EmitterQueryService(emitterRepository);
 
 		notificationFacade = new NotificationAdminFacade(
-			commandService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+			emitterQueryService, commandService, userQueryService, reservationQueryService, sseSender);
 
 		user = userRepository.save(User.builder()
 			.email("email@email.com")
