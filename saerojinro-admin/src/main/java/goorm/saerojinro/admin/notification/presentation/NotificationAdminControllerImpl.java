@@ -17,7 +17,7 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 	private final NotificationAdminFacade notificationFacade;
 
 	@Override
-	@PostMapping("/send-all")
+	@PostMapping("/all")
 	public ResponseEntity<Void> sendAll(
 		@RequestBody NotificationSendRequest request
 	) {
@@ -26,7 +26,7 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 	}
 
 	@Override
-	@PostMapping("/send-lecture/{lectureId}")
+	@PostMapping("/lecture/{lectureId}")
 	public ResponseEntity<Void> sendByLecture(
 		@PathVariable Long lectureId,
 		@RequestBody NotificationSendRequest request) {
@@ -35,7 +35,7 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 	}
 
 	@Override
-	@PostMapping("/send-user/{userId}")
+	@PostMapping("/user/{userId}")
 	public ResponseEntity<Void> sendByUserId(
 		@PathVariable Long userId,
 		@RequestBody NotificationSendRequest request) {
