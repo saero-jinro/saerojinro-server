@@ -1,6 +1,6 @@
 package wishList;
 
-import goorm.saerojinro.api.wishlist.api.WishListFacade;
+import goorm.saerojinro.api.wishlist.application.WishListFacade;
 import goorm.saerojinro.api.wishlist.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
