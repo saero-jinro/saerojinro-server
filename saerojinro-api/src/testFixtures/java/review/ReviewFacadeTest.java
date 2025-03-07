@@ -14,6 +14,7 @@ import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.review.application.ReviewCommandService;
 import goorm.saerojinro.domain.review.application.ReviewQueryService;
 import goorm.saerojinro.domain.review.domain.Review;
+import goorm.saerojinro.domain.review.exception.ReviewNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeLectureRepository;
@@ -32,11 +33,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDateTime;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
+import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 
 public class ReviewFacadeTest {
     private ReviewFacade reviewFacade;
 
+    private FakeUserRepository userRepository;
+    private FakeLectureRepository lectureRepository;
+    private FakeReservationRepository reservationRepository;
+
     private User user;
+    private Lecture lecture;
 
     private final String CONTENT = "Excellent lecture!";
     private final Double RATING = 5.0;
@@ -50,18 +57,18 @@ public class ReviewFacadeTest {
 
     @BeforeEach
     void init() {
-        FakeReservationRepository reservationRepository = new FakeReservationRepository();
+        reservationRepository = new FakeReservationRepository();
         ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
         FakeReviewRepository reviewRepository = new FakeReviewRepository();
         ReviewQueryService reviewQueryService = new ReviewQueryService(reviewRepository);
         ReviewCommandService reviewCommandService = new ReviewCommandService(reviewRepository, reservationQueryService);
 
-        FakeLectureRepository lectureRepository = new FakeLectureRepository();
+        lectureRepository = new FakeLectureRepository();
         LectureQueryService lectureQueryService = new LectureQueryService(lectureRepository);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        FakeUserRepository userRepository = new FakeUserRepository();
+        userRepository = new FakeUserRepository();
         UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
         reviewFacade = new ReviewFacade(reviewQueryService, reviewCommandService, lectureQueryService, userQueryService, reservationQueryService);
@@ -80,7 +87,7 @@ public class ReviewFacadeTest {
                 new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
         );
 
-        Lecture lecture = lectureRepository.save(
+        lecture = lectureRepository.save(
                 Lecture.builder()
                         .id(LECTURE_ID)
                         .title(LECTURE_TITLE)
@@ -105,11 +112,11 @@ public class ReviewFacadeTest {
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
 
         // when
-        ReviewListResponse Response = reviewFacade.getAllReview();
+        ReviewListResponse response = reviewFacade.getAllReview();
 
         // then
-        Assertions.assertThat(Response.reviews()).hasSize(1);
-        Review reviewFromList = Response.reviews().get(0);
+        Assertions.assertThat(response.reviews()).hasSize(1);
+        Review reviewFromList = response.reviews().get(0);
         Assertions.assertThat(reviewFromList.getId()).isEqualTo(createResponse.id());
         Assertions.assertThat(reviewFromList.getUser().getId()).isEqualTo(user.getId());
     }
@@ -122,12 +129,12 @@ public class ReviewFacadeTest {
         reviewFacade.create(LECTURE_ID, createRequest);
 
         // when
-        ReviewListResponse Response = reviewFacade.getByLecture(LECTURE_ID);
+        ReviewListResponse response = reviewFacade.getByLecture(LECTURE_ID);
 
         // then
-        Assertions.assertThat(Response.reviews()).hasSize(1);
-        Assertions.assertThat(Response.reviews().get(0).getLecture().getId()).isEqualTo(LECTURE_ID);
-        Assertions.assertThat(Response.reviews().get(0).getUser().getId()).isEqualTo(user.getId());
+        Assertions.assertThat(response.reviews()).hasSize(1);
+        Assertions.assertThat(response.reviews().get(0).getLecture().getId()).isEqualTo(LECTURE_ID);
+        Assertions.assertThat(response.reviews().get(0).getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test
@@ -145,6 +152,33 @@ public class ReviewFacadeTest {
         Assertions.assertThat(response.rating()).isEqualTo(RATING);
         Assertions.assertThat(response.lectureId()).isEqualTo(LECTURE_ID);
         Assertions.assertThat(response.userId()).isEqualTo(user.getId());
+    }
+
+    @Test
+    @DisplayName("create 는 강의가 아직 끝나지 않은 경우, ReviewNotAuthorizedException 을 반환 한다.")
+    public void create_Fail_LectureNotFinished() {
+        // given
+        Lecture upcomingLecture = Lecture.builder()
+                .id(2L)
+                .title("Upcoming Lecture")
+                .contents("Upcoming Contents")
+                .startTime(LocalDateTime.now().minusMinutes(30))
+                .endTime(LocalDateTime.now().plusHours(1)) // 아직 끝나지 않음
+                .location("New Location")
+                .category(CATEGORY)
+                .lectureStatus(STATUS)
+                .build();
+        upcomingLecture = lectureRepository.save(upcomingLecture);
+
+        Reservation upcomingReservation = Reservation.createReservation(user, upcomingLecture);
+        reservationRepository.save(upcomingReservation);
+
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+
+        // then
+        Lecture finalUpcomingLecture = upcomingLecture;
+        Assertions.assertThatThrownBy(() -> reviewFacade.create(finalUpcomingLecture.getId(), createRequest))
+                .isInstanceOf(ReviewNotAuthorizedException.class);
     }
 
     @Test
@@ -171,6 +205,38 @@ public class ReviewFacadeTest {
     }
 
     @Test
+    @DisplayName("update 는 유저가 작성하지 않은 리뷰를 수정하는 요청이 발생하면, ReviewNotAuthorizedException 을 반환한다.")
+    public void update_ReviewNotAuthorizedException(){
+        // given
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
+        Long reviewId = createResponse.id();
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User anotherUser = userRepository.save(
+                User.builder()
+                        .email("anotheruser@example.com")
+                        .password(passwordEncoder.encode("anotherpassword!"))
+                        .name("Another User")
+                        .role(ATTENDEE)
+                        .build()
+        );
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(anotherUser, anotherUser.getPassword(), anotherUser.getAuthorities())
+        );
+
+        ReviewUpdateRequest updateRequest = new ReviewUpdateRequest("Updated content", 4.0);
+
+        // then
+        Assertions.assertThatThrownBy(() -> reviewFacade.update(reviewId, updateRequest))
+                .isInstanceOf(ReviewNotAuthorizedException.class);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+        );
+    }
+
+    @Test
     @DisplayName("리뷰 삭제 테스트")
     public void delete_Success() {
         // given
@@ -184,5 +250,36 @@ public class ReviewFacadeTest {
         // then
         ReviewListResponse response = reviewFacade.getAllReview();
         Assertions.assertThat(response.reviews()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("delete 는 유저가 작성하지 않은 리뷰를 삭제하거나, 운영진이 아니면 ReviewNotAuthorizedException 을 반환한다.")
+    public void delete_ReviewNotAuthorizedException(){
+        // given
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
+        ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
+        Long reviewId = createResponse.id();
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User nonAdminUser = userRepository.save(
+                User.builder()
+                        .email("nonadmin@example.com")
+                        .password(passwordEncoder.encode("password"))
+                        .name("Non Admin")
+                        .role(ATTENDEE) // ADMIN 이 아닌 역할
+                        .build()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(nonAdminUser, nonAdminUser.getPassword(), nonAdminUser.getAuthorities())
+        );
+
+        // then
+        Assertions.assertThatThrownBy(() -> reviewFacade.delete(reviewId))
+                .isInstanceOf(ReviewNotAuthorizedException.class);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+        );
     }
 }
