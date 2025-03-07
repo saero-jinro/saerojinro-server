@@ -3,9 +3,7 @@ package goorm.saerojinro.api.review.presentation;
 import goorm.saerojinro.api.review.presentation.request.ReviewCreateRequest;
 import goorm.saerojinro.api.review.presentation.request.ReviewUpdateRequest;
 import goorm.saerojinro.api.review.presentation.response.ReviewCreateResponse;
-import goorm.saerojinro.api.review.presentation.response.ReviewDeleteResponse;
 import goorm.saerojinro.api.review.presentation.response.ReviewListResponse;
-import goorm.saerojinro.api.review.presentation.response.ReviewUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,9 +55,10 @@ public interface ReviewController {
             description = "강의 별로 특정 리뷰 데이터를 수정 합니다."
     )
     @ApiResponse(
-            responseCode = "200",
-            content = @Content(schema = @Schema(implementation = ReviewUpdateResponse.class)))
-    ResponseEntity<ReviewUpdateResponse> update(
+            responseCode = "204",
+            description = "리뷰 수정 성공"
+    )
+    ResponseEntity<Void> update(
             @PathVariable("reviewId") Long reviewId,
             @Parameter(
                     description = "리뷰 수정 request 객체 입니다.",
@@ -71,7 +70,8 @@ public interface ReviewController {
             description = "강의 별로 특정 리뷰 데이터를 삭제 합니다."
     )
     @ApiResponse(
-            responseCode = "200",
-            content = @Content(schema = @Schema(implementation = ReviewDeleteResponse.class)))
-    ResponseEntity<ReviewDeleteResponse> delete(@PathVariable("reviewId") Long reviewId);
+            responseCode = "204",
+            description = "리뷰 삭제 성공"
+    )
+    ResponseEntity<Void> delete(@PathVariable("reviewId") Long reviewId);
 }
