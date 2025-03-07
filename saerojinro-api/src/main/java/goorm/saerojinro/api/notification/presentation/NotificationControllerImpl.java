@@ -1,14 +1,10 @@
 package goorm.saerojinro.api.notification.presentation;
 
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
-import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.api.notification.application.NotificationFacade;
 import goorm.saerojinro.infra.notification.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -31,14 +27,5 @@ public class NotificationControllerImpl implements NotificationController {
 	public ResponseEntity<ReceivedNotificationListResponse> myNotifications() {
 		ReceivedNotificationListResponse response = notificationFacade.myNotification();
 		return ResponseEntity.ok(response);
-	}
-
-	@Override
-	@PostMapping("/send-user/{userId}")
-	public ResponseEntity<Void> sendByUserId(
-		@PathVariable Long userId,
-		@RequestBody NotificationSendRequest request) {
-		notificationFacade.sendNotificationByReceiverId(userId, request);
-		return ResponseEntity.noContent().build();
 	}
 }

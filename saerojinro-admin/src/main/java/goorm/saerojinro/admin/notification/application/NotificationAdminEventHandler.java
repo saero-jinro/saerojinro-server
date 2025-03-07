@@ -1,7 +1,6 @@
 package goorm.saerojinro.admin.notification.application;
 
 import goorm.saerojinro.common.event.CommonEvent;
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
 import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class NotificationAdminEventHandler {
-	private final NotificationFacade notificationFacade;
+	private final NotificationAdminFacade notificationFacade;
 
 	@EventListener
 	public void handleEvent(CommonEvent event) {

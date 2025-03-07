@@ -1,6 +1,5 @@
 package goorm.saerojinro.api.notification.application;
 
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
 import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package notification.application;
 
 import goorm.saerojinro.admin.notification.application.NotificationAdminEventHandler;
+import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
@@ -14,7 +15,6 @@ import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
 import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
@@ -65,8 +65,8 @@ public class NotificationAdminEventHandlerTest {
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
 		NotificationSseSender sseSender = new NotificationSseSender();
-		NotificationFacade notificationFacade = new NotificationFacade(
-			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+		NotificationAdminFacade notificationFacade = new NotificationAdminFacade(
+			commandService, emitterRepository, userQueryService, reservationQueryService, sseSender);
 
 		notificationEventHandler = new NotificationAdminEventHandler(notificationFacade);
 
@@ -83,8 +83,7 @@ public class NotificationAdminEventHandlerTest {
 		context.setAuthentication(
 			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
 		);
-
-		notificationFacade.subscribe();
+		emitterRepository.save(1L);
 		Lecture lecture = Lecture.builder().id(1L).build();
 		reservationRepository.save(Reservation.createReservation(userEntity, lecture));
 

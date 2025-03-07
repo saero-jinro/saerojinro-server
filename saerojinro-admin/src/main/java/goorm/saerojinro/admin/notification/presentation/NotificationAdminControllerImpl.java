@@ -1,6 +1,6 @@
 package goorm.saerojinro.admin.notification.presentation;
 
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
+import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
 import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/notifications")
 public class NotificationAdminControllerImpl implements NotificationAdminController {
-	private final NotificationFacade notificationFacade;
+	private final NotificationAdminFacade notificationFacade;
 
 	@Override
 	@PostMapping("/send-all")
@@ -31,6 +31,15 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 		@PathVariable Long lectureId,
 		@RequestBody NotificationSendRequest request) {
 		notificationFacade.sendNotificationByLectureId(lectureId, request);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	@PostMapping("/send-user/{userId}")
+	public ResponseEntity<Void> sendByUserId(
+		@PathVariable Long userId,
+		@RequestBody NotificationSendRequest request) {
+		notificationFacade.sendNotificationByReceiverId(userId, request);
 		return ResponseEntity.noContent().build();
 	}
 }

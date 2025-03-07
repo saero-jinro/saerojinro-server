@@ -1,8 +1,7 @@
 package notification.application;
 
 import goorm.saerojinro.api.notification.application.NotificationEventHandler;
-import goorm.saerojinro.infra.notification.application.NotificationFacade;
-import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
+import goorm.saerojinro.api.notification.application.NotificationFacade;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
@@ -16,6 +15,7 @@ import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
+import goorm.saerojinro.infra.notification.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
@@ -54,7 +54,6 @@ public class NotificationEventHandlerTest {
 	public void init() {
 		repository = new FakeNotificationRepository();
 		NotificationQueryService queryService = new NotificationQueryService(repository);
-		NotificationCommandService commandService = new NotificationCommandService(repository);
 		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -62,11 +61,9 @@ public class NotificationEventHandlerTest {
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
 		ReservationRepository reservationRepository = new FakeReservationRepository();
-		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
-		NotificationSseSender sseSender = new NotificationSseSender();
 		NotificationFacade notificationFacade = new NotificationFacade(
-			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+			emitterRepository, queryService, userQueryService);
 
 		notificationEventHandler = new NotificationEventHandler(notificationFacade);
 
@@ -84,7 +81,7 @@ public class NotificationEventHandlerTest {
 			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
 		);
 
-		notificationFacade.subscribe();
+		emitterRepository.save(1L);
 		Lecture lecture = Lecture.builder().id(1L).build();
 		reservationRepository.save(Reservation.createReservation(userEntity, lecture));
 
