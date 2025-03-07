@@ -2,10 +2,10 @@ package notification.application;
 
 import goorm.saerojinro.admin.notification.application.NotificationAdminEventHandler;
 import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
-import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
@@ -15,7 +15,6 @@ import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
-import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
@@ -53,7 +52,6 @@ public class NotificationAdminEventHandlerTest {
 	@BeforeEach
 	public void init() {
 		repository = new FakeNotificationRepository();
-		NotificationQueryService queryService = new NotificationQueryService(repository);
 		NotificationCommandService commandService = new NotificationCommandService(repository);
 		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 

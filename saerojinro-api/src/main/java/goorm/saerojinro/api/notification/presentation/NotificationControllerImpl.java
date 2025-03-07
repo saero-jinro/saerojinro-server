@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
@@ -19,7 +21,7 @@ public class NotificationControllerImpl implements NotificationController {
 	@GetMapping("/subscribe")
 	public ResponseEntity<SseEmitter> subscribe() {
 		SseEmitter response = notificationFacade.subscribe();
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(CREATED).body(response);
 	}
 
 	@Override

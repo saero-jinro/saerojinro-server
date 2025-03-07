@@ -17,7 +17,7 @@ public interface NotificationController {
 			- Assignee : 이신행
 		""")
 	@ApiResponse(
-		responseCode = "200",
+		responseCode = "201",
 		content = @Content(schema = @Schema(implementation = SseEmitter.class))
 	)
 	ResponseEntity<SseEmitter> subscribe();
