@@ -1,12 +1,11 @@
 package notification.application;
 
-import goorm.saerojinro.api.notification.application.NotificationEventHandler;
-import goorm.saerojinro.api.notification.application.NotificationFacade;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
+import goorm.saerojinro.admin.notification.application.NotificationAdminEventHandler;
+import goorm.saerojinro.admin.notification.application.NotificationAdminFacade;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
-import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
@@ -43,8 +42,8 @@ import static goorm.saerojinro.common.event.EventType.SPEAKER_CREATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class NotificationEventHandlerTest {
-	private NotificationEventHandler notificationEventHandler;
+public class NotificationAdminEventHandlerTest {
+	private NotificationAdminEventHandler notificationEventHandler;
 	private NotificationRepository repository;
 	private CommonEvent event;
 	private final String TITLE = "title";
@@ -53,7 +52,6 @@ public class NotificationEventHandlerTest {
 	@BeforeEach
 	public void init() {
 		repository = new FakeNotificationRepository();
-		NotificationQueryService queryService = new NotificationQueryService(repository);
 		NotificationCommandService commandService = new NotificationCommandService(repository);
 		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 
@@ -65,10 +63,10 @@ public class NotificationEventHandlerTest {
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
 		NotificationSseSender sseSender = new NotificationSseSender();
-		NotificationFacade notificationFacade = new NotificationFacade(
-			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+		NotificationAdminFacade notificationFacade = new NotificationAdminFacade(
+			commandService, emitterRepository, userQueryService, reservationQueryService, sseSender);
 
-		notificationEventHandler = new NotificationEventHandler(notificationFacade);
+		notificationEventHandler = new NotificationAdminEventHandler(notificationFacade);
 
 		User userEntity = userRepository.save(User.builder()
 			.email("email@email.com")
@@ -83,8 +81,7 @@ public class NotificationEventHandlerTest {
 		context.setAuthentication(
 			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
 		);
-
-		notificationFacade.subscribe();
+		emitterRepository.save(1L);
 		Lecture lecture = Lecture.builder().id(1L).build();
 		reservationRepository.save(Reservation.createReservation(userEntity, lecture));
 

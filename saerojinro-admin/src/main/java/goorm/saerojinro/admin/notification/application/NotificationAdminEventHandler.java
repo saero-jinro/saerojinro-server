@@ -1,16 +1,15 @@
-package goorm.saerojinro.api.notification.application;
+package goorm.saerojinro.admin.notification.application;
 
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.common.event.CommonEvent;
+import goorm.saerojinro.admin.notification.presentation.request.NotificationSendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @RequiredArgsConstructor
-public class NotificationEventHandler {
-	private final NotificationFacade notificationFacade;
+public class NotificationAdminEventHandler {
+	private final NotificationAdminFacade notificationFacade;
 
 	@EventListener
 	public void handleEvent(CommonEvent event) {
@@ -21,7 +20,7 @@ public class NotificationEventHandler {
 			case SPEAKER_APPROVED -> speakerApproved(event);
 			case LECTURE_CREATE -> lectureCreated(event);
 			case LECTURE_APPROVED -> lectureApproved(event);
-			case LECTURE_DELETE -> lectureDelete(event);
+			case LECTURE_DELETE -> lectureDeleted(event);
 		}
 	}
 
@@ -65,7 +64,7 @@ public class NotificationEventHandler {
 		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
 	}
 
-	private void lectureDelete(CommonEvent event) {
+	private void lectureDeleted(CommonEvent event) {
 		NotificationSendRequest request = NotificationSendRequest.of(
 			"강의 삭제 요청",
 			"강의 삭제 요청이 발생했습니다"

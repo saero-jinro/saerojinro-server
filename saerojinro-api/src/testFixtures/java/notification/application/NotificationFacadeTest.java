@@ -1,24 +1,16 @@
 package notification.application;
 
 import goorm.saerojinro.api.notification.application.NotificationFacade;
-import goorm.saerojinro.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.notification.application.NotificationCommandService;
 import goorm.saerojinro.domain.notification.application.NotificationQueryService;
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import goorm.saerojinro.domain.notification.domain.Notification;
 import goorm.saerojinro.domain.notification.domain.NotificationRepository;
-import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
-import goorm.saerojinro.domain.reservation.domain.Reservation;
-import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
-import goorm.saerojinro.infra.notification.sse.NotificationSseSender;
 import goorm.saerojinro.infra.repository.impl.EmitterRepositoryImpl;
 import mock.repository.FakeNotificationRepository;
-import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.List;
-
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class NotificationFacadeTest {
 	private NotificationFacade notificationFacade;
 	private NotificationRepository repository;
-	private ReservationRepository reservationRepository;
 
 	private User user;
 
@@ -50,20 +39,13 @@ public class NotificationFacadeTest {
 	public void init() {
 		repository = new FakeNotificationRepository();
 		NotificationQueryService queryService = new NotificationQueryService(repository);
-		NotificationCommandService commandService = new NotificationCommandService(repository);
 		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		UserRepository userRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
-		reservationRepository = new FakeReservationRepository();
-		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
-
-		NotificationSseSender sseSender = new NotificationSseSender();
-
-		notificationFacade = new NotificationFacade(
-			commandService, queryService, emitterRepository, userQueryService, reservationQueryService, sseSender);
+		notificationFacade = new NotificationFacade(emitterRepository, queryService, userQueryService);
 
 		user = userRepository.save(User.builder()
 			.email("email@email.com")
@@ -91,84 +73,15 @@ public class NotificationFacadeTest {
 	}
 
 	@Test
-	@DisplayName("sendNotificationByLectureId은 Lecture를 예약한 참가자에게 알림을 전송한다")
-	void sendNotificationByLectureId_Success() {
-		// given
-		notificationFacade.subscribe();
-		Lecture lecture = Lecture.builder().id(1L).build();
-		reservationRepository.save(Reservation.createReservation(user, lecture));
-
-		NotificationSendRequest request = NotificationSendRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.build();
-
-		// when
-		notificationFacade.sendNotificationByLectureId(1L, request);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(user.getId());
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		assertEquals(TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
-	}
-
-	@Test
-	@DisplayName("sendNotificationByReceiverId는 특정 참가자에게 알림을 전송한다")
-	void sendNotificationByReceiverId_Success() {
-		// given
-		notificationFacade.subscribe();
-		Long receiverId = 1L;
-		NotificationSendRequest request = NotificationSendRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.build();
-
-		// when
-		notificationFacade.sendNotificationByReceiverId(receiverId, request);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(receiverId);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		assertEquals(TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
-	}
-
-
-	@Test
-	@DisplayName("sendNotificationAll는 모든 참가자에게 알림을 전송한다")
-	void sendNotificationAll_Success() {
-		// given
-		notificationFacade.subscribe();
-		NotificationSendRequest request = NotificationSendRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.build();
-
-		// when
-		notificationFacade.sendNotificationAll(request);
-
-		// then
-		List<Notification> notifications = repository.findByUserIdIsNull();
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		assertEquals(TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
-	}
-
-	@Test
 	@DisplayName("myNotification은 현재 로그인한 유저가 받은 알림을 조회한다")
 	void myNotification_Success() {
 		// given
-		notificationFacade.subscribe();
-		Long receiverId = 1L;
-		NotificationSendRequest notification = NotificationSendRequest.builder()
+		repository.save(Notification.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
-			.build();
-		notificationFacade.sendNotificationByReceiverId(receiverId, notification);
+			.user(user)
+			.build()
+		);
 
 		// when
 		ReceivedNotificationListResponse response = notificationFacade.myNotification();
