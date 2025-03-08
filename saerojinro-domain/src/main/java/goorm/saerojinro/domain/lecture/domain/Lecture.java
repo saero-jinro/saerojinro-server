@@ -73,13 +73,27 @@ public class Lecture extends BaseTimeEntity {
 	 */
 	public void update(String title, String contents, Long maxCapacity, LocalDateTime startTime,
 					   LocalDateTime endTime, String location, Category category) {
-		this.title = title;
-		this.contents = contents;
-		this.maxCapacity = maxCapacity;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.location = location;
-		this.category = category;
+		if (title != null) {
+			this.title = title;
+		}
+		if (contents != null) {
+			this.contents = contents;
+		}
+		if (maxCapacity != null) {
+			this.maxCapacity = maxCapacity;
+		}
+		if (startTime != null) {
+			this.startTime = startTime;
+		}
+		if (endTime != null) {
+			this.endTime = endTime;
+		}
+		if (location != null) {
+			this.location = location;
+		}
+		if (category != null) {
+			this.category = category;
+		}
 	}
 
 	/**
