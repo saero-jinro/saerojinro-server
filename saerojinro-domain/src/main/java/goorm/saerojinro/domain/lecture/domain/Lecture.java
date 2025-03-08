@@ -3,14 +3,12 @@ package goorm.saerojinro.domain.lecture.domain;
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.enums.LectureStatus;
-import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
 import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 
 @Entity
@@ -54,10 +52,9 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
-	public static Lecture create(User speaker, String title, String contents, Long maxCapacity,
+	public static Lecture create(String title, String contents, Long maxCapacity,
 								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
-			.speaker(speaker)
 			.title(title)
 			.contents(contents)
 			.maxCapacity(maxCapacity)
@@ -70,32 +67,25 @@ public class Lecture extends BaseTimeEntity {
 	}
 
 	/**
-	 * 업데이트 요청 유저는 강연자(본인)이거나 운영자
+	 * 운영자만 수정 허용
 	 */
-	public void update(User speaker, String title, String contents) {
-		validateUpdatePermission(speaker);
+	public void update(String title, String contents, Long maxCapacity, LocalDateTime startTime,
+					   LocalDateTime endTime, String location, Category category) {
 		this.title = title;
 		this.contents = contents;
+		this.maxCapacity = maxCapacity;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.location = location;
+		this.category = category;
 	}
 
 	/**
-	 * 강연자(본인)인 경우 삭제 요청만으로 상태를 DELETE_PENDING
-	 * 운영자(ADMIN)인 경우 바로 DELETED 상태로 변경
+	 * 운영자만 삭제 허용
 	 */
-	public void requestDelete(User user) {
-		if (user.getRole().equals(ADMIN)) {
-			this.lectureStatus = DELETED;
-			this.delete();
-		} else if (this.speaker.getId().equals(user.getId())) {
-			this.lectureStatus = PENDING_DELETION;
-		} else {
-			throw new LectureNotAuthorizedException();
-		}
-	}
-
-	private void validateUpdatePermission(User speaker) {
-		if (!speaker.getRole().equals(ADMIN) && !(this.speaker.getId().equals(speaker.getId()))) {
-			throw new LectureNotAuthorizedException();
-		}
+	@Override
+	public void delete() {
+		super.delete();
+		this.lectureStatus = DELETED;
 	}
 }
