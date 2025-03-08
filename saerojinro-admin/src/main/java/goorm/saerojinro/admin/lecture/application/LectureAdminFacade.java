@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AdminLectureFacade {
+public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 
 	public LectureCreateResponse create(LectureCreateRequest request) {

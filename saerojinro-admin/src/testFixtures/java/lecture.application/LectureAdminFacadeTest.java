@@ -3,32 +3,25 @@ package lecture.application;
 import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import goorm.saerojinro.admin.lecture.application.AdminLectureFacade;
+import goorm.saerojinro.admin.lecture.application.LectureAdminFacade;
 import goorm.saerojinro.admin.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.lecture.presentation.response.LectureCreateResponse;
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
-import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
-import goorm.saerojinro.domain.user.application.UserQueryService;
-import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class AdminLectureFacadeTest {
+public class LectureAdminFacadeTest {
 
-	private AdminLectureFacade adminLectureFacade;
+	private LectureAdminFacade lectureAdminFacade;
 	private FakeLectureRepository lectureRepository;
 	private FakeUserRepository userRepository;
 
@@ -61,7 +54,7 @@ public class AdminLectureFacadeTest {
 		LectureCommandService lectureCommandService = new LectureCommandService(lectureRepository);
 //		UserQueryService userQueryService = new UserQueryService(userRepository, new BCryptPasswordEncoder());
 
-		adminLectureFacade = new AdminLectureFacade(lectureCommandService);
+		lectureAdminFacade = new LectureAdminFacade(lectureCommandService);
 
 //		userRepository.save(VALID_SPEAKER);
 //		userRepository.save(VALID_SPEAKER_2);
@@ -82,7 +75,7 @@ public class AdminLectureFacadeTest {
 			.build();
 
 		// when
-		LectureCreateResponse response = adminLectureFacade.create(request);
+		LectureCreateResponse response = lectureAdminFacade.create(request);
 
 		// then
 		assertNotNull(response);
@@ -103,7 +96,7 @@ public class AdminLectureFacadeTest {
 			.category(CATEGORY)
 			.build();
 
-		LectureCreateResponse createResponse = adminLectureFacade.create(createRequest);
+		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
 		Long lectureId = createResponse.lectureId();
 
 		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
@@ -112,7 +105,7 @@ public class AdminLectureFacadeTest {
 			.build();
 
 		// when
-		adminLectureFacade.update(lectureId, updateRequest);
+		lectureAdminFacade.update(lectureId, updateRequest);
 
 		// then
 		Lecture updatedLecture = lectureRepository.findById(lectureId)
@@ -142,11 +135,11 @@ public class AdminLectureFacadeTest {
 			.category(CATEGORY)
 			.build();
 
-		LectureCreateResponse createResponse = adminLectureFacade.create(createRequest);
+		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
 		Long lectureId = createResponse.lectureId();
 
 		// when
-		adminLectureFacade.delete(lectureId);
+		lectureAdminFacade.delete(lectureId);
 
 		// then
 		Lecture deletedLecture = lectureRepository.findById(lectureId)

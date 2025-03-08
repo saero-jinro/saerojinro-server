@@ -12,14 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "Admin", description = "운영자 강의 API")
-public interface AdminLectureController {
+@Tag(name = "Lecture", description = "운영자 강의 API")
+public interface LectureAdminController {
 	@Operation(
 		summary = "강의 생성",
 		description = "운영자가 강의를 생성합니다.",
 		responses = {
 			@ApiResponse(
-				responseCode = "200",
+				responseCode = "201",
 				content = @Content(schema = @Schema(implementation = LectureCreateResponse.class))
 			)
 		}
