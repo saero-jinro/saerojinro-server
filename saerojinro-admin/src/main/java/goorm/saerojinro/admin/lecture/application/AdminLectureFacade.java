@@ -15,6 +15,7 @@ public class AdminLectureFacade {
 
 	public LectureCreateResponse create(LectureCreateRequest request) {
 		Lecture lecture = lectureCommandService.create(
+			null,
 			request.title(),
 			request.contents(),
 			request.maxCapacity(),

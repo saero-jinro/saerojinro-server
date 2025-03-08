@@ -23,7 +23,8 @@ public class Lecture extends BaseTimeEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "speaker_id", nullable = false)
+//	@JoinColumn(name = "speaker_id", nullable = false)
+	@JoinColumn(name = "speaker_id")
 	private User speaker;
 
 	@Column(nullable = false, unique = true)
@@ -52,9 +53,10 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LectureStatus lectureStatus;
 
-	public static Lecture create(String title, String contents, Long maxCapacity,
+	public static Lecture create(User speaker, String title, String contents, Long maxCapacity,
 								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
+			.speaker(speaker)
 			.title(title)
 			.contents(contents)
 			.maxCapacity(maxCapacity)
@@ -62,7 +64,7 @@ public class Lecture extends BaseTimeEntity {
 			.endTime(endTime)
 			.location(location)
 			.category(category)
-			.lectureStatus(PENDING_APPROVAL)
+			.lectureStatus(APPROVED) // 추후 상태 필드 수정
 			.build();
 	}
 
