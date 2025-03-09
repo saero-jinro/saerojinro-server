@@ -78,8 +78,8 @@ public class ReviewFacade {
 
         Review review = reviewQueryService.getByReviewId(reviewId);
 
-        if(!review.getUser().getId().equals(user.getId()) && !user.getRole().equals(ADMIN)){
-          throw new ReviewNotAuthorizedException();
+        if (!(user.getRole().equals(ADMIN) || review.getUser().getId().equals(user.getId()))) {
+            throw new ReviewNotAuthorizedException();
         }
 
         reviewCommandService.delete(user, review);
