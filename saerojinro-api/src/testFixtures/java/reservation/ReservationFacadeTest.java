@@ -1,6 +1,6 @@
 package reservation;
 
-import goorm.saerojinro.api.reservation.api.ReservationFacade;
+import goorm.saerojinro.api.reservation.application.ReservationFacade;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.common.domain.Category;
