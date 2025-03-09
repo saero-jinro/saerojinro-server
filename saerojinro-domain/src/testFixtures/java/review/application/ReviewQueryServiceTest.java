@@ -1,0 +1,136 @@
+package review.application;
+
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.lecture.enums.LectureStatus;
+import goorm.saerojinro.domain.review.application.ReviewQueryService;
+import goorm.saerojinro.domain.review.domain.Review;
+import goorm.saerojinro.domain.review.domain.ReviewRepository;
+import goorm.saerojinro.domain.review.exception.ReviewNotFoundException;
+import goorm.saerojinro.domain.user.domain.User;
+import mock.repository.FakeReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ReviewQueryServiceTest {
+    private ReviewQueryService reviewQueryService;
+
+    private static final Long USER_ID = 1L;
+    private static final Long LECTURE_ID = 1L;
+    private static final String LECTURE_TITLE = "Title";
+    private static final String LECTURE_CONTENTS = "Contents";
+    private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
+    private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
+    private static final String LOCATION = "Location";
+    private static final Category CATEGORY = Category.BACKEND;
+    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
+
+    private static final String CONTENT = "리뷰 입니다";
+    private static final Double RATING = 5.0;
+
+    @BeforeEach
+    void init() {
+        ReviewRepository reviewRepository = new FakeReviewRepository();
+        reviewQueryService = new ReviewQueryService(reviewRepository);
+
+        User user = User.builder()
+                .id(USER_ID)
+                .build();
+
+        Lecture lecture = Lecture.builder()
+                .id(LECTURE_ID)
+                .title(LECTURE_TITLE)
+                .contents(LECTURE_CONTENTS)
+                .startTime(START_TIME)
+                .endTime(END_TIME)
+                .location(LOCATION)
+                .category(CATEGORY)
+                .lectureStatus(STATUS)
+                .build();
+
+        Review review = Review.create(user,lecture, CONTENT, RATING);
+        reviewRepository.save(review);
+    }
+
+    private Lecture createLecture(Long id) {
+        return Lecture.builder()
+                .id(id)
+                .title(LECTURE_TITLE)
+                .contents(LECTURE_CONTENTS)
+                .startTime(START_TIME)
+                .endTime(END_TIME)
+                .location(LOCATION)
+                .category(CATEGORY)
+                .lectureStatus(STATUS)
+                .build();
+    }
+
+    @Test
+    @DisplayName("getAllReview 는 모든 리뷰 데이터를 조회 합니다.")
+    public void getAllReview_Success(){
+        // when
+        List<Review> reviews = reviewQueryService.getAll();
+
+        // then
+        assertThat(reviews)
+                .isNotNull()
+                .hasSize(1);
+
+        Review review = reviews.get(0);
+        assertThat(review.getUser().getId()).isEqualTo(USER_ID);
+        assertThat(review.getLecture().getId()).isEqualTo(LECTURE_ID);
+    }
+
+    @Test
+    @DisplayName("getByLecture 는 강의 별 리뷰 데이터를 조회 합니다.")
+    public void getByLecture_Success(){
+        // given
+        Lecture lecture = createLecture(LECTURE_ID);
+
+        // when
+        List<Review> reviews = reviewQueryService.getByLecture(lecture);
+
+        // then
+        assertThat(reviews)
+                .isNotNull()
+                .hasSize(1);
+
+        Review review = reviews.get(0);
+        assertThat(review.getLecture().getId()).isEqualTo(LECTURE_ID);
+    }
+
+    @Test
+    @DisplayName("getByReviewId 는 리뷰 아이디에 해당하는 리뷰 데이터를 조회 합니다.")
+    public void getByReviewId_Success(){
+        // given
+        List<Review> allReviews = reviewQueryService.getAll();
+        Review savedReview = allReviews.get(0);
+        Long reviewId = savedReview.getId();
+
+        // when
+        Review findReview = reviewQueryService.getByReviewId(reviewId);
+
+        // then
+        assertThat(findReview.getId()).isEqualTo(reviewId);
+        assertThat(findReview.getUser().getId()).isEqualTo(USER_ID);
+        assertThat(findReview.getLecture().getId()).isEqualTo(LECTURE_ID);
+    }
+
+    @Test
+    @DisplayName("getByReviewId 는 리뷰 아이디에 해당하는 데이터가 없을 시, ReviewNotFoundException 을 반환 합니다")
+    public void getByReviewId_ReviewNotFoundException(){
+        // given
+        Long reviewId = 2L;
+
+        // then
+        assertThrows(ReviewNotFoundException.class,
+                () -> reviewQueryService.getByReviewId(reviewId));
+    }
+}
