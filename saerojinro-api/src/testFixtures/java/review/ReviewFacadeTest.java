@@ -43,6 +43,7 @@ public class ReviewFacadeTest {
     private FakeReservationRepository reservationRepository;
 
     private User user;
+    private User nonAdminUser;
     private Lecture lecture;
 
     private final String CONTENT = "Excellent lecture!";
@@ -87,6 +88,16 @@ public class ReviewFacadeTest {
                 new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
         );
 
+        nonAdminUser = userRepository.save(
+                User.builder()
+                        .email("nonadminowner@example.com")
+                        .password(passwordEncoder.encode("password"))
+                        .name("NonAdminOwner")
+                        .role(ATTENDEE)
+                        .build()
+        );
+
+
         lecture = lectureRepository.save(
                 Lecture.builder()
                         .id(LECTURE_ID)
@@ -100,8 +111,11 @@ public class ReviewFacadeTest {
                         .build()
         );
 
-        Reservation reservation = Reservation.createReservation(user, lecture);
-        reservationRepository.save(reservation);
+        Reservation reservationByUser = Reservation.createReservation(user, lecture);
+        reservationRepository.save(reservationByUser);
+
+        Reservation reservationByNonAdminUser = Reservation.createReservation(nonAdminUser, lecture);
+        reservationRepository.save(reservationByNonAdminUser);
     }
 
     @Test
@@ -237,7 +251,7 @@ public class ReviewFacadeTest {
     }
 
     @Test
-    @DisplayName("리뷰 삭제 테스트")
+    @DisplayName("리뷰 삭제 성공 테스트: ADMIN 또는 작성자이면 삭제 가능")
     public void delete_Success() {
         // given
         ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
@@ -253,7 +267,32 @@ public class ReviewFacadeTest {
     }
 
     @Test
-    @DisplayName("delete 는 유저가 작성하지 않은 리뷰를 삭제하거나, 운영진이 아니면 ReviewNotAuthorizedException 을 반환한다.")
+    @DisplayName("리뷰 삭제 성공 테스트: 작성자가 삭제 요청하는 경우 삭제 가능")
+    public void delete_Success_asOwner() {
+        // given
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(nonAdminUser, nonAdminUser.getPassword(), nonAdminUser.getAuthorities())
+        );
+
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(nonAdminUser.getId(), "Review by non-admin owner", 4.0);
+        ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
+        Long reviewId = createResponse.id();
+
+        // when
+        reviewFacade.delete(reviewId);
+
+        // then
+        ReviewListResponse response = reviewFacade.getAllReview();
+        Assertions.assertThat(response.reviews()).isEmpty();
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+        );
+    }
+
+    @Test
+    @DisplayName("리뷰 삭제 실패 테스트: ADMIN이 아니고, 작성자도 아닌 경우 삭제 불가")
     public void delete_ReviewNotAuthorizedException(){
         // given
         ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
@@ -261,17 +300,16 @@ public class ReviewFacadeTest {
         Long reviewId = createResponse.id();
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        User nonAdminUser = userRepository.save(
+        User nonOwnerUser = userRepository.save(
                 User.builder()
-                        .email("nonadmin@example.com")
+                        .email("nonowner@example.com")
                         .password(passwordEncoder.encode("password"))
-                        .name("Non Admin")
-                        .role(ATTENDEE) // ADMIN 이 아닌 역할
+                        .name("Non Owner")
+                        .role(ATTENDEE)
                         .build()
         );
-
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(nonAdminUser, nonAdminUser.getPassword(), nonAdminUser.getAuthorities())
+                new UsernamePasswordAuthenticationToken(nonOwnerUser, nonOwnerUser.getPassword(), nonOwnerUser.getAuthorities())
         );
 
         // then
