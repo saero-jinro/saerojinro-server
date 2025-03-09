@@ -32,13 +32,13 @@ public class LectureCommandServiceTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "room A";
 	private static final Category CATEGORY = Category.BACKEND;
-	private static final LectureStatus EXPECTED_STATUS = LectureStatus.PENDING_APPROVAL;
+	private static final LectureStatus EXPECTED_STATUS = LectureStatus.APPROVED;
 
-	private static final User VALID_SPEAKER = User.builder()
-		.id(1L)
-		.name("Speaker")
-		.role(SPEAKER)
-		.build();
+//	private static final User VALID_SPEAKER = User.builder()
+//		.id(1L)
+//		.name("Speaker")
+//		.role(SPEAKER)
+//		.build();
 
 	@BeforeEach
 	void setUp() {
@@ -46,7 +46,7 @@ public class LectureCommandServiceTest {
 		userRepository = new FakeUserRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
 		lectureCommandService = new LectureCommandService(lectureRepository);
-		userRepository.save(VALID_SPEAKER);
+//		userRepository.save(VALID_SPEAKER);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class LectureCommandServiceTest {
 	void createLecture_success() {
 		// when
 		Lecture createdLecture = lectureCommandService.create(
-			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			null, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// then
@@ -67,9 +67,6 @@ public class LectureCommandServiceTest {
 		assertEquals(LOCATION, createdLecture.getLocation());
 		assertEquals(CATEGORY, createdLecture.getCategory());
 		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
-
-		assertNotNull(createdLecture.getSpeaker());
-		assertEquals(VALID_SPEAKER.getId(), createdLecture.getSpeaker().getId());
 	}
 
 	@Test
@@ -77,12 +74,15 @@ public class LectureCommandServiceTest {
 	void updateLecture_success() {
 		//given
 		Lecture createdLecture = lectureCommandService.create(
-			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			null, TITLE, CONTENTS, MAX_CAPACITY,
+			START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when
 		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
-		lectureCommandService.update(VALID_SPEAKER, findLecture.getId(), "updated title", "updated contents");
+		lectureCommandService.update(
+			findLecture.getId(), "updated title", "updated contents",
+			MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY);
 
 		// then
 		assertNotNull(createdLecture);
@@ -96,7 +96,6 @@ public class LectureCommandServiceTest {
 		assertEquals(LOCATION, createdLecture.getLocation());
 		assertEquals(CATEGORY, createdLecture.getCategory());
 		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
-		assertEquals(createdLecture.getSpeaker(), VALID_SPEAKER);
 	}
 
 	@Test
@@ -104,16 +103,16 @@ public class LectureCommandServiceTest {
 	void deleteLecture_success() {
 		//given
 		Lecture createdLecture = lectureCommandService.create(
-			VALID_SPEAKER, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			null, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when
 		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
-		lectureCommandService.delete(VALID_SPEAKER, findLecture.getId());
+		lectureCommandService.delete(findLecture.getId());
 
 		// then
 		assertNotNull(findLecture);
 
-		assertEquals(LectureStatus.PENDING_DELETION, findLecture.getLectureStatus());
+		assertEquals(LectureStatus.DELETED, findLecture.getLectureStatus());
 	}
 }

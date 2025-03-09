@@ -17,20 +17,21 @@ public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
 	public Lecture create(User speaker, String title, String contents, Long maxCapacity,
-								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
+						  LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
-		Lecture lecture = Lecture.create(speaker, title, contents, maxCapacity, startTime, endTime, location, category);
+		Lecture lecture = Lecture.create(null, title, contents, maxCapacity, startTime, endTime, location, category);
 		return lectureRepository.save(lecture);
 	}
 
-	public void update(User speaker, Long lectureId, String title, String contents) {
-		Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
+	public void update(Long id, String title, String contents, Long maxCapacity,
+					   LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
+		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
 
-		lecture.update(speaker, title, contents);
+		lecture.update(title, contents, maxCapacity, startTime, endTime, location, category);
 	}
 
-	public void delete(User speaker, Long lectureId) {
-		Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
-		lecture.requestDelete(speaker);
+	public void delete(Long id) {
+		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
+		lecture.delete();
 	}
 }

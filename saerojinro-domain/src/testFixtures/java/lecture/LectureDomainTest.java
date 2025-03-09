@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final User TEST_SPEAKER = User.builder()
-		.id(1L)
-		.name("Test Speaker")
-		.role(BaseRole.SPEAKER)
-		.build();
+//	private static final User TEST_SPEAKER = User.builder()
+//		.id(1L)
+//		.name("Test Speaker")
+//		.role(BaseRole.SPEAKER)
+//		.build();
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
@@ -32,14 +32,14 @@ class LectureDomainTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
-	private static final LectureStatus STATUS = PENDING_APPROVAL;
+	private static final LectureStatus STATUS = APPROVED;
 
 	private Lecture lecture;
 
 	@BeforeEach
 	void setUp() {
 		lecture = Lecture.create(
-			TEST_SPEAKER,
+			null,
 			TITLE,
 			CONTENTS,
 			MAX_CAPACITY,
@@ -72,7 +72,7 @@ class LectureDomainTest {
 		String newContents = "Updated Contents";
 
 		// when
-		lecture.update(TEST_SPEAKER, newTitle, newContents);
+		lecture.update(newTitle, newContents, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY);
 
 		// then
 		assertEquals(newTitle, lecture.getTitle());
@@ -80,24 +80,8 @@ class LectureDomainTest {
 	}
 
 	@Test
-	@DisplayName("다른 강연자 or 운영자가 아닐 경우 강의 수정시 예외를 반환한다")
-	void LectureUpdateNotAuthorizedException() {
-		// given
-		User wrongSpeaker = User.builder()
-			.id(2L)
-			.name("Wrong Speaker")
-			.role(BaseRole.SPEAKER)
-			.build();
-
-		// when & then
-		Assertions.assertThrows(LectureNotAuthorizedException.class, () -> {
-			lecture.update(wrongSpeaker, "Wrong Speaker", "Wrong Speaker");
-		});
-	}
-
-	@Test
-	@DisplayName("운영자가 강의를 수정을 할 수 있다")
-	void updateLectureByAdmin_success() {
+	@DisplayName("Lecture를 성공적으로 삭제한다")
+	void deleteLecture_success() {
 		// given
 		User admin = User.builder()
 			.id(999L)
@@ -106,58 +90,9 @@ class LectureDomainTest {
 			.build();
 
 		// when
-		lecture.update(admin, "updated title", "updated contents");
-
-		//then
-		assertEquals("updated title", lecture.getTitle());
-		assertEquals("updated contents", lecture.getContents());
-	}
-
-	@Test
-	@DisplayName("운영자가 강의 삭제시 삭제 완료 상태로 변경된다")
-	void deleteLectureByAdmin_success() {
-		// given
-		User admin = User.builder()
-			.id(999L)
-			.name("Admin")
-			.role(ADMIN)
-			.build();
-
-		// when
-		lecture.requestDelete(admin);
+		lecture.delete();
 
 		//then
 		assertEquals(DELETED, lecture.getLectureStatus());
-	}
-
-	@Test
-	@DisplayName("강연자 본인이 강의 삭제시 삭제 대기 상태로 변경된다")
-	void deleteLectureByLecture_success() {
-		// given
-		User rightSpeaker = User.builder()
-			.id(1L)
-			.name("Right Speaker")
-			.role(SPEAKER)
-			.build();
-
-		// when
-		lecture.requestDelete(rightSpeaker);
-
-		//then
-		assertEquals(PENDING_DELETION, lecture.getLectureStatus());
-	}
-
-	@Test
-	@DisplayName("강연자 본인이 아닐시 예외가 발생한다")
-	void LectureDeleteNotAuthorizedException() {
-		// given
-		User wrongSpeaker = User.builder()
-			.id(2L)
-			.name("Wrong Speaker")
-			.role(SPEAKER)
-			.build();
-
-		// when & then
-		Assertions.assertThrows(LectureNotAuthorizedException.class, (() -> lecture.requestDelete(wrongSpeaker)));
 	}
 }
