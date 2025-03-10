@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
+import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
+import goorm.saerojinro.infra.messaging.exception.StreamProcessingException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.redis.connection.stream.RecordId;
@@ -33,10 +35,10 @@ public class EventLogProducer {
 			RecordId recordId = redisTemplate.opsForStream().add(record);
 
 			if (Optional.ofNullable(recordId).isEmpty()) {
-				throw new RuntimeException("Redis Stream 기록 실패: " + eventLogDTO);
+				throw new StreamProcessingException();
 			}
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("JSON 직렬화 실패: " + e.getMessage());
+			throw new InvalidMessageFormatException();
 		}
 	}
 }

@@ -1,23 +1,21 @@
-package goorm.saerojinro.infra.config.redis;
+package goorm.saerojinro.infra.messaging.eventlog;
 
-import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import goorm.saerojinro.domain.eventlog.application.EventLogCommandService;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
 import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
-import goorm.saerojinro.domain.eventlog.domain.EventLogRepository;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -42,9 +40,8 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 			eventLogCommandService.save(eventLog);
 
 			redisTemplate.opsForStream().trim(STREAM_KEY, 1000);
-
-		} catch (Exception e) {
-			System.err.println("❌ 메시지 처리 실패: " + e.getMessage());
+		} catch (JsonProcessingException e) {
+			throw new InvalidMessageFormatException();
 		}
 	}
 }

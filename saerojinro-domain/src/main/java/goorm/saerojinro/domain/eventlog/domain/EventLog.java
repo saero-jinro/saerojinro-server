@@ -37,7 +37,7 @@ public class EventLog {
 	private User user;
 
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "lecture_id")
+	@JoinColumn(name = "lecture_id", nullable = false)
 	private Lecture lecture;
 
 	@Enumerated(STRING)
