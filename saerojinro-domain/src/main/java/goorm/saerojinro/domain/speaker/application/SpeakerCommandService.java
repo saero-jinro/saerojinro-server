@@ -11,6 +11,7 @@ public class SpeakerCommandService {
 	private final SpeakerRepository speakerRepository;
 
 	public Speaker create(String name, String email, String position, String introduction, String filmography, String photo) {
-		return Speaker.create(name, email, position, introduction, filmography, photo);
+		Speaker speaker = Speaker.create(name, email, position, introduction, filmography, photo);
+		return speakerRepository.save(speaker);
 	}
 }
