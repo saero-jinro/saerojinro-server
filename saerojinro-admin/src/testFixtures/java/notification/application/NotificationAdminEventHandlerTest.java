@@ -96,8 +96,10 @@ public class NotificationAdminEventHandlerTest {
 	@DisplayName("handleEvent는 각 이벤트별 올바른 알림을 생성할 수 있다.")
 	void handleEvent_Success() {
 		// given
+		// 강의 별 알림
 		CommonEvent event2 = CommonEvent.builder().eventType(LECTURE_NOTICE)
 			.lectureId(1L).title(TITLE).userId(1L).build();
+		// 5분 전 알림
 		CommonEvent event3 = CommonEvent.builder().eventType(LECTURE_IMMINENT)
 			.lectureId(1L).title(TITLE).build();
 
@@ -121,8 +123,6 @@ public class NotificationAdminEventHandlerTest {
 	@Test
 	@DisplayName("broadcastNotice는 전체 알림을 전송할 수 있다.")
 	void broadcastNotice_Success() {
-		// given
-
 		// when
 		notificationEventHandler.broadcastNotice(event);
 
@@ -137,8 +137,6 @@ public class NotificationAdminEventHandlerTest {
 	@Test
 	@DisplayName("lectureNotice는 강의별 알림을 전송할 수 있다.")
 	void lectureNotice_Success() {
-		// given
-
 		// when
 		notificationEventHandler.lectureNotice(event);
 
@@ -151,7 +149,7 @@ public class NotificationAdminEventHandlerTest {
 	}
 
 	@Test
-	@DisplayName("lectureImminent는 강연자 생성 알림을 전송할 수 있다.")
+	@DisplayName("lectureImminent는 5분전 알림을 전송할 수 있다.")
 	void lectureImminent_Success() {
 		// when
 		notificationEventHandler.lectureImminent(event);
