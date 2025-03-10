@@ -21,13 +21,6 @@ public record CommonEvent(
 			.build();
 	}
 
-	public static CommonEvent createWithUserId(EventType eventType, Long userId) {
-		return CommonEvent.builder()
-			.eventType(eventType)
-			.userId(userId)
-			.build();
-	}
-
 	public static CommonEvent createBroadcast(String title, String contents) {
 		return CommonEvent.builder()
 			.eventType(BROADCAST_NOTICE)
