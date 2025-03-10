@@ -4,7 +4,7 @@ import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
+import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
 import goorm.saerojinro.domain.eventlog.domain.EventLogProducer;
 import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
 import goorm.saerojinro.infra.messaging.exception.StreamProcessingException;
