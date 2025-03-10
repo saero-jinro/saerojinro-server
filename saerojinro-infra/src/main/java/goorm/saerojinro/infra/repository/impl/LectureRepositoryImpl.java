@@ -46,7 +46,7 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime time1, LocalDateTime time2) {
-		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(time1, time2);
+	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
+		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(startTime, endTime);
 	}
 }

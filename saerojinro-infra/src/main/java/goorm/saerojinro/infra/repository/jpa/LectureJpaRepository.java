@@ -20,5 +20,5 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 
 	List<Lecture> findByStartTime(LocalDateTime time);
 
-	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime time1, LocalDateTime time2);
+	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 }

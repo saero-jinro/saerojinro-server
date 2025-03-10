@@ -17,5 +17,5 @@ public interface LectureRepository {
 
 	List<Lecture> findByStartTime(LocalDateTime time);
 
-	List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime time1, LocalDateTime time2);
+	List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime);
 }

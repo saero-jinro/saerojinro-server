@@ -33,7 +33,7 @@ public class LectureQueryService {
 		return lectureRepository.findByStartTime(time);
 	}
 
-	public List<Lecture> getAllLectureBetween(LocalDateTime time1, LocalDateTime time2) {
-		return lectureRepository.findByStartTimeAfterAndEndTimeBefore(time1, time2);
+	public List<Lecture> getAllLectureBetween(LocalDateTime startTime, LocalDateTime endTime) {
+		return lectureRepository.findByStartTimeAfterAndEndTimeBefore(startTime, endTime);
 	}
 }
