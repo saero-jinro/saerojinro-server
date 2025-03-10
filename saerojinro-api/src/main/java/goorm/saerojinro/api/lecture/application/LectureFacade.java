@@ -1,6 +1,6 @@
 package goorm.saerojinro.api.lecture.application;
 
-import static goorm.saerojinro.domain.eventlog.domain.EventLogType.LECTURE_VIEW;
+import static goorm.saerojinro.domain.eventlog.domain.enums.EventLogType.LECTURE_VIEW;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;

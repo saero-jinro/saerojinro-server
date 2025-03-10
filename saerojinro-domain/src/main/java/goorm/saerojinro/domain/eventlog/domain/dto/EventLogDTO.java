@@ -2,7 +2,7 @@ package goorm.saerojinro.domain.eventlog.domain.dto;
 
 import goorm.saerojinro.common.domain.Category;
 
-import goorm.saerojinro.domain.eventlog.domain.EventLogType;
+import goorm.saerojinro.domain.eventlog.domain.enums.EventLogType;
 import lombok.Builder;
 
 @Builder

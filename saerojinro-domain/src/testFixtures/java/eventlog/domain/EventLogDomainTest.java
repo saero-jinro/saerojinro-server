@@ -1,7 +1,7 @@
-package eventlog;
+package eventlog.domain;
 
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static goorm.saerojinro.domain.eventlog.domain.EventLogType.LECTURE_REGISTER;
+import static goorm.saerojinro.domain.eventlog.domain.enums.EventLogType.LECTURE_REGISTER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
-import goorm.saerojinro.domain.eventlog.domain.EventLogType;
+import goorm.saerojinro.domain.eventlog.domain.enums.EventLogType;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 

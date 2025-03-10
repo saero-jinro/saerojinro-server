@@ -6,6 +6,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.eventlog.domain.enums.EventLogType;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.Column;

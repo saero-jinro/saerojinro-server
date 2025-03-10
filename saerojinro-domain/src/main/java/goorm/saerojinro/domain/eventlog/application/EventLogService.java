@@ -20,11 +20,11 @@ public class EventLogService {
 	private final LectureQueryService lectureQueryService;
 
 	@Transactional
-	public void save(String record, EventLogDTO eventLogDTO) {
+	public EventLog save(String record, EventLogDTO eventLogDTO) {
 		User user = userQueryService.getById(eventLogDTO.userId());
 		Lecture lecture = lectureQueryService.getByLectureId(eventLogDTO.lectureId());
 		EventLog eventLog = EventLog.create(record, user, lecture, eventLogDTO.eventLogType(), eventLogDTO.category());
 
-		eventLogRepository.save(eventLog);
+		return eventLogRepository.save(eventLog);
 	}
 }
