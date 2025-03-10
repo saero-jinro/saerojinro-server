@@ -27,7 +27,6 @@ public class NotificationScheduler {
 		LocalDateTime fiveMinutesLater = LocalDateTime.now()
 			.truncatedTo(MINUTES)
 			.plusMinutes(MINUTES_BEFORE);
-		System.out.println(fiveMinutesLater);
 		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(fiveMinutesLater);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -42,6 +41,5 @@ public class NotificationScheduler {
 					fiveMinutesLater.format(formatter) + "에 시작합니다")
 			);
 		}
-		System.out.println("hey");
 	}
 }
