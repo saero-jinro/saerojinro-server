@@ -43,12 +43,12 @@ public class QuestionsControllerImpl implements QuestionsController{
     public ResponseEntity<Void> update(@PathVariable("lectureId") Long questionsId,
                                        QuestionsUpdateRequest request) {
         questionsFacade.update(questionsId, request);
-        return ResponseEntity.status(NO_CONTENT).body(null);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<Void> delete(@PathVariable("lectureId") Long questionsId) {
         questionsFacade.delete(questionsId);
-        return ResponseEntity.status(NO_CONTENT).body(null);
+        return ResponseEntity.noContent().build();
     }
 }
