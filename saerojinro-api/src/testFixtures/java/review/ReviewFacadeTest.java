@@ -8,7 +8,6 @@ import goorm.saerojinro.api.review.presentation.response.ReviewListResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.review.application.ReviewCommandService;
@@ -54,7 +53,6 @@ public class ReviewFacadeTest {
     private static final String LECTURE_CONTENTS = "Contents";
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     @BeforeEach
     void init() {
@@ -107,7 +105,6 @@ public class ReviewFacadeTest {
                         .endTime(LocalDateTime.now().minusHours(1))
                         .location(LOCATION)
                         .category(CATEGORY)
-                        .lectureStatus(STATUS)
                         .build()
         );
 
@@ -180,7 +177,6 @@ public class ReviewFacadeTest {
                 .endTime(LocalDateTime.now().plusHours(1)) // 아직 끝나지 않음
                 .location("New Location")
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
         upcomingLecture = lectureRepository.save(upcomingLecture);
 

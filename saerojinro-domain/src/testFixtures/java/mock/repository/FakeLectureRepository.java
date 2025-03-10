@@ -3,7 +3,6 @@ package mock.repository;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +26,6 @@ public class FakeLectureRepository implements LectureRepository {
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
 			.category(lecture.getCategory())
-			.lectureStatus(lecture.getLectureStatus())
 			.build();
 		data.add(saved);
 		return saved;
