@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import goorm.saerojinro.domain.eventlog.application.EventLogCommandService;
+import goorm.saerojinro.domain.eventlog.application.EventLogService;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
 import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class RedisStreamListener implements StreamListener<String, ObjectRecord<String, String>> {
-	private final EventLogCommandService eventLogCommandService;
+	private final EventLogService eventLogService;
 	private final UserQueryService userQueryService;
 	private final LectureQueryService lectureQueryService;
 	private final RedisTemplate<String, String> redisTemplate;
@@ -37,7 +37,7 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 			Lecture lecture = lectureQueryService.getByLectureId(eventLogDTO.lectureId());
 			EventLog eventLog = EventLog.create(record, user, lecture, eventLogDTO.eventType(), eventLogDTO.category());
 
-			eventLogCommandService.save(eventLog);
+			eventLogService.save(eventLog);
 
 			redisTemplate.opsForStream().trim(STREAM_KEY, 1000);
 		} catch (JsonProcessingException e) {

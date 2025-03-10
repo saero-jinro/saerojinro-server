@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EventLogCommandService {
+public class EventLogService {
 	private final EventLogRepository eventLogRepository;
 
 	@Transactional
