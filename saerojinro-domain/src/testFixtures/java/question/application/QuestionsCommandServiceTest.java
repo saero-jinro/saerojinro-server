@@ -2,7 +2,6 @@ package question.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.questions.application.QuestionsCommandService;
 import goorm.saerojinro.domain.questions.domain.Questions;
 import goorm.saerojinro.domain.questions.exception.QuestionsNotFoundException;
@@ -32,7 +31,6 @@ public class QuestionsCommandServiceTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     private static final String CONTENT = "사전 질문 입니다";
 
@@ -53,7 +51,6 @@ public class QuestionsCommandServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 

@@ -1,4 +1,4 @@
-package Questions;
+package questions;
 
 import goorm.saerojinro.api.questions.application.QuestionsFacade;
 import goorm.saerojinro.api.questions.presentation.request.QuestionsCreateRequest;
@@ -8,7 +8,6 @@ import goorm.saerojinro.api.questions.presentation.response.QuestionsListRespons
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.questions.application.QuestionsCommandService;
 import goorm.saerojinro.domain.questions.application.QuestionsQueryService;
 import goorm.saerojinro.domain.questions.domain.Questions;
@@ -49,7 +48,6 @@ public class QuestionsFacadeTest {
     private static final String LECTURE_CONTENTS = "Contents";
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
     private final String CONTENT = "Excellent lecture!";
 
     @BeforeEach
@@ -104,7 +102,6 @@ public class QuestionsFacadeTest {
                         .endTime(LocalDateTime.now().minusHours(1))
                         .location(LOCATION)
                         .category(CATEGORY)
-                        .lectureStatus(STATUS)
                         .build()
         );
 
