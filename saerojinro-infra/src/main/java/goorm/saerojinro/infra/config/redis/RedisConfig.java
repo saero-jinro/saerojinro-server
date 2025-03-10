@@ -18,27 +18,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 @EnableRedisRepositories(basePackages = "goorm.saerojinro.infra.repository.redis")
 public class RedisConfig {
-	@Value("${spring.data.redis.host}")
-	String redisHost;
-
-	@Value("${spring.data.redis.port}")
-	int redisPort;
-
-	@Value("${spring.data.redis.password}")
-	String redisPassword;
-
-	private static final String STREAM_KEY = "event_log_stream";
-	private static final String CONSUMER_GROUP = "event_consumer_group";
+	private final RedisProperties redisProperties;
 
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-		configuration.setHostName(redisHost);
-		configuration.setPort(redisPort);
-		configuration.setPassword(redisPassword);
+		configuration.setHostName(redisProperties.getHost());
+		configuration.setPort(redisProperties.getPort());
+		configuration.setPassword(redisProperties.getPassword());
 
 		LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
 			.commandTimeout(Duration.ofSeconds(5))
@@ -79,7 +72,7 @@ public class RedisConfig {
 			StreamMessageListenerContainer.create(connectionFactory, containerOptions);
 
 		container.receive(
-			StreamOffset.create(STREAM_KEY, ReadOffset.lastConsumed()),
+			StreamOffset.create(redisProperties.getLogEventStreamKey(), ReadOffset.lastConsumed()),
 			streamListener
 		);
 
