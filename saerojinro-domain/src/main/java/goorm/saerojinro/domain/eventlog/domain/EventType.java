@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.eventlog;
+package goorm.saerojinro.domain.eventlog.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

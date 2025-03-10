@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.eventlog;
+package goorm.saerojinro.domain.eventlog.domain;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -45,7 +45,7 @@ public class EventLog {
 	private EventType eventType;
 
 	@Enumerated(STRING)
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private Category category;
 
 	@Column(nullable = false)
