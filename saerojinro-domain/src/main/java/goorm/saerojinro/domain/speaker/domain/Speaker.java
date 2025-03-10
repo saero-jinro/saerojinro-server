@@ -15,10 +15,13 @@ public class Speaker extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
+	private String name;
+
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String position; // 기업 / 직급
 
 	@Column(nullable = false)
@@ -30,8 +33,9 @@ public class Speaker extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String photo;
 
-	public static Speaker create(String email, String position, String introduction, String filmography, String photo) {
+	public static Speaker create(String name,String email, String position, String introduction, String filmography, String photo) {
 		return Speaker.builder()
+			.name(name)
 			.email(email)
 			.position(position)
 			.introduction(introduction)

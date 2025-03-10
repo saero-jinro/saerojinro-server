@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class SpeakerCommandService {
 	private final SpeakerRepository speakerRepository;
 
-	public Speaker create(String email, String position, String introduction, String filmography, String photo) {
-		return Speaker.create(email, position, introduction, filmography, photo);
+	public Speaker create(String name, String email, String position, String introduction, String filmography, String photo) {
+		return Speaker.create(name, email, position, introduction, filmography, photo);
 	}
 }

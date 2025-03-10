@@ -18,6 +18,7 @@ public class LectureAdminFacade {
 
 	public LectureCreateResponse create(LectureCreateRequest request) {
 		Speaker speaker = speakerCommandService.create(
+			request.speakerName(),
 			request.speakerEmail(),
 			request.speakerPosition(),
 			request.speakerIntroduction(),

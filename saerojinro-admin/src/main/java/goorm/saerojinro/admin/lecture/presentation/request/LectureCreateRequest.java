@@ -32,6 +32,9 @@ public record LectureCreateRequest(
 	@NotNull Category category,
 
 	// 강연자
+	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull String speakerName,
+
 	@Schema(description = "강연자 이메일", example = "google@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull String speakerEmail,
 
