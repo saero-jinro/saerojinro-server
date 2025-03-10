@@ -6,6 +6,7 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
+import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
 import goorm.saerojinro.domain.eventlog.domain.EventType;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -14,6 +15,7 @@ import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.infra.messaging.eventlog.EventLogProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,13 +35,14 @@ public class LectureFacade {
 		return LectureListResponse.from(responses);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureDetailResponse getByLectureId(long lectureId) {
 		Lecture lecture = lectureService.getByLectureId(lectureId);
 		User user = userQueryService.me();
 
 		if (user != null) {
-			EventLog eventLog = EventLog.create(user, lecture, LECTURE_VIEW);
-			eventLogProducer.sendEventLog(eventLog);
+			EventLogDTO eventLogDTO = EventLogDTO.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory());
+			eventLogProducer.sendEventLog(eventLogDTO);
 		}
 
 		return LectureDetailResponse.from(lecture);

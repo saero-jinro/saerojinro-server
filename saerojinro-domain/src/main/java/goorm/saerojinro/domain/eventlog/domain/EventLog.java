@@ -51,11 +51,12 @@ public class EventLog {
 	@Column(nullable = false)
 	private LocalDateTime timestamp;
 
-	public static EventLog create(User user, Lecture lecture, EventType eventType) {
+	public static EventLog create(User user, Lecture lecture, EventType eventType, Category category) {
 		return EventLog.builder()
 			.user(user)
 			.lecture(lecture)
 			.eventType(eventType)
+			.category(category)
 			.timestamp(LocalDateTime.now())
 			.build();
 	}
