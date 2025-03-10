@@ -27,13 +27,10 @@ public class SwaggerConfig {
 	@Value("${docs.admin-docs-url}")
 	private String adminDocsUrl;
 
-	@Value("${docs.speaker-docs-url}")
-	private String speakerDocsUrl;
-
 	private final Environment environment;
 
 	private static final Map<String, String> PROFILE_SERVER_URL_MAP = Map.of(
-		"local", "http://localhost:8083"
+		"local", "http://localhost:8081"
 	);
 
 	@Bean
@@ -47,7 +44,7 @@ public class SwaggerConfig {
 
 	private List<Server> initializeServers() {
 		String activeProfile = environment.getActiveProfiles()[0];
-		String serverUrl = PROFILE_SERVER_URL_MAP.getOrDefault(activeProfile, "http://localhost:8083");
+		String serverUrl = PROFILE_SERVER_URL_MAP.getOrDefault(activeProfile, "http://localhost:8081");
 		return List.of(new Server().url(serverUrl).description("SAERO-JINRO AUTH (" + activeProfile + ")"));
 	}
 
@@ -83,12 +80,10 @@ public class SwaggerConfig {
 				
 				<ul>
 					<li>사용자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
-					<li>강연자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
 					<li>관리자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
             	</ul>
 				""",
 			apiDocsUrl, apiDocsUrl,
-			speakerDocsUrl, speakerDocsUrl,
 			adminDocsUrl, adminDocsUrl
 		);
 	}

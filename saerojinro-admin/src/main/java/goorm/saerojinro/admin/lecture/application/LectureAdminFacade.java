@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 	private final SpeakerCommandService speakerCommandService;
 
+	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
 		Speaker speaker = speakerCommandService.create(
 			request.speakerName(),
@@ -39,6 +41,7 @@ public class LectureAdminFacade {
 		return LectureCreateResponse.from(speaker, lecture);
 	}
 
+	@Transactional
 	public void update(Long lectureId, LectureUpdateRequest request) {
 		lectureCommandService.update(
 			lectureId,
@@ -52,6 +55,7 @@ public class LectureAdminFacade {
 		);
 	}
 
+	@Transactional
 	public void delete(Long lectureId) {
 		lectureCommandService.delete(lectureId);
 	}

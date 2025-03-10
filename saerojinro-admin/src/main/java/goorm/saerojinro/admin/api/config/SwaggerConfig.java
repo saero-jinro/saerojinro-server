@@ -24,9 +24,6 @@ public class SwaggerConfig {
 	@Value("${docs.api-docs-url}")
 	private String apiDocsUrl;
 
-	@Value("${docs.speaker-docs-url}")
-	private String speakerDocsUrl;
-
 	@Value("${docs.auth-docs-url}")
 	private String authDocsUrl;
 
@@ -83,12 +80,10 @@ public class SwaggerConfig {
 				
 				<ul>
 					<li>사용자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
-					<li>강연자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
 					<li>인증/인가 API 문서: <a href="%s" target="_blank">%s</a></li>
             	</ul>
 				""",
 			apiDocsUrl, apiDocsUrl,
-			speakerDocsUrl, speakerDocsUrl,
 			authDocsUrl, authDocsUrl);
 	}
 }
