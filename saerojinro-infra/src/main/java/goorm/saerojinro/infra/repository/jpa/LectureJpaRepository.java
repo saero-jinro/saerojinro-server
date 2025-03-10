@@ -19,4 +19,8 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 
 	@Query("SELECT DISTINCT l FROM Lecture l JOIN FETCH l.speaker WHERE l.id = :id")
 	Optional<Lecture> findById(@Param("id") Long id);
+
+	List<Lecture> findByStartTime(LocalDateTime time);
+
+	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime time1, LocalDateTime time2);
 }

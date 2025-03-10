@@ -39,4 +39,14 @@ public class LectureRepositoryImpl implements LectureRepository {
 	public void delete(Lecture lecture) {
 		lectureJpaRepository.delete(lecture);
 	}
+
+	@Override
+	public List<Lecture> findByStartTime(LocalDateTime time) {
+		return lectureJpaRepository.findByStartTime(time);
+	}
+
+	@Override
+	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime time1, LocalDateTime time2) {
+		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(time1, time2);
+	}
 }

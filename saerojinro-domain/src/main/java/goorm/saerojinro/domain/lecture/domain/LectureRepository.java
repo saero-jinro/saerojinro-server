@@ -14,4 +14,8 @@ public interface LectureRepository {
 	List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 
 	void delete(Lecture lecture);
+
+	List<Lecture> findByStartTime(LocalDateTime time);
+
+	List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime time1, LocalDateTime time2);
 }
