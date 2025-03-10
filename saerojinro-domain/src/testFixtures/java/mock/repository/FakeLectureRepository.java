@@ -26,7 +26,6 @@ public class FakeLectureRepository implements LectureRepository {
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
 			.category(lecture.getCategory())
-			.lectureStatus(lecture.getLectureStatus())
 			.build();
 		data.add(saved);
 		return saved;

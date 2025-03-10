@@ -6,7 +6,6 @@ import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateR
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -37,7 +36,6 @@ public class ReservationFacadeTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     @BeforeEach
     public void init(){
@@ -65,7 +63,6 @@ public class ReservationFacadeTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
 
         userRepository.save(user);
