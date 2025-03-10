@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import goorm.saerojinro.domain.eventlog.application.EventLogService;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
-import goorm.saerojinro.domain.eventlog.domain.EventLogDTO;
+import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -22,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RedisStreamListener implements StreamListener<String, ObjectRecord<String, String>> {
 	private final EventLogService eventLogService;
-	private final UserQueryService userQueryService;
-	private final LectureQueryService lectureQueryService;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final ObjectMapper objectMapper;
 	private static final String STREAM_KEY = "event_log_stream";
@@ -33,11 +31,8 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 		try {
 			String record = String.valueOf(message.getId());
 			EventLogDTO eventLogDTO = objectMapper.readValue(message.getValue(), EventLogDTO.class);
-			User user = userQueryService.getById(eventLogDTO.userId());
-			Lecture lecture = lectureQueryService.getByLectureId(eventLogDTO.lectureId());
-			EventLog eventLog = EventLog.create(record, user, lecture, eventLogDTO.eventType(), eventLogDTO.category());
 
-			eventLogService.save(eventLog);
+			eventLogService.save(record, eventLogDTO);
 
 			redisTemplate.opsForStream().trim(STREAM_KEY, 1000);
 		} catch (JsonProcessingException e) {
