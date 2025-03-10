@@ -2,7 +2,6 @@ package wishlist.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
@@ -32,7 +31,6 @@ public class WishListCommandServiceTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     @BeforeEach
     void init(){
@@ -51,7 +49,6 @@ public class WishListCommandServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 
@@ -68,7 +65,6 @@ public class WishListCommandServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 
