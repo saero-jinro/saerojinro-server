@@ -1,6 +1,5 @@
 package lecture.application;
 
-import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.admin.lecture.application.LectureAdminFacade;
@@ -10,8 +9,10 @@ import goorm.saerojinro.admin.lecture.presentation.response.LectureCreateRespons
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
-import mock.repository.FakeUserRepository;
+import mock.repository.FakeSpeakerRepository;
 
 import java.time.LocalDateTime;
 
@@ -22,11 +23,11 @@ import org.junit.jupiter.api.Test;
 public class LectureAdminFacadeTest {
 
 	private LectureAdminFacade lectureAdminFacade;
+	private LectureCommandService lectureCommandService;
+	private SpeakerCommandService speakerCommandService;
 	private FakeLectureRepository lectureRepository;
-	private FakeUserRepository userRepository;
+	private FakeSpeakerRepository speakerRepository;
 
-//	private static final Long VALID_SPEAKER_ID = 1L;
-//	private static final Long VALID_SPEAKER_2_ID = 2L;
 	private static final String TITLE = "Lecture Title";
 	private static final String CONTENTS = "Lecture Contents";
 	private static final Long MAX_CAPACITY = 100L;
@@ -35,29 +36,31 @@ public class LectureAdminFacadeTest {
 	private static final String LOCATION = "room A";
 	private static final Category CATEGORY = Category.BACKEND;
 
-//	private static final User VALID_SPEAKER = User.builder()
-//		.id(VALID_SPEAKER_ID)
-//		.name("Test Speaker")
-//		.role(BaseRole.SPEAKER)
-//		.build();
-//
-//	private static final User VALID_SPEAKER_2 = User.builder()
-//		.id(VALID_SPEAKER_2_ID)
-//		.name("Test Speaker 2")
-//		.role(BaseRole.SPEAKER)
-//		.build();
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 CEO";
+	private static final String INTRODUCTION = "AA 기업 - 백엔드 개발";
+	private static final String FILMOGRAPHY = "Location";
+	private static final String PHOTO = "Photo uri";
+
+	private static final Speaker VALID_SPEAKER = Speaker.builder()
+		.id(1L)
+		.email(EMAIL)
+		.position(POSITION)
+		.introduction(INTRODUCTION)
+		.filmography(FILMOGRAPHY)
+		.photo(PHOTO)
+		.build();
 
 	@BeforeEach
 	public void setUp() {
 		lectureRepository = new FakeLectureRepository();
-		userRepository = new FakeUserRepository();
-		LectureCommandService lectureCommandService = new LectureCommandService(lectureRepository);
-//		UserQueryService userQueryService = new UserQueryService(userRepository, new BCryptPasswordEncoder());
+		speakerRepository = new FakeSpeakerRepository();
+		lectureCommandService = new LectureCommandService(lectureRepository);
+		speakerCommandService = new SpeakerCommandService(speakerRepository);
 
-		lectureAdminFacade = new LectureAdminFacade(lectureCommandService);
+		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService);
 
-//		userRepository.save(VALID_SPEAKER);
-//		userRepository.save(VALID_SPEAKER_2);
+		speakerRepository.save(VALID_SPEAKER);
 	}
 
 	@Test
@@ -72,6 +75,11 @@ public class LectureAdminFacadeTest {
 			.endTime(END_TIME)
 			.location(LOCATION)
 			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
 			.build();
 
 		// when
@@ -94,6 +102,11 @@ public class LectureAdminFacadeTest {
 			.endTime(END_TIME)
 			.location(LOCATION)
 			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
 			.build();
 
 		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
@@ -102,14 +115,18 @@ public class LectureAdminFacadeTest {
 		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
 			.title("Updated Title")
 			.contents("Updated Contents")
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
 			.build();
 
 		// when
 		lectureAdminFacade.update(lectureId, updateRequest);
 
 		// then
-		Lecture updatedLecture = lectureRepository.findById(lectureId)
-			.orElseThrow();
+		Lecture updatedLecture = lectureRepository.findById(lectureId).orElseThrow();
 		assertEquals("Updated Title", updatedLecture.getTitle());
 		assertEquals("Updated Contents", updatedLecture.getContents());
 		assertEquals(MAX_CAPACITY, updatedLecture.getMaxCapacity());
@@ -117,8 +134,6 @@ public class LectureAdminFacadeTest {
 		assertEquals(END_TIME, updatedLecture.getEndTime());
 		assertEquals(LOCATION, updatedLecture.getLocation());
 		assertEquals(CATEGORY, updatedLecture.getCategory());
-		assertEquals(APPROVED, updatedLecture.getLectureStatus());
-//		assertEquals(VALID_SPEAKER.getId(), updatedLecture.getSpeaker().getId());
 	}
 
 	@Test
@@ -133,6 +148,11 @@ public class LectureAdminFacadeTest {
 			.endTime(END_TIME)
 			.location(LOCATION)
 			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
 			.build();
 
 		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
@@ -144,7 +164,5 @@ public class LectureAdminFacadeTest {
 		// then
 		Lecture deletedLecture = lectureRepository.findById(lectureId)
 			.orElseThrow();
-
-		assertEquals(DELETED, deletedLecture.getLectureStatus());
 	}
 }

@@ -3,7 +3,6 @@ package review.application;
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
@@ -11,7 +10,6 @@ import goorm.saerojinro.domain.review.application.ReviewCommandService;
 import goorm.saerojinro.domain.review.application.ReviewQueryService;
 import goorm.saerojinro.domain.review.domain.Review;
 import goorm.saerojinro.domain.review.domain.ReviewRepository;
-import goorm.saerojinro.domain.review.exception.ReviewNotAuthorizedException;
 import goorm.saerojinro.domain.review.exception.ReviewNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
@@ -38,7 +36,6 @@ public class ReviewCommandServiceTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     private static final String CONTENT = "리뷰 입니다";
     private static final Double RATING = 5.0;
@@ -64,7 +61,6 @@ public class ReviewCommandServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
 
         Reservation reservation = Reservation.createReservation(user, lecture);
@@ -87,7 +83,6 @@ public class ReviewCommandServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 

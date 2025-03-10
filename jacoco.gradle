@@ -57,7 +57,6 @@ private excludedClassFilesForReport(classDirectories) {
                         "goorm/saerojinro/api/SaerojinroApiApplication.class",
                         "goorm/saerojinro/admin/SaerojinroAdminApplication.class",
                         "goorm/saerojinro/auth/SaerojinroAuthApplication.class",
-                        "goorm/saerojinro/speaker/SaerojinroSpeakerApplication.class",
                 ])
             })
     )
