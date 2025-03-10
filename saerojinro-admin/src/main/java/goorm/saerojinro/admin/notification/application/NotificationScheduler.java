@@ -22,11 +22,12 @@ public class NotificationScheduler {
 	private final LectureQueryService lectureQueryService;
 	private final int MINUTES_BEFORE = 5;
 
-	@Scheduled(cron = "0 */5 * * * *")
+	@Scheduled(cron = "0 0/5 * * * *")
 	public void checkLectureTime() {
 		LocalDateTime fiveMinutesLater = LocalDateTime.now()
 			.truncatedTo(MINUTES)
 			.plusMinutes(MINUTES_BEFORE);
+		System.out.println(fiveMinutesLater);
 		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(fiveMinutesLater);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -41,5 +42,6 @@ public class NotificationScheduler {
 					fiveMinutesLater.format(formatter) + "에 시작합니다")
 			);
 		}
+		System.out.println("hey");
 	}
 }
