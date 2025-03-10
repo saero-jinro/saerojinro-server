@@ -17,4 +17,8 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 	List<Lecture> findAll();
 
 	Optional<Lecture> findById(@Param("id") Long id);
+
+	List<Lecture> findByStartTime(LocalDateTime time);
+
+	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -12,6 +12,7 @@ import goorm.saerojinro.infra.SaeroJinroConfigGroup;
 	SaeroJinroConfigGroup.JPA,
 	SaeroJinroConfigGroup.JPA_AUDITING,
 	SaeroJinroConfigGroup.PROPERTIES,
+	SaeroJinroConfigGroup.SCHEDULING,
 })
 class InfraConfig {
 

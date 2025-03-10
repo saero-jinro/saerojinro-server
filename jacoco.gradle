@@ -54,6 +54,7 @@ private excludedClassFilesForReport(classDirectories) {
                         "**/config/**",
                         "**/aspect/**",
                         "goorm/saerojinro/auth/social/**",
+                        "**/NotificationScheduler.class",
                         "goorm/saerojinro/api/SaerojinroApiApplication.class",
                         "goorm/saerojinro/admin/SaerojinroAdminApplication.class",
                         "goorm/saerojinro/auth/SaerojinroAuthApplication.class",
