@@ -1,7 +1,12 @@
 package eventlog.application;
 
+import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
+import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static goorm.saerojinro.domain.eventlog.domain.enums.EventLogType.LECTURE_REGISTER;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +17,9 @@ import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.eventlog.application.EventLogService;
 import goorm.saerojinro.domain.eventlog.domain.EventLog;
 import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
-import goorm.saerojinro.domain.eventlog.domain.enums.EventLogType;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeEventLogRepository;
@@ -25,6 +30,7 @@ public class EventLogServiceTest {
 	private EventLogService eventLogService;
 	private User user;
 	private Lecture lecture;
+
 	@BeforeEach
 	public void init() {
 		FakeEventLogRepository fakeEventLogRepository = new FakeEventLogRepository();
@@ -38,6 +44,25 @@ public class EventLogServiceTest {
 			userQueryService,
 			lectureQueryService
 		);
+
+		user = fakeUserRepository.save(User.builder()
+			.email("email@email.com")
+			.password("password1234!")
+			.name("박민준")
+			.role(ADMIN)
+			.build()
+		);
+
+		lecture = fakeLectureRepository.save(Lecture.create(
+			Speaker.builder().build(),
+			"Lecture One",
+			"Content One",
+			100L,
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			LocalDateTime.of(2025, 3, 1, 12, 0),
+			"Location One",
+			Category.BACKEND
+		));
 	}
 
 	@Test
@@ -51,5 +76,10 @@ public class EventLogServiceTest {
 		EventLog response = eventLogService.save(record, eventLogDTO);
 
 		// then
+		assertEquals(record, response.getRecord());
+		assertEquals(eventLogDTO.eventLogType(), response.getEventLogType());
+		assertEquals(eventLogDTO.category(), response.getCategory());
+		assertEquals(user, response.getUser());
+		assertEquals(lecture, response.getLecture());
 	}
 }
