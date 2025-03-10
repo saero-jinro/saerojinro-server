@@ -14,10 +14,10 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LectureFacade {
 	private final LectureQueryService lectureService;
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getAllLecture() {
 		List<LectureResponse> responses = lectureService.getAllLecture().stream()
 			.map(LectureResponse::from)
@@ -25,11 +25,13 @@ public class LectureFacade {
 		return LectureListResponse.from(responses);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureDetailResponse getByLectureId(long lectureId) {
 		Lecture lecture = lectureService.getByLectureId(lectureId);
 		return LectureDetailResponse.from(lecture);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getByDate(LocalDate localDate) {
 		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
 			.map(LectureResponse::from)

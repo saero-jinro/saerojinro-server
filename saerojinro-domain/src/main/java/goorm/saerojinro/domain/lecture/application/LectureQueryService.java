@@ -5,7 +5,6 @@ import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LectureQueryService {
 	private final LectureRepository lectureRepository;
 
