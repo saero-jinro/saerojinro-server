@@ -99,7 +99,7 @@ public class NotificationAdminEventHandlerTest {
 		CommonEvent event2 = CommonEvent.builder().eventType(LECTURE_NOTICE)
 			.lectureId(1L).title(TITLE).userId(1L).build();
 		CommonEvent event3 = CommonEvent.builder().eventType(LECTURE_IMMINENT)
-			.userId(1L).title(TITLE).build();
+			.lectureId(1L).title(TITLE).build();
 
 		// when
 		notificationEventHandler.handleEvent(event);

@@ -30,7 +30,7 @@ public class NotificationAdminEventHandler {
 
 	public void lectureImminent(CommonEvent event) {
 		NotificationSendRequest request = NotificationSendRequest.of(event.title(), event.contents());
-		notificationFacade.sendNotificationByReceiverId(event.userId(), request);
+		notificationFacade.sendNotificationByLectureId(event.lectureId(), request);
 	}
 
 	public NotificationSendRequest makeNotice(CommonEvent event) {
