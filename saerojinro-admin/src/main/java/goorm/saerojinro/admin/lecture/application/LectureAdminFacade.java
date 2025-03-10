@@ -9,9 +9,11 @@ import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 	private final SpeakerCommandService speakerCommandService;

@@ -7,12 +7,14 @@ import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LectureFacade {
 	private final LectureQueryService lectureService;
 
