@@ -24,8 +24,6 @@ public class EventLogProducer {
 
 	public void sendEventLog(EventLogDTO eventLogDTO) {
 		try {
-			System.out.println("📌 [Producer] 이벤트 로그 저장 요청: " + eventLogDTO);
-
 			String eventLogJson = objectMapper.writeValueAsString(eventLogDTO);
 
 			ObjectRecord<String, String> record = StreamRecords.newRecord()
