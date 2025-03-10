@@ -34,10 +34,11 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 	public void onMessage(ObjectRecord<String, String> message) {
 		try {
 			// ✅ JSON 문자열을 EventLog 객체로 변환
+			String record = String.valueOf(message.getId());
 			EventLogDTO eventLogDTO = objectMapper.readValue(message.getValue(), EventLogDTO.class);
 			User user = userQueryService.getById(eventLogDTO.userId());
 			Lecture lecture = lectureQueryService.getByLectureId(eventLogDTO.lectureId());
-			EventLog eventLog = EventLog.create(user, lecture, eventLogDTO.eventType(), eventLogDTO.category());
+			EventLog eventLog = EventLog.create(record, user, lecture, eventLogDTO.eventType(), eventLogDTO.category());
 			// ✅ 저장
 			eventLogCommandService.save(eventLog);
 			System.out.println("✅ 로그 저장 완료: " + eventLog);

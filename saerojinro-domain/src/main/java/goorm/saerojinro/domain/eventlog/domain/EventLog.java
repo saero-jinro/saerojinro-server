@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -29,8 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventLog {
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private Long id;
+	private String record;
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -51,8 +51,9 @@ public class EventLog {
 	@Column(nullable = false)
 	private LocalDateTime timestamp;
 
-	public static EventLog create(User user, Lecture lecture, EventType eventType, Category category) {
+	public static EventLog create(String record, User user, Lecture lecture, EventType eventType, Category category) {
 		return EventLog.builder()
+			.record(record)
 			.user(user)
 			.lecture(lecture)
 			.eventType(eventType)

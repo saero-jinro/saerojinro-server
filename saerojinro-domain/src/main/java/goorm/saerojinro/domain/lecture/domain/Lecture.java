@@ -23,7 +23,6 @@ public class Lecture extends BaseTimeEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "speaker_id", nullable = false)
 	@JoinColumn(name = "speaker_id")
 	private User speaker;
 
