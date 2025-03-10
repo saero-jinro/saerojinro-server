@@ -3,12 +3,11 @@ package lecture.application;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +27,13 @@ public class LectureQueryServiceTest {
 		fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		final User SPEAKER = User.builder()
-			.id(1L)
-			.name("Test Speaker")
-			.role(BaseRole.SPEAKER)
+		final Speaker SPEAKER = Speaker.builder()
+			.name("Cole palmer")
+			.email("google@mail.com")
+			.position("00 기업 CEO")
+			.introduction("안녕하세요 반가워용")
+			.filmography("AA 기업  - 백엔드 개발")
+			.photo("Photo uri")
 			.build();
 
 		Lecture lecture1 = Lecture.create(

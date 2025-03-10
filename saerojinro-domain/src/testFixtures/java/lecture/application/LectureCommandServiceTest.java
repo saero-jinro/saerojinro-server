@@ -1,16 +1,14 @@
 package lecture.application;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
-import mock.repository.FakeUserRepository;
+import mock.repository.FakeSpeakerRepository;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +21,7 @@ public class LectureCommandServiceTest {
 	private LectureCommandService lectureCommandService;
 	private LectureQueryService lectureQueryService;
 	private FakeLectureRepository lectureRepository;
-	private FakeUserRepository userRepository;
+	private FakeSpeakerRepository speakerRepository;
 
 	private static final String TITLE = "Lecture Title";
 	private static final String CONTENTS = "Lecture Contents";
@@ -32,21 +30,23 @@ public class LectureCommandServiceTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "room A";
 	private static final Category CATEGORY = Category.BACKEND;
-	private static final LectureStatus EXPECTED_STATUS = LectureStatus.APPROVED;
 
-//	private static final User VALID_SPEAKER = User.builder()
-//		.id(1L)
-//		.name("Speaker")
-//		.role(SPEAKER)
-//		.build();
+	private static final Speaker speaker = Speaker.builder()
+		.name("Cole palmer")
+		.email("google@mail.com")
+		.position("00 기업 CEO")
+		.introduction("안녕하세요 반가워용")
+		.filmography("AA 기업  - 백엔드 개발")
+		.photo("Photo uri")
+		.build();
 
 	@BeforeEach
 	void setUp() {
 		lectureRepository = new FakeLectureRepository();
-		userRepository = new FakeUserRepository();
+		speakerRepository = new FakeSpeakerRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
 		lectureCommandService = new LectureCommandService(lectureRepository);
-//		userRepository.save(VALID_SPEAKER);
+		speakerRepository.save(speaker);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class LectureCommandServiceTest {
 	void createLecture_success() {
 		// when
 		Lecture createdLecture = lectureCommandService.create(
-			null, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			speaker, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// then
@@ -66,7 +66,8 @@ public class LectureCommandServiceTest {
 		assertEquals(END_TIME, createdLecture.getEndTime());
 		assertEquals(LOCATION, createdLecture.getLocation());
 		assertEquals(CATEGORY, createdLecture.getCategory());
-		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
+
+		assertEquals("google@mail.com", createdLecture.getSpeaker().getEmail());
 	}
 
 	@Test
@@ -74,8 +75,7 @@ public class LectureCommandServiceTest {
 	void updateLecture_success() {
 		//given
 		Lecture createdLecture = lectureCommandService.create(
-			null, TITLE, CONTENTS, MAX_CAPACITY,
-			START_TIME, END_TIME, LOCATION, CATEGORY
+			speaker, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when
@@ -87,7 +87,7 @@ public class LectureCommandServiceTest {
 		// then
 		assertNotNull(createdLecture);
 
-		assertEquals(createdLecture.getId(), 1L);
+		assertEquals(1L, createdLecture.getId());
 		assertEquals("updated title", createdLecture.getTitle());
 		assertEquals("updated contents", createdLecture.getContents());
 		assertEquals(MAX_CAPACITY, createdLecture.getMaxCapacity());
@@ -95,7 +95,8 @@ public class LectureCommandServiceTest {
 		assertEquals(END_TIME, createdLecture.getEndTime());
 		assertEquals(LOCATION, createdLecture.getLocation());
 		assertEquals(CATEGORY, createdLecture.getCategory());
-		assertEquals(EXPECTED_STATUS, createdLecture.getLectureStatus());
+
+		assertEquals("google@mail.com", createdLecture.getSpeaker().getEmail());
 	}
 
 	@Test
@@ -112,7 +113,5 @@ public class LectureCommandServiceTest {
 
 		// then
 		assertNotNull(findLecture);
-
-		assertEquals(LectureStatus.DELETED, findLecture.getLectureStatus());
 	}
 }

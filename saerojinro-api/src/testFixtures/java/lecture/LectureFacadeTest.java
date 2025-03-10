@@ -1,8 +1,6 @@
 package lecture;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
 import static goorm.saerojinro.common.domain.Category.*;
-import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
@@ -11,7 +9,7 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,17 +26,40 @@ public class LectureFacadeTest {
 	private Lecture lecture1;
 	private Lecture lecture2;
 
+	private Speaker speaker;
+	private Speaker speaker2;
+
+	private static final String NAME = "Cole Palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String EMAIL_2 = "google_2@mail.com";
+	private static final String POSITION = "00 기업 CEO";
+	private static final String  INTRODUCTION = "AA 기업  - 백엔드 개발";
+	private static final String FILMOGRAPHY = "Location";
+	private static final String PHOTO = "Photo uri";
+
+
 	@BeforeEach
 	void setUp() {
 		lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
-
 		lectureFacade = new LectureFacade(lectureQueryService);
 
-		User speaker = User.builder()
-			.id(1L)
-			.name("Speaker")
-			.role(SPEAKER)
+		speaker = Speaker.builder()
+			.name(NAME)
+			.email(EMAIL)
+			.position(POSITION)
+			.introduction(INTRODUCTION)
+			.filmography(FILMOGRAPHY)
+			.photo(PHOTO)
+			.build();
+
+		speaker2 = Speaker.builder()
+			.name(NAME)
+			.email(EMAIL_2)
+			.position(POSITION)
+			.introduction(INTRODUCTION)
+			.filmography(FILMOGRAPHY)
+			.photo(PHOTO)
 			.build();
 
 		lecture1 = Lecture.builder()
@@ -50,7 +71,6 @@ public class LectureFacadeTest {
 			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
 			.location("room A")
 			.category(BACKEND)
-			.lectureStatus(PENDING_APPROVAL)
 			.build();
 
 		lecture2 = Lecture.builder()
@@ -62,7 +82,6 @@ public class LectureFacadeTest {
 			.endTime(LocalDateTime.of(2025, 3, 1, 16, 0))
 			.location("room B")
 			.category(BACKEND)
-			.lectureStatus(PENDING_APPROVAL)
 			.build();
 
 		lectureRepository.save(lecture1);
@@ -81,7 +100,7 @@ public class LectureFacadeTest {
 		assertEquals(2, response.lectures().size());
 
 		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertEquals("Speaker", response.lectures().get(0).speakerName());
+		assertEquals("Cole Palmer", response.lectures().get(0).speakerName());
 	}
 
 	@Test
