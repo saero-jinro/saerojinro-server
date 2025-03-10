@@ -17,8 +17,8 @@ public record LectureDetailResponse(
 
 	//speaker
 	String speakerName,
-	String speakerEmail,
-	String speakerProfileImage
+	String speakerPosition,
+	String speakerIntroduction
 ) {
 	public static LectureDetailResponse from(Lecture lecture) {
 		return LectureDetailResponse.builder()
@@ -29,8 +29,8 @@ public record LectureDetailResponse(
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
 			.speakerName(lecture.getSpeaker().getName())
-			.speakerEmail(lecture.getSpeaker().getEmail())
-			.speakerProfileImage(lecture.getSpeaker().getProfileImage())
+			.speakerPosition(lecture.getSpeaker().getPosition())
+			.speakerIntroduction(lecture.getSpeaker().getIntroduction())
 			.build();
 	}
 }
