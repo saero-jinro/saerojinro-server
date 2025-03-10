@@ -7,6 +7,7 @@ import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class LectureFacade {
 	private final LectureQueryService lectureService;
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getAllLecture() {
 		List<LectureResponse> responses = lectureService.getAllLecture().stream()
 			.map(LectureResponse::from)
@@ -23,11 +25,13 @@ public class LectureFacade {
 		return LectureListResponse.from(responses);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureDetailResponse getByLectureId(long lectureId) {
 		Lecture lecture = lectureService.getByLectureId(lectureId);
 		return LectureDetailResponse.from(lecture);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getByDate(LocalDate localDate) {
 		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
 			.map(LectureResponse::from)
