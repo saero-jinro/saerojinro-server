@@ -1,9 +1,8 @@
-package eventlog.application;
+package logevent.application;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
-import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static goorm.saerojinro.domain.eventlog.domain.enums.EventLogType.LECTURE_REGISTER;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_REGISTER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
@@ -14,32 +13,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.eventlog.application.EventLogService;
-import goorm.saerojinro.domain.eventlog.domain.EventLog;
-import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.LogEvent;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import mock.repository.FakeEventLogRepository;
+import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
 
-public class EventLogServiceTest {
-	private EventLogService eventLogService;
+public class LogEventServiceTest {
+	private LogEventService logEventService;
 	private User user;
 	private Lecture lecture;
 
 	@BeforeEach
 	public void init() {
-		FakeEventLogRepository fakeEventLogRepository = new FakeEventLogRepository();
+		FakeLogEventRepository fakeEventLogRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		FakeLectureRepository fakeLectureRepository = new FakeLectureRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
 		LectureQueryService lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		eventLogService = new EventLogService(
+		logEventService = new LogEventService(
 			fakeEventLogRepository,
 			userQueryService,
 			lectureQueryService
@@ -70,15 +69,15 @@ public class EventLogServiceTest {
 	public void save_Success() {
 		// given
 		String record = "record";
-		EventLogDTO eventLogDTO = EventLogDTO.of(1L, 1L, LECTURE_REGISTER, BACKEND);
+		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_REGISTER, BACKEND);
 
 		// when
-		EventLog response = eventLogService.save(record, eventLogDTO);
+		LogEvent response = logEventService.save(record, logEventDto);
 
 		// then
 		assertEquals(record, response.getRecord());
-		assertEquals(eventLogDTO.eventLogType(), response.getEventLogType());
-		assertEquals(eventLogDTO.category(), response.getCategory());
+		assertEquals(logEventDto.logEventType(), response.getLogEventType());
+		assertEquals(logEventDto.category(), response.getCategory());
 		assertEquals(user, response.getUser());
 		assertEquals(lecture, response.getLecture());
 	}

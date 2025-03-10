@@ -8,33 +8,29 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import goorm.saerojinro.domain.eventlog.application.EventLogService;
-import goorm.saerojinro.domain.eventlog.domain.EventLog;
-import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
-import goorm.saerojinro.domain.lecture.application.LectureQueryService;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.user.application.UserQueryService;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.infra.config.redis.RedisProperties;
 import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class RedisStreamListener implements StreamListener<String, ObjectRecord<String, String>> {
-	private final EventLogService eventLogService;
+	private final LogEventService logEventService;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final ObjectMapper objectMapper;
-	private static final String STREAM_KEY = "event_log_stream";
+	private final RedisProperties redisProperties;
 
 	@Override
 	public void onMessage(ObjectRecord<String, String> message) {
 		try {
 			String record = String.valueOf(message.getId());
-			EventLogDTO eventLogDTO = objectMapper.readValue(message.getValue(), EventLogDTO.class);
+			LogEventDto logEventDto = objectMapper.readValue(message.getValue(), LogEventDto.class);
 
-			eventLogService.save(record, eventLogDTO);
+			logEventService.save(record, logEventDto);
 
-			redisTemplate.opsForStream().trim(STREAM_KEY, 1000);
+			redisTemplate.opsForStream().trim(redisProperties.getLogEventStreamKey(), 1000);
 		} catch (JsonProcessingException e) {
 			throw new InvalidMessageFormatException();
 		}

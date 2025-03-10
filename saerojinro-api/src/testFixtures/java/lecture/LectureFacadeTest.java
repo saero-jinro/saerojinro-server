@@ -12,7 +12,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import mock.producer.FakeEventLogProducer;
+import mock.producer.FakeLogEventProducer;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
@@ -33,7 +33,7 @@ public class LectureFacadeTest {
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
 	private FakeLectureRepository lectureRepository;
-	private FakeEventLogProducer fakeEventLogProducer = new FakeEventLogProducer();
+	private FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 	private UserQueryService userQueryService;
 
 	private Lecture lecture1;

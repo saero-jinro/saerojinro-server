@@ -4,8 +4,9 @@ import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import goorm.saerojinro.domain.eventlog.domain.dto.EventLogDTO;
-import goorm.saerojinro.domain.eventlog.domain.EventLogProducer;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
+import goorm.saerojinro.infra.config.redis.RedisProperties;
 import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
 import goorm.saerojinro.infra.messaging.exception.StreamProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +21,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @RequiredArgsConstructor
-public class EventLogProducerImpl implements EventLogProducer {
+public class LogEventProducerImpl implements LogEventProducer {
 	private final RedisTemplate<String, String> redisTemplate;
 	private final ObjectMapper objectMapper;
-	private static final String STREAM_KEY = "event_log_stream";
+	private final RedisProperties redisProperties;
 
 	@Override
-	public void sendMessage(EventLogDTO eventLogDTO) {
+	public void sendMessage(LogEventDto logEventDto) {
 		try {
-			String eventLogJson = objectMapper.writeValueAsString(eventLogDTO);
+			String eventLogJson = objectMapper.writeValueAsString(logEventDto);
 
 			ObjectRecord<String, String> record = StreamRecords.newRecord()
-				.in(STREAM_KEY)
+				.in(redisProperties.getLogEventStreamKey())
 				.ofObject(eventLogJson);
 
 			RecordId recordId = redisTemplate.opsForStream().add(record);

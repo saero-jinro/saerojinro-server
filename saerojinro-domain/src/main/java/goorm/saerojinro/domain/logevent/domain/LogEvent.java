@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.eventlog.domain;
+package goorm.saerojinro.domain.logevent.domain;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -6,7 +6,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.eventlog.domain.enums.EventLogType;
+import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class EventLog {
+public class LogEvent {
 	@Id
 	private String record;
 
@@ -40,7 +40,7 @@ public class EventLog {
 
 	@Enumerated(STRING)
 	@Column(nullable = false)
-	private EventLogType eventLogType;
+	private LogEventType logEventType;
 
 	@Enumerated(STRING)
 	@Column(nullable = false)
@@ -49,12 +49,12 @@ public class EventLog {
 	@Column(nullable = false)
 	private LocalDateTime timestamp;
 
-	public static EventLog create(String record, User user, Lecture lecture, EventLogType eventLogType, Category category) {
-		return EventLog.builder()
+	public static LogEvent create(String record, User user, Lecture lecture, LogEventType logEventType, Category category) {
+		return LogEvent.builder()
 			.record(record)
 			.user(user)
 			.lecture(lecture)
-			.eventLogType(eventLogType)
+			.logEventType(logEventType)
 			.category(category)
 			.timestamp(LocalDateTime.now())
 			.build();
