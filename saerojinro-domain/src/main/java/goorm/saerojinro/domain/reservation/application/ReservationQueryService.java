@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 public class ReservationQueryService {
@@ -32,5 +30,9 @@ public class ReservationQueryService {
   
     public List<Reservation> getAllByLectureId(Long lectureId) {
         return reservationRepository.findAllByLectureId(lectureId);
+    }
+
+    public int countByLectureId(Long lectureId) {
+        return reservationRepository.countByLectureId(lectureId);
     }
 }

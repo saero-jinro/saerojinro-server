@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
-import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import mock.repository.FakeUserRepository;
 
