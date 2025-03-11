@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.lecture.application;
 
+import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_VIEW;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
@@ -38,7 +39,7 @@ public class LectureFacade {
 		Lecture lecture = lectureService.getByLectureId(lectureId);
 		User user = userQueryService.me();
 
-		if (user != null) {
+		if (user != null && user.getRole().equals(ATTENDEE)) {
 			LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory());
 			logEventProducer.sendMessage(logEventDto);
 		}
