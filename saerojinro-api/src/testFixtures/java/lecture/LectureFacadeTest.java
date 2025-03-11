@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -122,7 +123,7 @@ public class LectureFacadeTest {
 	@DisplayName("전체 강의 목록을 리스트로 조회할 수 있다")
 	void getAllLecture_success() {
 		// when
-		LectureListResponse response = lectureFacade.getAllLecture();
+		LectureListResponseByAll response = lectureFacade.getAllLecture();
 
 		// then
 		assertNotNull(response);
@@ -156,7 +157,7 @@ public class LectureFacadeTest {
 		LocalDate date = LocalDate.of(2025, 3, 1);
 
 		// when
-		LectureListResponse response = lectureFacade.getByDate(date);
+		LectureListResponseByDate response = lectureFacade.getByDate(date);
 
 		// then
 		assertNotNull(response);
