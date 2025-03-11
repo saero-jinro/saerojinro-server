@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/reviews")
+@RequestMapping("/api/reviews")
 public class ReviewControllerImpl implements ReviewController{
     private final ReviewFacade reviewFacade;
 
