@@ -1,7 +1,8 @@
 package goorm.saerojinro.api.lecture.presentation;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,11 +20,11 @@ public interface LectureController {
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
-				content = @Content(schema = @Schema(implementation = LectureListResponse.class))
+				content = @Content(schema = @Schema(implementation = LectureListResponseByAll.class))
 			)
 		}
 	)
-	ResponseEntity<LectureListResponse> getAllLecture();
+	ResponseEntity<LectureListResponseByAll> getAllLecture();
 
 	@Operation(
 		summary = "강의 상세 조회",
@@ -43,9 +44,9 @@ public interface LectureController {
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
-				content = @Content(schema = @Schema(implementation = LectureListResponse.class))
+				content = @Content(schema = @Schema(implementation = LectureListResponseByDate.class))
 			)
 		}
 	)
-	ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day);
+	ResponseEntity<LectureListResponseByDate> getByDate(@RequestParam("day") String day);
 }
