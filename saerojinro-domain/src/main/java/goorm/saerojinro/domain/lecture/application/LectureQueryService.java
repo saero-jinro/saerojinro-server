@@ -29,4 +29,12 @@ public class LectureQueryService {
 		LocalDateTime end   = localDate.plusDays(1).atStartOfDay();
 		return lectureRepository.findByStartTimeBetween(start, end);
 	}
+
+	public List<Lecture> getAllLectureByStartTime(LocalDateTime time) {
+		return lectureRepository.findByStartTime(time);
+	}
+
+	public List<Lecture> getAllLectureBetween(LocalDateTime startTime, LocalDateTime endTime) {
+		return lectureRepository.findByStartTimeAfterAndEndTimeBefore(startTime, endTime);
+	}
 }

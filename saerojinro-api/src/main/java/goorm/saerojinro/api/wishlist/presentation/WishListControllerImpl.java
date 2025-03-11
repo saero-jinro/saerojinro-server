@@ -1,6 +1,6 @@
 package goorm.saerojinro.api.wishlist.presentation;
 
-import goorm.saerojinro.api.wishlist.api.WishListFacade;
+import goorm.saerojinro.api.wishlist.application.WishListFacade;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListDeleteResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;

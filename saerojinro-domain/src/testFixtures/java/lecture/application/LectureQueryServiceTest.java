@@ -103,4 +103,34 @@ public class LectureQueryServiceTest {
 		assertEquals("Lecture One", lectures.get(0).getTitle());
 		assertEquals("Lecture Two", lectures.get(1).getTitle());
 	}
+
+	@Test
+	@DisplayName("getAllLectureByStartTime은 시작 시간으로 강의를 조회한다")
+	void getAllLectureByStartTime_Success() {
+		// when
+		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(
+			LocalDateTime.of(2025, 3, 1, 10, 0));
+
+		// then
+		assertNotNull(lectureList);
+		assertEquals(2, lectureList.size());
+		assertEquals(
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			lectureList.get(0).getStartTime());
+	}
+
+	@Test
+	@DisplayName("getAllLectureBetween은 주어진 시간 사이에 있는 강의를 조회한다")
+	void getAllLectureBetween_Success() {
+		// when
+		List<Lecture> lectureList = lectureQueryService.getAllLectureBetween(
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			LocalDateTime.of(2025, 3, 1, 12, 0));
+
+		// then
+		assertNotNull(lectureList);
+		assertEquals(2, lectureList.size());
+		assertEquals(LocalDateTime.of(2025, 3, 1, 10, 0),
+			lectureList.get(0).getStartTime());
+	}
 }

@@ -25,6 +25,7 @@ public class LectureFacade {
 	private final LogEventProducer logEventProducer;
 	private final UserQueryService userQueryService;
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getAllLecture() {
 		List<LectureResponse> responses = lectureService.getAllLecture().stream()
 			.map(LectureResponse::from)
@@ -46,6 +47,7 @@ public class LectureFacade {
 		return LectureDetailResponse.from(lecture);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getByDate(LocalDate localDate) {
 		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
 			.map(LectureResponse::from)

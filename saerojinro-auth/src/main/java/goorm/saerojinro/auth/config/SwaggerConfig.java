@@ -44,7 +44,7 @@ public class SwaggerConfig {
 
 	private List<Server> initializeServers() {
 		String activeProfile = environment.getActiveProfiles()[0];
-		String serverUrl = PROFILE_SERVER_URL_MAP.getOrDefault(activeProfile, "http://localhost:8083");
+		String serverUrl = PROFILE_SERVER_URL_MAP.getOrDefault(activeProfile, "http://localhost:8081");
 		return List.of(new Server().url(serverUrl).description("SAERO-JINRO AUTH (" + activeProfile + ")"));
 	}
 

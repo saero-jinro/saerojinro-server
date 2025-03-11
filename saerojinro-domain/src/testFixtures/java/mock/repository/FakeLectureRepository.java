@@ -60,4 +60,21 @@ public class FakeLectureRepository implements LectureRepository {
 			})
 			.toList();
 	}
+
+	@Override
+	public List<Lecture> findByStartTime(LocalDateTime time) {
+		return data.stream()
+			.filter(lecture -> lecture.getStartTime().equals(time))
+			.toList();
+	}
+
+	@Override
+	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
+		return data.stream()
+			.filter(lecture ->
+				!lecture.getStartTime().isBefore(startTime) &&
+					!lecture.getEndTime().isAfter(endTime)
+			)
+			.toList();
+	}
 }
