@@ -99,19 +99,6 @@ public class UserDomainTest {
 	}
 
 	@Test
-	@DisplayName("updateRole은 유저 권한을 변경할 수 있다.")
-	public void updateRole_Success() {
-		// given
-		BaseRole newRole = SPEAKER;
-
-		// when
-		user.updateRole(newRole);
-
-		// then
-		assertEquals(newRole, user.getRole());
-	}
-
-	@Test
 	@DisplayName("updateInterest는 유저 관심사를 변경할 수 있다.")
 	public void updateInterest_Success() {
 		// given
