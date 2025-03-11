@@ -1,11 +1,9 @@
 package goorm.saerojinro.admin.api.presentation;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
-import goorm.saerojinro.admin.api.presentation.request.RoleUpdateRequest;
 import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,22 +27,5 @@ public interface AdminController {
 			description = "관리자 등록 request 객체 입니다.",
 			required = true
 		) @Valid @RequestBody AdminCreateRequest request
-	);
-
-
-	@Operation(summary = "유저 권한 수정 API", description = """
-			- Description : 이 API는 유저의 권한을 수정합니다.
-			- Assignee : 박민준
-		""")
-	@ApiResponse(responseCode = "204")
-	ResponseEntity<Void> updateRole(
-		@Parameter(
-			description = "유저 Index 입니다.",
-			required = true
-		) @Valid @PathVariable Long userId,
-		@Parameter(
-			description = "유저 권한 수정 request 객체 입니다.",
-			required = true
-		) @Valid @RequestBody RoleUpdateRequest request
 	);
 }

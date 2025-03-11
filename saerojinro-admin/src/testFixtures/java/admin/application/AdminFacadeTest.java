@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import goorm.saerojinro.admin.api.application.AdminFacade;
 import goorm.saerojinro.admin.api.presentation.request.AdminCreateRequest;
-import goorm.saerojinro.admin.api.presentation.request.RoleUpdateRequest;
 import goorm.saerojinro.admin.api.presentation.response.AdminPersistResponse;
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.domain.user.application.UserCommandService;
@@ -27,8 +26,7 @@ public class AdminFacadeTest {
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		adminFacade = new AdminFacade(
-			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder),
-			new UserQueryService(fakeUserRepository, bCryptPasswordEncoder)
+			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder)
 		);
 
 		user = fakeUserRepository.save(
@@ -53,21 +51,5 @@ public class AdminFacadeTest {
 
 		// then
 		assertEquals(2L, response.id());
-	}
-
-	@Test
-	@DisplayName("updateRole은 유저의 권한을 수정한다.")
-	public void updateRole_Success() {
-		// given
-		BaseRole updatedRole = SPEAKER;
-		RoleUpdateRequest request = RoleUpdateRequest.builder()
-			.permission(updatedRole)
-			.build();
-
-		// when
-		adminFacade.updateRole(user.getId(), request);
-
-		// then
-		assertEquals(updatedRole, user.getRole());
 	}
 }
