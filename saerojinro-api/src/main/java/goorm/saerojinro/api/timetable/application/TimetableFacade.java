@@ -36,20 +36,16 @@ public class TimetableFacade {
 		List<WishlistListResponse> wishListResponseList = new ArrayList<>();
 
 		for (Reservation reservation : reservationList) {
-			List<Reservation> thisLectureReservationList = reservationQueryService
-				.getAllByLectureId(reservation.getLecture().getId());
-
+			int size = reservationQueryService.countByLectureId(reservation.getLecture().getId());
 			reservationListResponseList.add(
-				ReservationListResponse.from(reservation, thisLectureReservationList.size())
+				ReservationListResponse.from(reservation, size)
 			);
 		}
 
 		for (WishList wishList : wishListList) {
-			List<Reservation> thisLectureReservationList = reservationQueryService
-				.getAllByLectureId(wishList.getLecture().getId());
-
+			int size = reservationQueryService.countByLectureId(wishList.getLecture().getId());
 			wishListResponseList.add(
-				WishlistListResponse.from(wishList, thisLectureReservationList.size())
+				WishlistListResponse.from(wishList, size)
 			);
 		}
 

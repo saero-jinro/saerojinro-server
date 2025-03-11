@@ -33,4 +33,8 @@ public class ReservationQueryService {
     public List<Reservation> getAllByLectureId(Long lectureId) {
         return reservationRepository.findAllByLectureId(lectureId);
     }
+
+    public int countByLectureId(Long lectureId) {
+        return reservationRepository.countByLectureId(lectureId);
+    }
 }
