@@ -27,6 +27,7 @@ public class LectureAdminFacade {
 			request.speakerFilmography(),
 			request.speakerPhoto()
 		);
+
 		Lecture lecture = lectureCommandService.create(
 			speaker,
 			request.title(),

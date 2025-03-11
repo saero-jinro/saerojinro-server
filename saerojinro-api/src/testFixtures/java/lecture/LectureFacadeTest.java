@@ -1,5 +1,6 @@
 package lecture;
 
+import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,19 +10,31 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
+import goorm.saerojinro.domain.user.application.UserQueryService;
+import goorm.saerojinro.domain.user.domain.User;
+import mock.producer.FakeLogEventProducer;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
+import mock.repository.FakeUserRepository;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LectureFacadeTest {
 
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
 	private FakeLectureRepository lectureRepository;
+	private FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
+	private UserQueryService userQueryService;
 
 	private Lecture lecture1;
 	private Lecture lecture2;
@@ -42,7 +55,10 @@ public class LectureFacadeTest {
 	void setUp() {
 		lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
-		lectureFacade = new LectureFacade(lectureQueryService);
+
+		FakeUserRepository fakeUserRepository = new FakeUserRepository();
+		userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
+		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService);
 
 		speaker = Speaker.builder()
 			.name(NAME)
@@ -86,6 +102,20 @@ public class LectureFacadeTest {
 
 		lectureRepository.save(lecture1);
 		lectureRepository.save(lecture2);
+
+		fakeUserRepository.save(User.builder()
+			.email("email@email.com")
+			.password("password1234!")
+			.name("박민준")
+			.role(ADMIN)
+			.build()
+		);
+
+		UserDetails user = userQueryService.getByEmail("email@email.com");
+		SecurityContext context = SecurityContextHolder.getContext();
+		context.setAuthentication(
+			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+		);
 	}
 
 	@Test
