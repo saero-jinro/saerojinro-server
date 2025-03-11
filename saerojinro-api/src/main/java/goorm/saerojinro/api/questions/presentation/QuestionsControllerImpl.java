@@ -40,17 +40,17 @@ public class QuestionsControllerImpl implements QuestionsController{
     }
 
     @Override
-    @PatchMapping("/{lectureId}/{questionsId}")
-    public ResponseEntity<Void> update(@PathVariable("questionsId") Long questionsId,
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") Long id,
                                        QuestionsUpdateRequest request) {
-        questionsFacade.update(questionsId, request);
+        questionsFacade.update(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @DeleteMapping("/{lectureId]/{questionsId}")
-    public ResponseEntity<Void> delete(@PathVariable("questionsId") Long questionsId) {
-        questionsFacade.delete(questionsId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        questionsFacade.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

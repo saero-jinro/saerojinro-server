@@ -49,6 +49,7 @@ public class QuestionsFacade {
         Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
         Questions questions = questionsCommandService.create(user, lecture, request.content());
+
         return QuestionsCreateResponse.from(questions.getId());
     }
 
