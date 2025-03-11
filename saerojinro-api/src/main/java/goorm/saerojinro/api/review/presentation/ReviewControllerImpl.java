@@ -27,7 +27,7 @@ public class ReviewControllerImpl implements ReviewController{
     @Override
     @GetMapping("/lectures/{lectureId}")
     public ResponseEntity<ReviewListResponse> getByLecture(@PathVariable("lectureId") Long lectureId) {
-        ReviewListResponse response = reviewFacade.getByLecture(lectureId);
+        ReviewListResponse response = reviewFacade.getByLectureId(lectureId);
         return ResponseEntity.status(OK).body(response);
     }
 

@@ -1,6 +1,5 @@
 package mock.repository;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.review.domain.Review;
 import goorm.saerojinro.domain.review.domain.ReviewRepository;
 
@@ -21,9 +20,9 @@ public class FakeReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public List<Review> findByLecture(Lecture lecture) {
+    public List<Review> findByLectureId(Long id) {
         return data.stream()
-                .filter(r -> r.getLecture().getId().equals(lecture.getId()))
+                .filter(r -> r.getLecture().getId().equals(id))
                 .toList();
     }
 

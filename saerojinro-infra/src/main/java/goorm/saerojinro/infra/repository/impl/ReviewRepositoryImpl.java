@@ -21,8 +21,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public List<Review> findByLecture(Lecture lecture) {
-        return reviewJpaRepository.findByLecture(lecture);
+    public List<Review> findByLectureId(Long lectureId) {
+        return reviewJpaRepository.findByLectureId(lectureId);
     }
 
     @Override

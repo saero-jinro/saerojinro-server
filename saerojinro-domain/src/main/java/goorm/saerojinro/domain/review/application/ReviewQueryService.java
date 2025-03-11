@@ -1,6 +1,5 @@
 package goorm.saerojinro.domain.review.application;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.review.domain.Review;
 import goorm.saerojinro.domain.review.domain.ReviewRepository;
 import goorm.saerojinro.domain.review.exception.ReviewNotFoundException;
@@ -18,8 +17,8 @@ public class ReviewQueryService {
         return reviewRepository.findAll();
     }
 
-    public List<Review> getByLecture(Lecture lecture){
-        return reviewRepository.findByLecture(lecture);
+    public List<Review> getByLectureId(Long lectureId){
+        return reviewRepository.findByLectureId(lectureId);
     }
 
     public Review getByReviewId(Long reviewId){

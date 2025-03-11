@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ReviewRepository {
     List<Review> findAll();
 
-    List<Review> findByLecture(Lecture lecture);
+    List<Review> findByLectureId(Long lectureId);
 
     Optional<Review> findById(Long reviewId);
 

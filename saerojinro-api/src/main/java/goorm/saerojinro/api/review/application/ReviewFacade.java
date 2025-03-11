@@ -38,11 +38,9 @@ public class ReviewFacade {
     }
 
     @Transactional(readOnly = true)
-    public ReviewListResponse getByLecture(Long lectureId){
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
-
-        List<Review> findReview = reviewQueryService.getByLecture(lecture);
-        return ReviewListResponse.from(findReview);
+    public ReviewListResponse getByLectureId(Long lectureId){
+        List<Review> reviews = reviewQueryService.getByLectureId(lectureId);
+        return ReviewListResponse.from(reviews);
     }
 
     @Transactional
@@ -50,7 +48,10 @@ public class ReviewFacade {
         User user = userQueryService.me();
         Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
-        if (!reservationQueryService.existsCheck(user, lecture) || LocalDateTime.now().isBefore(lecture.getEndTime())) {
+        if (!user.getRole().equals(ADMIN) &&
+            !reservationQueryService.existsCheck(user, lecture) ||
+            LocalDateTime.now().isBefore(lecture.getEndTime())
+        ) {
             throw new ReviewNotAuthorizedException();
         }
 

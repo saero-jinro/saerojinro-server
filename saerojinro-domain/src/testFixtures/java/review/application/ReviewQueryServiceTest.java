@@ -87,11 +87,8 @@ public class ReviewQueryServiceTest {
     @Test
     @DisplayName("getByLecture 는 강의 별 리뷰 데이터를 조회 합니다.")
     public void getByLecture_Success(){
-        // given
-        Lecture lecture = createLecture(LECTURE_ID);
-
         // when
-        List<Review> reviews = reviewQueryService.getByLecture(lecture);
+        List<Review> reviews = reviewQueryService.getByLectureId(LECTURE_ID);
 
         // then
         assertThat(reviews)
