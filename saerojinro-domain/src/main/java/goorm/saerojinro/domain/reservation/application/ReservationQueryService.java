@@ -29,7 +29,10 @@ public class ReservationQueryService {
     public boolean existsCheck(User user, Lecture lecture){
         return reservationRepository.existByUserAndLecture(user, lecture);
     }
-  
+    public boolean existsCheckByStartTime(User user, Lecture lecture){
+        return reservationRepository.existByUserAndStartTime(user, lecture);
+    }
+
     public List<Reservation> getAllByLectureId(Long lectureId) {
         return reservationRepository.findAllByLectureId(lectureId);
     }

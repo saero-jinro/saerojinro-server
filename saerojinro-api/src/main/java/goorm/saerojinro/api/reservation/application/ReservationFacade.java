@@ -7,6 +7,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
+import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,11 @@ public class ReservationFacade {
         User user = getUser(userId);
         Lecture lecture = getLecture(lectureId);
 
-        Reservation reservation = reservationCommandService.create(user, lecture);
+        if(reservationQueryService.existsCheckByStartTime(user, lecture)){
+            throw new ReservationExistException();
+        }
 
+        Reservation reservation = reservationCommandService.create(user, lecture);
         return ReservationCreateResponse.from(reservation);
     }
 

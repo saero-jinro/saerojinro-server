@@ -10,6 +10,8 @@ public interface ReservationRepository {
 
     boolean existByUserAndLecture(User user, Lecture lecture);
 
+    boolean existByUserAndStartTime(User user, Lecture lecture);
+
     List<Reservation> findByUser(User user);
 
     Optional<Reservation> findByUserAndLecture(User user, Lecture lecture);
