@@ -7,14 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "Timetable", description = "시간표 API")
 public interface TimetableController {
 
 	@Operation(
 		summary = "시간표 조회",
-		description = "유저 ID로 시간표 목록을 조회 합니다.",
+		description = "로그인한 본인의 시간표 목록을 조회 합니다.",
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
@@ -22,5 +21,5 @@ public interface TimetableController {
 			)
 		}
 	)
-	ResponseEntity<TimetableResponse> getTimetable(@PathVariable("id") Long attendeeId);
+	ResponseEntity<TimetableResponse> getTimetable();
 }

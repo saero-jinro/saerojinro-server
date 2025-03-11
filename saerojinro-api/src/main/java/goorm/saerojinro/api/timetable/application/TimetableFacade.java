@@ -24,8 +24,11 @@ public class TimetableFacade {
 	private final WishListQueryService wishListQueryService;
 
 	@Transactional(readOnly = true)
-	public TimetableResponse getTimetable(Long attendeeId) {
-		User user = userQueryService.getById(attendeeId);
+	public TimetableResponse getTimetable() {
+		User user = userQueryService.me();
+		if (user == null)
+			return TimetableResponse.of(new ArrayList<>(), new ArrayList<>());
+
 		List<Reservation> reservationList = reservationQueryService.getAllReservationByUser(user);
 		List<WishList> wishListList = wishListQueryService.getAllByUser(user);
 

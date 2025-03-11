@@ -23,12 +23,15 @@ import mock.repository.FakeWishListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
+import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TimetableFacadeTest {
 	private TimetableFacade timetableFacade;
@@ -48,7 +51,11 @@ public class TimetableFacadeTest {
 
 		// 데이터 준비
 		User user = userRepository.save(
-			User.builder().build()
+			User.builder()
+				.name("user")
+				.role(ATTENDEE)
+				.email("user@email.com")
+				.build()
 		);
 
 		SpeakerRepository speakerRepository = new FakeSpeakerRepository();
@@ -84,18 +91,20 @@ public class TimetableFacadeTest {
 		wishListRepository.save(
 			WishList.builder().user(user).lecture(lecture2).build()
 		);
+
+		SecurityContext context = SecurityContextHolder.getContext();
+		context.setAuthentication(
+			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+		);
 	}
 
 	@Test
 	@DisplayName("getTimetable은 사용자의 예약, 즐겨찾기 리스트를 반환한다")
 	public void getTimetable_Success() {
-		// given
-
 		// when
-		TimetableResponse timetable = timetableFacade.getTimetable(1L);
+		TimetableResponse timetable = timetableFacade.getTimetable();
 
 		// then
-		assertNotNull(timetable);
 		assertEquals(1, timetable.reservation().size());
 		assertEquals("Lecture 1", timetable.reservation().get(0).title());
 		assertEquals(LocalDateTime.parse("2025-01-01T00:00:00"), timetable.reservation().get(0).startTime());
