@@ -4,12 +4,12 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record LectureListResponse(
-	List<LectureResponse> lectures,
+public record LectureListResponseByAll(
+	List<LectureResponseByAll> lectures,
 	long totalCount
 ) {
-	public static LectureListResponse from(List<LectureResponse> lectures) {
-		return LectureListResponse.builder()
+	public static LectureListResponseByAll from(List<LectureResponseByAll> lectures) {
+		return LectureListResponseByAll.builder()
 			.lectures(lectures)
 			.totalCount(lectures != null ? lectures.size() : 0)
 			.build();

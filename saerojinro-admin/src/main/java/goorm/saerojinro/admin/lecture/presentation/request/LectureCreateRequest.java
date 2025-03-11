@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record LectureCreateRequest(
+public record 	LectureCreateRequest(
 	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull String title,
 

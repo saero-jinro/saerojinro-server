@@ -1,8 +1,6 @@
 package goorm.saerojinro.api.lecture.application;
 
-import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
+import goorm.saerojinro.api.lecture.presentation.response.*;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +16,11 @@ public class LectureFacade {
 	private final LectureQueryService lectureService;
 
 	@Transactional(readOnly = true)
-	public LectureListResponse getAllLecture() {
-		List<LectureResponse> responses = lectureService.getAllLecture().stream()
-			.map(LectureResponse::from)
+	public LectureListResponseByAll getAllLecture() {
+		List<LectureResponseByAll> responses = lectureService.getAllLecture().stream()
+			.map(LectureResponseByAll::from)
 			.toList();
-		return LectureListResponse.from(responses);
+		return LectureListResponseByAll.from(responses);
 	}
 
 	@Transactional(readOnly = true)
@@ -32,10 +30,10 @@ public class LectureFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public LectureListResponse getByDate(LocalDate localDate) {
-		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
-			.map(LectureResponse::from)
+	public LectureListResponseByDate getByDate(LocalDate localDate) {
+		List<LectureResponseByDate> responses = lectureService.getByDate(localDate).stream()
+			.map(LectureResponseByDate::from)
 			.toList();
-		return LectureListResponse.from(responses);
+		return LectureListResponseByDate.from(responses);
 	}
 }

@@ -7,28 +7,26 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record LectureResponse(
-	Category category,
+public record LectureResponseByDate(
+	Long id,
 	String title,
-	String contents,
-
-	//speaker
-	String speakerName,
-
-	//세션 시간 및 장소
+	Category category,
 	LocalDateTime startTime,
 	LocalDateTime endTime,
-	String location
+
+	//강연자
+	String speakerName,
+	String image
 ) {
-	public static LectureResponse from(Lecture lecture) {
-		return LectureResponse.builder()
-			.category(lecture.getCategory())
+	public static LectureResponseByDate from(Lecture lecture) {
+		return LectureResponseByDate.builder()
+			.id(lecture.getId())
 			.title(lecture.getTitle())
-			.contents(lecture.getContents())
-			.speakerName(lecture.getSpeaker().getName())
+			.category(lecture.getCategory())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
-			.location(lecture.getLocation())
+			.speakerName(lecture.getSpeaker().getName())
+			.image(lecture.getSpeaker().getPhoto())
 			.build();
 	}
 }
