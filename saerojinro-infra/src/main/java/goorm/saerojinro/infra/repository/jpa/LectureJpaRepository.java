@@ -14,8 +14,11 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 		"WHERE l.startTime >= :start AND l.startTime < :end")
 	List<Lecture> findByStartTimeBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-	@Query("SELECT DISTINCT l FROM Lecture l JOIN FETCH l.speaker")
 	List<Lecture> findAll();
 
 	Optional<Lecture> findById(@Param("id") Long id);
+
+	List<Lecture> findByStartTime(LocalDateTime time);
+
+	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 }

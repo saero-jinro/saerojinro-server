@@ -1,4 +1,4 @@
-package goorm.saerojinro.api.reservation.api;
+package goorm.saerojinro.api.reservation.application;
 
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;

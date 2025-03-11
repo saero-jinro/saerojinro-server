@@ -37,3 +37,4 @@ springdoc:
 docs:
   api-docs-url: ${API_DOCS_URL:http://localhost:8080/swagger-ui/index.html}
   auth-docs-url: ${AUTH_DOCS_URL:http://localhost:8081/swagger-ui/index.html}
+

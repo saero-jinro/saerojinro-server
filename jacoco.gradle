@@ -56,6 +56,7 @@ private excludedClassFilesForReport(classDirectories) {
                         "**/dto/**",
                         "**/enums/**",
                         "goorm/saerojinro/auth/social/**",
+                        "**/NotificationScheduler.class",
                         "goorm/saerojinro/api/SaerojinroApiApplication.class",
                         "goorm/saerojinro/admin/SaerojinroAdminApplication.class",
                         "goorm/saerojinro/auth/SaerojinroAuthApplication.class",
