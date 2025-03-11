@@ -18,11 +18,11 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public boolean existByUserAndLecture(User user, Lecture lecture){
-        return reservationJpaRepository.existByUserAndLecture(user, lecture);
+        return reservationJpaRepository.existsByUserAndLecture(user, lecture);
     }
     @Override
     public boolean existByUserAndStartTime(User user, Lecture lecture) {
-        return reservationJpaRepository.existsByUserAndStartTime(user, lecture.getStartTime());
+        return reservationJpaRepository.existsByUserAndStartTime(user.getId(), lecture.getStartTime());
     }
 
     @Override

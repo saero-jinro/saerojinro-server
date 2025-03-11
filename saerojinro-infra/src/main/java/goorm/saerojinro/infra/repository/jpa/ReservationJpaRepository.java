@@ -15,11 +15,11 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
 
     @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END " +
             "FROM Reservation r JOIN r.lecture l " +
-            "WHERE r.user = :user AND l.startTime = :startTime")
-    boolean existsByUserAndStartTime(@Param("user") User user,
+            "WHERE r.user.id = :userId AND l.startTime = :startTime")
+    boolean existsByUserAndStartTime(@Param("userId") Long userId,
                                      @Param("startTime") LocalDateTime startTime);
 
-    boolean existByUserAndLecture(User user, Lecture lecture);
+    boolean existsByUserAndLecture(User user, Lecture lecture);
 
     List<Reservation> findAllByUser(User user);
 

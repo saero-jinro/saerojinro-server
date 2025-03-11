@@ -1,14 +1,12 @@
 package goorm.saerojinro.api.reservation.presentation;
 
 import goorm.saerojinro.api.reservation.application.ReservationFacade;
-import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +25,9 @@ public class ReservationControllerImpl implements ReservationController {
 
     @Override
     @DeleteMapping("/{id}/reservations/{lectureId}")
-    public ResponseEntity<ReservationCancelResponse> cancel(@PathVariable("id") Long attendeeId,
+    public ResponseEntity<Void> cancel(@PathVariable("id") Long attendeeId,
                                                             @PathVariable("lectureId") Long lectureId) {
-        ReservationCancelResponse response = reservationFacade.cancel(attendeeId, lectureId);
-        return ResponseEntity.status(OK).body(response);
+        reservationFacade.cancel(attendeeId, lectureId);
+        return ResponseEntity.noContent().build();
     }
 }

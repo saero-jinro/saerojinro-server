@@ -1,6 +1,5 @@
 package goorm.saerojinro.api.reservation.application;
 
-import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -36,14 +35,12 @@ public class ReservationFacade {
     }
 
     @Transactional
-    public ReservationCancelResponse cancel(Long userId, Long lectureId){
+    public void cancel(Long userId, Long lectureId){
         User user = getUser(userId);
         Lecture lecture = getLecture(lectureId);
 
         Reservation reservation = reservationQueryService.getByUserAndLecture(user, lecture);
         reservationCommandService.cancel(reservation);
-
-        return ReservationCancelResponse.from(reservation);
     }
 
     private User getUser(Long userId) {

@@ -1,6 +1,5 @@
 package goorm.saerojinro.api.reservation.presentation;
 
-import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,11 +30,11 @@ public interface ReservationController {
         description = "유저 ID와 강의 ID를 통해 예약을 취소합니다.",
         responses = {
             @ApiResponse(
-                responseCode = "200",
-                content = @Content(schema = @Schema(implementation = ReservationCancelResponse.class))
+                responseCode = "204",
+                description = "예약이 취소 되었습니다."
             )
         }
     )
-    ResponseEntity<ReservationCancelResponse> cancel(@PathVariable("id") Long attendeeId,
+    ResponseEntity<Void> cancel(@PathVariable("id") Long attendeeId,
                                                      @PathVariable("lectureId") Long lectureId);
 }

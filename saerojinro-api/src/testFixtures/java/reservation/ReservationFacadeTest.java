@@ -1,7 +1,6 @@
 package reservation;
 
 import goorm.saerojinro.api.reservation.application.ReservationFacade;
-import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -29,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ReservationFacadeTest {
 
     private ReservationFacade reservationFacade;
+    private ReservationQueryService reservationQueryService;
 
     private static final Long USER_ID = 1L;
     private static final Long LECTURE_ID = 1L;
@@ -44,7 +44,7 @@ public class ReservationFacadeTest {
         FakeReservationRepository reservationRepository = new FakeReservationRepository();
         FakeUserRepository userRepository = new FakeUserRepository();
         FakeLectureRepository lectureRepository = new FakeLectureRepository();
-        ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
+        reservationQueryService = new ReservationQueryService(reservationRepository);
 
         reservationFacade = new ReservationFacade(
                 new UserQueryService(userRepository, new BCryptPasswordEncoder()),
@@ -112,11 +112,11 @@ public class ReservationFacadeTest {
         ReservationCreateResponse createResponse = reservationFacade.create(USER_ID, LECTURE_ID);
 
         // when
-        ReservationCancelResponse cancelResponse = reservationFacade.cancel(USER_ID, LECTURE_ID);
+        reservationFacade.cancel(USER_ID, LECTURE_ID);
 
         // then
-        assertNotNull(cancelResponse);
-        assertThat(cancelResponse.id()).isEqualTo(createResponse.id());
+        assertThat(reservationQueryService.getAllByLectureId(LECTURE_ID).size()).isEqualTo(0);
+
     }
 
 }
