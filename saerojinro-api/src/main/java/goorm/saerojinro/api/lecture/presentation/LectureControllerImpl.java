@@ -2,7 +2,8 @@ package goorm.saerojinro.api.lecture.presentation;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,8 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping
-	public ResponseEntity<LectureListResponse> getAllLecture() {
-		LectureListResponse response = lectureFacade.getAllLecture();
+	public ResponseEntity<LectureListResponseByAll> getAllLecture() {
+		LectureListResponseByAll response = lectureFacade.getAllLecture();
 		return ResponseEntity.ok(response);
 	}
 
@@ -33,11 +34,11 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping(("/date"))
-	public ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day) {
+	public ResponseEntity<LectureListResponseByDate> getByDate(@RequestParam("day") String day) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 		LocalDate localDate = LocalDate.parse(day, formatter);
 
-		LectureListResponse response = lectureFacade.getByDate(localDate);
+		LectureListResponseByDate response = lectureFacade.getByDate(localDate);
 		return ResponseEntity.ok(response);
 	}
 }
