@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record ReservationsResponse(
+public record ReservationListResponse(
 	Long reservationId,
 	Long userId,
 	Long lectureId,
@@ -15,8 +15,8 @@ public record ReservationsResponse(
 	int currentReservation,
 	int capacity
 ) {
-	public static ReservationsResponse from(Reservation reservation, int currentReservation) {
-		return ReservationsResponse.builder()
+	public static ReservationListResponse from(Reservation reservation, int currentReservation) {
+		return ReservationListResponse.builder()
 			.reservationId(reservation.getId())
 			.userId(reservation.getUser().getId())
 			.lectureId(reservation.getLecture().getId())

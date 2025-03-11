@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.timetable.presentation;
 
+import goorm.saerojinro.api.timetable.application.TimetableFacade;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/attendees")
 public class TimetableControllerImpl implements TimetableController {
 
+	private final TimetableFacade timetableFacade;
+
 	@Override
 	@GetMapping("/{id}/timetable")
 	public ResponseEntity<TimetableResponse> getTimetable(@PathVariable("id") Long attendeeId) {
-		// TODO
-		return null;
+		return ResponseEntity.ok(timetableFacade.getTimetable(attendeeId));
 	}
 }

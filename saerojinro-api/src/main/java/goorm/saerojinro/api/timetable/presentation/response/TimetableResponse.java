@@ -6,10 +6,10 @@ import java.util.List;
 
 @Builder
 public record TimetableResponse(
-	List<ReservationsResponse> reservation,
-	List<WishlistsResponse> wishlist
+	List<ReservationListResponse> reservation,
+	List<WishlistListResponse> wishlist
 ) {
-	public static TimetableResponse of(List<ReservationsResponse> reservation, List<WishlistsResponse> wishlist) {
+	public static TimetableResponse of(List<ReservationListResponse> reservation, List<WishlistListResponse> wishlist) {
 		return TimetableResponse.builder()
 			.reservation(reservation)
 			.wishlist(wishlist)

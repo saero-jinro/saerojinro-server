@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record WishlistsResponse(
+public record WishlistListResponse(
 	Long wishlistId,
 	Long userId,
 	Long lectureId,
@@ -15,8 +15,8 @@ public record WishlistsResponse(
 	int currentReservation,
 	int capacity
 ) {
-	private static WishlistsResponse from(WishList wishList, int currentReservation) {
-		return WishlistsResponse.builder()
+	public static WishlistListResponse from(WishList wishList, int currentReservation) {
+		return WishlistListResponse.builder()
 			.wishlistId(wishList.getId())
 			.userId(wishList.getUser().getId())
 			.lectureId(wishList.getLecture().getId())
