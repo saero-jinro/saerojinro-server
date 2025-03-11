@@ -34,8 +34,17 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture) {
-        return findByUserAndLecture(user, lecture).isPresent();
+    public boolean existByUserAndLecture(User user, Lecture lecture){
+        return data.stream()
+                .anyMatch(r -> r.getUser().getId().equals(user.getId()) &&
+                        r.getLecture().getId().equals(lecture.getId()));
+    }
+
+    @Override
+    public boolean existByUserAndStartTime(User user, Lecture lecture) {
+        return data.stream()
+                .anyMatch(r -> r.getUser().getId().equals(user.getId()) &&
+                        r.getLecture().getStartTime().equals(lecture.getStartTime()));
     }
 
     @Override

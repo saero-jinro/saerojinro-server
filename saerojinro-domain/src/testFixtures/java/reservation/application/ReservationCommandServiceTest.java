@@ -6,7 +6,6 @@ import goorm.saerojinro.domain.reservation.application.ReservationCommandService
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
-import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ReservationCommandServiceTest {
     ReservationCommandService reservationCommandService;
@@ -35,8 +33,7 @@ public class ReservationCommandServiceTest {
     void init(){
         ReservationRepository reservationRepository = new FakeReservationRepository();
         reservationQueryService = new ReservationQueryService(reservationRepository);
-        reservationCommandService = new ReservationCommandService(
-                reservationRepository, reservationQueryService);
+        reservationCommandService = new ReservationCommandService(reservationRepository);
     }
 
     private User createUser() {
@@ -73,20 +70,6 @@ public class ReservationCommandServiceTest {
         assertThat(reservation.getLecture().getId()).isEqualTo(LECTURE_ID);
     }
 
-    @Test
-    @DisplayName("create 는 동일한 예약 정보가 존재할 때, ReservationExistException 예외를 던진다.")
-    public void create_ReservationExistException(){
-        // given
-        User user = createUser();
-        Lecture lecture = createLecture();
-
-        // when
-        reservationCommandService.create(user, lecture);
-
-        // then
-        assertThrows(ReservationExistException.class,
-                () -> reservationCommandService.create(user, lecture));
-    }
 
     @Test
     @DisplayName("cancel 은 등록된 예약을 취소한다.")
@@ -101,7 +84,7 @@ public class ReservationCommandServiceTest {
         reservationCommandService.cancel(reservation);
 
         // then
-        boolean exists = reservationQueryService.existsCheck(user, lecture);
+        boolean exists = reservationQueryService.existsCheckByStartTime(user, lecture);
         assertThat(exists).isFalse();
     }
 

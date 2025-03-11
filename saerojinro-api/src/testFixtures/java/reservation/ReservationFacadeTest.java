@@ -8,11 +8,13 @@ import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
+import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ public class ReservationFacadeTest {
                 new UserQueryService(userRepository, new BCryptPasswordEncoder()),
                 new LectureQueryService(lectureRepository),
                 reservationQueryService,
-                new ReservationCommandService(reservationRepository, reservationQueryService)
+                new ReservationCommandService(reservationRepository)
         );
 
         User user = User.builder()
@@ -65,8 +67,19 @@ public class ReservationFacadeTest {
                 .category(CATEGORY)
                 .build();
 
+        Lecture lecture2 = Lecture.builder()
+                .id(2L)
+                .title(LECTURE_TITLE)
+                .contents(LECTURE_CONTENTS)
+                .startTime(START_TIME)
+                .endTime(END_TIME)
+                .location(LOCATION)
+                .category(CATEGORY)
+                .build();
+
         userRepository.save(user);
         lectureRepository.save(lecture);
+        lectureRepository.save(lecture2);
     }
 
     @Test
@@ -79,6 +92,17 @@ public class ReservationFacadeTest {
         // then
         assertNotNull(response);
         assertTrue(response.id() > 0);
+    }
+
+    @Test
+    @DisplayName("create 는 예약하려는 강의의 시작 시간에 해당하는 다른 예약이 있을 시 ReservationExistException을 반환 합니다.")
+    public void create_ReservationExistException(){
+        // given
+        ReservationCreateResponse response = reservationFacade.create(USER_ID, LECTURE_ID);
+
+        // when
+        Assertions.assertThrows(ReservationExistException.class,
+                () -> reservationFacade.create(USER_ID, 2L));
     }
 
     @Test

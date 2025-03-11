@@ -128,7 +128,7 @@ public class ReservationQueryServiceTest {
         Lecture lecture = createLecture(LECTURE_ID);
 
         //when
-        boolean isExist = reservationQueryService.existsCheck(user, lecture);
+        boolean isExist = reservationQueryService.existsCheckByStartTime(user, lecture);
 
         //then
         assertThat(isExist).isTrue();
@@ -137,8 +137,6 @@ public class ReservationQueryServiceTest {
     @Test
     @DisplayName("getAllByLectureId 는 Lecture 에 예약한 예약 정보를 반환할 수 있다.")
     public void getAllByLectureId_Success(){
-        // given
-
         // when
         List<Reservation> reservationList = reservationQueryService.getAllByLectureId(LECTURE_ID);
 
