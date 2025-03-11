@@ -22,4 +22,9 @@ public class FileRepositoryImpl implements FileRepository {
 	public Optional<File> findById(Long id) {
 		return fileJpaRepository.findById(id);
 	}
+
+	@Override
+	public Optional<File> findByUri(String uri) {
+		return fileJpaRepository.findByPhysicalPath(uri);
+	}
 }

@@ -22,8 +22,7 @@ public class LectureAdminFacade {
 
 	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
-		File file = fileQueryService.getFileById(request.speakerPhotoFileId());
-		String storedImageUri = file.getPhysicalPath();
+		File file = fileQueryService.getFileByUri(request.speakerPhotoUri());
 
 		Speaker speaker = speakerCommandService.create(
 			request.speakerName(),
@@ -31,7 +30,7 @@ public class LectureAdminFacade {
 			request.speakerPosition(),
 			request.speakerIntroduction(),
 			request.speakerFilmography(),
-			storedImageUri
+			file
 		);
 
 		Lecture lecture = lectureCommandService.create(

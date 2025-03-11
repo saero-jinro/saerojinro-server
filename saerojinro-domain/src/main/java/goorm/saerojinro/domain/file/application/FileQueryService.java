@@ -14,4 +14,8 @@ public class FileQueryService {
 	public File getFileById(Long id) {
 		return fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
 	}
+
+	public File getFileByUri(String uri) {
+		return fileRepository.findByUri(uri).orElseThrow(FileNotFoundException::new);
+	}
 }
