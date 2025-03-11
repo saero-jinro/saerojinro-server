@@ -32,9 +32,11 @@ import java.time.LocalDateTime;
 
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TimetableFacadeTest {
 	private TimetableFacade timetableFacade;
+	private User user;
 
 	@BeforeEach
 	public void init() {
@@ -50,7 +52,7 @@ public class TimetableFacadeTest {
 		timetableFacade = new TimetableFacade(userQueryService, reservationQueryService, wishListQueryService);
 
 		// 데이터 준비
-		User user = userRepository.save(
+		user = userRepository.save(
 			User.builder()
 				.name("user")
 				.role(ATTENDEE)
@@ -92,15 +94,17 @@ public class TimetableFacadeTest {
 			WishList.builder().user(user).lecture(lecture2).build()
 		);
 
-		SecurityContext context = SecurityContextHolder.getContext();
-		context.setAuthentication(
-			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
-		);
 	}
 
 	@Test
 	@DisplayName("getTimetable은 사용자의 예약, 즐겨찾기 리스트를 반환한다")
 	public void getTimetable_Success() {
+		// given
+		SecurityContext context = SecurityContextHolder.getContext();
+		context.setAuthentication(
+			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
+		);
+
 		// when
 		TimetableResponse timetable = timetableFacade.getTimetable();
 
@@ -113,5 +117,17 @@ public class TimetableFacadeTest {
 		assertEquals(8, timetable.wishlist().get(0).capacity());
 		assertEquals("Room 1", timetable.wishlist().get(0).location());
 		assertEquals("콜 팔머", timetable.wishlist().get(0).speakerName());
+	}
+
+	@Test
+	@DisplayName("getTimetable은 사용자가 로그인하지 않으면 빈 리스트를 반환한다")
+	public void getTimetable_Not_Login() {
+		// when
+		TimetableResponse timetable = timetableFacade.getTimetable();
+
+		// then
+		assertNotNull(timetable);
+		assertEquals(0, timetable.reservation().size());
+		assertEquals(0, timetable.wishlist().size());
 	}
 }
