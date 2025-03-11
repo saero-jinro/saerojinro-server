@@ -1,9 +1,7 @@
 package notification.application;
 
-import goorm.saerojinro.admin.api.notification.application.NotificationAdminEventHandler;
 import goorm.saerojinro.admin.api.notification.application.NotificationAdminFacade;
 import goorm.saerojinro.admin.api.notification.presentation.request.NotificationSendRequest;
-import goorm.saerojinro.common.event.CommonEvent;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.notification.application.EmitterQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
@@ -33,16 +31,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
-import static goorm.saerojinro.common.event.EventType.BROADCAST_NOTICE;
-import static goorm.saerojinro.common.event.EventType.LECTURE_IMMINENT;
-import static goorm.saerojinro.common.event.EventType.LECTURE_NOTICE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class NotificationAdminEventHandlerTest {
-	private NotificationAdminEventHandler notificationEventHandler;
+public class NotificationUserAdminFacadeTest {
+	private NotificationAdminFacade notificationFacade;
 	private NotificationRepository repository;
-	private CommonEvent event;
+	private ReservationRepository reservationRepository;
+
+	private User user;
+
 	private final String TITLE = "title";
 	private final String CONTENTS = "contents";
 
@@ -56,17 +54,16 @@ public class NotificationAdminEventHandlerTest {
 		UserRepository userRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
-		ReservationRepository reservationRepository = new FakeReservationRepository();
+		reservationRepository = new FakeReservationRepository();
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 
 		NotificationSseSender sseSender = new NotificationSseSender(emitterRepository);
 		EmitterQueryService emitterQueryService = new EmitterQueryService(emitterRepository);
-		NotificationAdminFacade notificationFacade = new NotificationAdminFacade(
+
+		notificationFacade = new NotificationAdminFacade(
 			emitterQueryService, commandService, userQueryService, reservationQueryService, sseSender);
 
-		notificationEventHandler = new NotificationAdminEventHandler(notificationFacade);
-
-		User userEntity = userRepository.save(User.builder()
+		user = userRepository.save(User.builder()
 			.email("email@email.com")
 			.password(passwordEncoder.encode("password1234!"))
 			.name("박민준")
@@ -74,105 +71,76 @@ public class NotificationAdminEventHandlerTest {
 			.build()
 		);
 
+		emitterRepository.save(1L);
+
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(
 			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
 		);
-		emitterRepository.save(1L);
-		Lecture lecture = Lecture.builder().id(1L).build();
-		reservationRepository.save(Reservation.createReservation(userEntity, lecture));
+	}
 
-		event = CommonEvent.builder()
-			.eventType(BROADCAST_NOTICE)
-			.lectureId(1L)
-			.userId(1L)
+	@Test
+	@DisplayName("sendNotificationByLectureId은 Lecture를 예약한 참가자에게 알림을 전송한다")
+	void sendNotificationByLectureId_Success() {
+		// given
+		Lecture lecture = Lecture.builder().id(1L).build();
+		reservationRepository.save(Reservation.createReservation(user, lecture));
+
+		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
 			.build();
-	}
-
-	@Test
-	@DisplayName("handleEvent는 각 이벤트별 올바른 알림을 생성할 수 있다.")
-	void handleEvent_Success() {
-		// given
-		// 강의 별 알림
-		CommonEvent event2 = CommonEvent.builder().eventType(LECTURE_NOTICE)
-			.lectureId(1L).title(TITLE).userId(1L).build();
-		// 5분 전 알림
-		CommonEvent event3 = CommonEvent.builder().eventType(LECTURE_IMMINENT)
-			.lectureId(1L).title(TITLE).build();
 
 		// when
-		notificationEventHandler.handleEvent(event);
-		notificationEventHandler.handleEvent(event2);
-		notificationEventHandler.handleEvent(event3);
+		notificationFacade.sendNotificationByLectureId(1L, request);
 
 		// then
-		List<Notification> all = repository.findByUserIdIsNull();
-		assertEquals(1, all.size());
-		assertNotNull(all);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, all.get(0).getTitle());
-
-		List<Notification> my = repository.findByUserId(1L);
-		assertEquals(2, my.size());
-		assertEquals("[" + event2.eventType().getDescription() + "]" + TITLE, my.get(0).getTitle());
-		assertEquals(TITLE, my.get(1).getTitle());
+		List<Notification> notifications = repository.findByUserId(user.getId());
+		Notification result = notifications.get(0);
+		assertNotNull(notifications);
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
 	}
 
 	@Test
-	@DisplayName("broadcastNotice는 전체 알림을 전송할 수 있다.")
-	void broadcastNotice_Success() {
+	@DisplayName("sendNotificationByReceiverId는 특정 참가자에게 알림을 전송한다")
+	void sendNotificationByReceiverId_Success() {
+		// given
+		Long receiverId = 1L;
+		NotificationSendRequest request = NotificationSendRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.build();
+
 		// when
-		notificationEventHandler.broadcastNotice(event);
+		notificationFacade.sendNotificationByReceiverId(receiverId, request);
+
+		// then
+		List<Notification> notifications = repository.findByUserId(receiverId);
+		Notification result = notifications.get(0);
+		assertNotNull(notifications);
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
+	}
+
+	@Test
+	@DisplayName("sendNotificationAll는 모든 참가자에게 알림을 전송한다")
+	void sendNotificationAll_Success() {
+		// given
+		NotificationSendRequest request = NotificationSendRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.build();
+
+		// when
+		notificationFacade.sendNotificationAll(request);
 
 		// then
 		List<Notification> notifications = repository.findByUserIdIsNull();
 		Notification result = notifications.get(0);
 		assertNotNull(notifications);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
-	}
-
-	@Test
-	@DisplayName("lectureNotice는 강의별 알림을 전송할 수 있다.")
-	void lectureNotice_Success() {
-		// when
-		notificationEventHandler.lectureNotice(event);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(1L);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, result.getTitle());
-		assertEquals(CONTENTS, result.getContents());
-	}
-
-	@Test
-	@DisplayName("lectureImminent는 5분전 알림을 전송할 수 있다.")
-	void lectureImminent_Success() {
-		// when
-		notificationEventHandler.lectureImminent(event);
-
-		// then
-		List<Notification> notifications = repository.findByUserId(1L);
-		Notification result = notifications.get(0);
-		assertNotNull(notifications);
-
 		assertEquals(TITLE, result.getTitle());
 		assertEquals(CONTENTS, result.getContents());
-
-	}
-
-	@Test
-	@DisplayName("makeNotice는 알림 내용을 생성할 수 있다.")
-	void makeNotice_Success() {
-		// when
-		NotificationSendRequest request = notificationEventHandler.makeNotice(event);
-
-		// then
-		assertNotNull(request);
-		assertEquals("[" + event.eventType().getDescription() + "]" + TITLE, request.title());
-		assertEquals(CONTENTS, request.contents());
 	}
 }
