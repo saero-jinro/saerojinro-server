@@ -98,7 +98,7 @@ public class ReservationFacadeTest {
     @DisplayName("create 는 예약하려는 강의의 시작 시간에 해당하는 다른 예약이 있을 시 ReservationExistException을 반환 합니다.")
     public void create_ReservationExistException(){
         // given
-        ReservationCreateResponse response = reservationFacade.create(USER_ID, LECTURE_ID);
+        reservationFacade.create(USER_ID, LECTURE_ID);
 
         // when
         Assertions.assertThrows(ReservationExistException.class,
@@ -109,7 +109,7 @@ public class ReservationFacadeTest {
     @DisplayName("cancel 은 기존에 저장된 예약 정보를 삭제한다.")
     public void cancel(){
         // given
-        ReservationCreateResponse createResponse = reservationFacade.create(USER_ID, LECTURE_ID);
+        reservationFacade.create(USER_ID, LECTURE_ID);
 
         // when
         reservationFacade.cancel(USER_ID, LECTURE_ID);
