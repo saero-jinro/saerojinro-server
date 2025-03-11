@@ -43,7 +43,7 @@ public class UserQueryService {
 			String email = ((UserDetails)principal).getUsername();
 			return getByEmail(email);
 		} catch (Exception e) {
-			throw new UserNotAuthenticatedException();
+			return null;
 		}
 	}
 }

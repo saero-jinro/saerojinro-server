@@ -13,7 +13,7 @@ public class QuestionsCommandService {
     private final QuestionsRepository questionsRepository;
 
     public Questions create(User user, Lecture lecture, String content){
-        Questions questions = Questions.create(user, lecture , content);
+        Questions questions = Questions.create(user, lecture, content);
         return questionsRepository.save(questions);
     }
 

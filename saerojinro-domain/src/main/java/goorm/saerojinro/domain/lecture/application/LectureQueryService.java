@@ -20,7 +20,8 @@ public class LectureQueryService {
 	}
 
 	public Lecture getByLectureId(Long lectureId) {
-		return lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
+		return lectureRepository.findById(lectureId)
+			.orElseThrow(LectureNotFoundException::new);
 	}
 
 	public List<Lecture> getByDate(LocalDate localDate) {
