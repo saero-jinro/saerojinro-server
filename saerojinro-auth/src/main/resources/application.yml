@@ -45,5 +45,6 @@ springdoc:
     tags-sorter: alpha
 
 docs:
-  api-docs-url: ${API_DOCS_URL:http://localhost:8080/swagger-ui/index.html}
   admin-docs-url: ${ADMIN_DOCS_URL:http://localhost:8082/swagger-ui/index.html}
+  api-docs-url: ${API_DOCS_URL:http://localhost:8080/swagger-ui/index.html}
+

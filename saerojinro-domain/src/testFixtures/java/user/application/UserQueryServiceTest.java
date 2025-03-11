@@ -3,6 +3,7 @@ package user.application;
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -137,14 +138,13 @@ public class UserQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("me는 현재 로그인이 안되어있는 상태에서 호출 시 UserNotAuthenticatiedException을 발생시킨다")
-	public void me_Throws_NotAuthenticated_ThrowsException() {
+	@DisplayName("me는 현재 로그인이 안되어있는 상태에서 호출 시 NULL을 반환한다.")
+	public void me_Failed() {
 		// given
 		SecurityContextHolder.clearContext();
 
 		// when
 		// then
-		assertThatThrownBy(() -> userQueryService.me())
-			.isInstanceOf(UserNotAuthenticatedException.class);
+		assertNull(userQueryService.me());
 	}
 }

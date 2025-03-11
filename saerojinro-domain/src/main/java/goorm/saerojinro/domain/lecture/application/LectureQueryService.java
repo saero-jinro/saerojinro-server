@@ -20,12 +20,21 @@ public class LectureQueryService {
 	}
 
 	public Lecture getByLectureId(Long lectureId) {
-		return lectureRepository.findById(lectureId).orElseThrow(LectureNotFoundException::new);
+		return lectureRepository.findById(lectureId)
+			.orElseThrow(LectureNotFoundException::new);
 	}
 
 	public List<Lecture> getByDate(LocalDate localDate) {
 		LocalDateTime start = localDate.atStartOfDay();
 		LocalDateTime end   = localDate.plusDays(1).atStartOfDay();
 		return lectureRepository.findByStartTimeBetween(start, end);
+	}
+
+	public List<Lecture> getAllLectureByStartTime(LocalDateTime time) {
+		return lectureRepository.findByStartTime(time);
+	}
+
+	public List<Lecture> getAllLectureBetween(LocalDateTime startTime, LocalDateTime endTime) {
+		return lectureRepository.findByStartTimeAfterAndEndTimeBefore(startTime, endTime);
 	}
 }
