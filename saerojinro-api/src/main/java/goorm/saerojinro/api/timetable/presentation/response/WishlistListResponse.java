@@ -11,6 +11,7 @@ public record WishlistListResponse(
 	Long wishlistId,
 	Long userId,
 	Long lectureId,
+	String title,
 	LocalDateTime startTime,
 	LocalDateTime endTime,
 	int currentReservation,
@@ -24,6 +25,7 @@ public record WishlistListResponse(
 			.wishlistId(wishList.getId())
 			.userId(wishList.getUser().getId())
 			.lectureId(lecture.getId())
+			.title(lecture.getTitle())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.currentReservation(currentReservation)

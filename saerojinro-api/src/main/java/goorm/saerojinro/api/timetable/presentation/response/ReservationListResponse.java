@@ -11,6 +11,7 @@ public record ReservationListResponse(
 	Long reservationId,
 	Long userId,
 	Long lectureId,
+	String title,
 	LocalDateTime startTime,
 	LocalDateTime endTime,
 	int currentReservation,
@@ -25,6 +26,7 @@ public record ReservationListResponse(
 			.reservationId(reservation.getId())
 			.userId(reservation.getUser().getId())
 			.lectureId(lecture.getId())
+			.title(lecture.getTitle())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.currentReservation(currentReservation)
