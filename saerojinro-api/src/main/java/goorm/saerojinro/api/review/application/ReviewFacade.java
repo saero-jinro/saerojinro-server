@@ -38,7 +38,7 @@ public class ReviewFacade {
     }
 
     @Transactional(readOnly = true)
-    public ReviewListResponse getByLecture(Long lectureId){
+    public ReviewListResponse getByLectureId(Long lectureId){
         Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
         List<Review> findReview = reviewQueryService.getByLecture(lecture);
@@ -47,7 +47,7 @@ public class ReviewFacade {
 
     @Transactional
     public ReviewCreateResponse create(Long lectureId, ReviewCreateRequest request){
-        User user = userQueryService.getById(request.userId());
+        User user = userQueryService.me();
         Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
         if (!reservationQueryService.existsCheck(user, lecture) || LocalDateTime.now().isBefore(lecture.getEndTime())) {

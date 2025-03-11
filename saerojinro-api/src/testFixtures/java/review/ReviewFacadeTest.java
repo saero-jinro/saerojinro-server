@@ -119,7 +119,7 @@ public class ReviewFacadeTest {
     @DisplayName("전체 리뷰 조회 테스트")
     public void getAllReview_Success() {
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(CONTENT, RATING);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
 
         // when
@@ -136,11 +136,11 @@ public class ReviewFacadeTest {
     @DisplayName("강의별 리뷰 조회 테스트")
     public void getByLecture_Success() {
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(CONTENT, RATING);
         reviewFacade.create(LECTURE_ID, createRequest);
 
         // when
-        ReviewListResponse response = reviewFacade.getByLecture(LECTURE_ID);
+        ReviewListResponse response = reviewFacade.getByLectureId(LECTURE_ID);
 
         // then
         Assertions.assertThat(response.reviews()).hasSize(1);
@@ -152,7 +152,7 @@ public class ReviewFacadeTest {
     @DisplayName("리뷰 생성 테스트")
     public void create_Success() {
         // given
-        ReviewCreateRequest request = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest request = new ReviewCreateRequest(CONTENT, RATING);
 
         // when
         ReviewCreateResponse response = reviewFacade.create(LECTURE_ID, request);
@@ -183,7 +183,7 @@ public class ReviewFacadeTest {
         Reservation upcomingReservation = Reservation.createReservation(user, upcomingLecture);
         reservationRepository.save(upcomingReservation);
 
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(CONTENT, RATING);
 
         // then
         Lecture finalUpcomingLecture = upcomingLecture;
@@ -195,7 +195,7 @@ public class ReviewFacadeTest {
     @DisplayName("리뷰 수정 테스트")
     public void update_Success(){
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(CONTENT, RATING);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
@@ -218,7 +218,7 @@ public class ReviewFacadeTest {
     @DisplayName("update 는 유저가 작성하지 않은 리뷰를 수정하는 요청이 발생하면, ReviewNotAuthorizedException 을 반환한다.")
     public void update_ReviewNotAuthorizedException(){
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), CONTENT, RATING);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest(CONTENT, RATING);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
@@ -250,7 +250,7 @@ public class ReviewFacadeTest {
     @DisplayName("리뷰 삭제 성공 테스트: ADMIN 또는 작성자이면 삭제 가능")
     public void delete_Success() {
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest("Review to delete", 4.0);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
@@ -271,7 +271,7 @@ public class ReviewFacadeTest {
                 new UsernamePasswordAuthenticationToken(nonAdminUser, nonAdminUser.getPassword(), nonAdminUser.getAuthorities())
         );
 
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(nonAdminUser.getId(), "Review by non-admin owner", 4.0);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest("Review by non-admin owner", 4.0);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
@@ -291,7 +291,7 @@ public class ReviewFacadeTest {
     @DisplayName("리뷰 삭제 실패 테스트: ADMIN이 아니고, 작성자도 아닌 경우 삭제 불가")
     public void delete_ReviewNotAuthorizedException(){
         // given
-        ReviewCreateRequest createRequest = new ReviewCreateRequest(user.getId(), "Review to delete", 4.0);
+        ReviewCreateRequest createRequest = new ReviewCreateRequest("Review to delete", 4.0);
         ReviewCreateResponse createResponse = reviewFacade.create(LECTURE_ID, createRequest);
         Long reviewId = createResponse.id();
 
