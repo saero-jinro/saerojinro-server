@@ -59,4 +59,12 @@ public class FakeReservationRepository implements ReservationRepository {
             .filter(r -> r.getLecture().getId().equals(lectureId))
             .toList();
     }
+
+    @Override
+    public int countByLectureId(Long lectureId) {
+        return data.stream()
+            .filter(r -> r.getLecture().getId().equals(lectureId))
+            .toList()
+            .size();
+    }
 }

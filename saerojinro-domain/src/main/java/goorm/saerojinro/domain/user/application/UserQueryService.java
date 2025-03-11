@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
-import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 

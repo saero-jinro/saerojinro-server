@@ -44,4 +44,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public List<Reservation> findAllByLectureId(Long lectureId) {
         return reservationJpaRepository.findAllByLectureId(lectureId);
     }
+
+    @Override
+    public int countByLectureId(Long lectureId) {
+        return reservationJpaRepository.countByLectureId(lectureId);
+    }
 }
