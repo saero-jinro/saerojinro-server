@@ -1,0 +1,168 @@
+package lecture.application;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import goorm.saerojinro.admin.api.lecture.application.LectureAdminFacade;
+import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
+import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.LectureCommandService;
+import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
+import mock.repository.FakeLectureRepository;
+import mock.repository.FakeSpeakerRepository;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+public class LectureUserAdminFacadeTest {
+
+	private LectureAdminFacade lectureAdminFacade;
+	private LectureCommandService lectureCommandService;
+	private SpeakerCommandService speakerCommandService;
+	private FakeLectureRepository lectureRepository;
+	private FakeSpeakerRepository speakerRepository;
+
+	private static final String TITLE = "Lecture Title";
+	private static final String CONTENTS = "Lecture Contents";
+	private static final Long MAX_CAPACITY = 100L;
+	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
+	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
+	private static final String LOCATION = "room A";
+	private static final Category CATEGORY = Category.BACKEND;
+
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 CEO";
+	private static final String INTRODUCTION = "AA 기업 - 백엔드 개발";
+	private static final String FILMOGRAPHY = "Location";
+	private static final String PHOTO = "Photo uri";
+
+	private static final Speaker VALID_SPEAKER = Speaker.builder()
+		.id(1L)
+		.email(EMAIL)
+		.position(POSITION)
+		.introduction(INTRODUCTION)
+		.filmography(FILMOGRAPHY)
+		.photo(PHOTO)
+		.build();
+
+	@BeforeEach
+	public void setUp() {
+		lectureRepository = new FakeLectureRepository();
+		speakerRepository = new FakeSpeakerRepository();
+		lectureCommandService = new LectureCommandService(lectureRepository);
+		speakerCommandService = new SpeakerCommandService(speakerRepository);
+
+		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService);
+
+		speakerRepository.save(VALID_SPEAKER);
+	}
+
+	@Test
+	@DisplayName("정상적으로 강의를 생성한다")
+	void createLecture_success() {
+		// given
+		LectureCreateRequest request = LectureCreateRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
+			.build();
+
+		// when
+		LectureCreateResponse response = lectureAdminFacade.create(request);
+
+		// then
+		assertNotNull(response);
+		assertTrue(response.lectureId() > 0);
+	}
+
+	@Test
+	@DisplayName("정상적으로 강의를 수정한다")
+	void updateLecture_success() {
+		// given
+		LectureCreateRequest createRequest = LectureCreateRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
+			.build();
+
+		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
+		Long lectureId = createResponse.lectureId();
+
+		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
+			.title("Updated Title")
+			.contents("Updated Contents")
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.build();
+
+		// when
+		lectureAdminFacade.update(lectureId, updateRequest);
+
+		// then
+		Lecture updatedLecture = lectureRepository.findById(lectureId).orElseThrow();
+		assertEquals("Updated Title", updatedLecture.getTitle());
+		assertEquals("Updated Contents", updatedLecture.getContents());
+		assertEquals(MAX_CAPACITY, updatedLecture.getMaxCapacity());
+		assertEquals(START_TIME, updatedLecture.getStartTime());
+		assertEquals(END_TIME, updatedLecture.getEndTime());
+		assertEquals(LOCATION, updatedLecture.getLocation());
+		assertEquals(CATEGORY, updatedLecture.getCategory());
+	}
+
+	@Test
+	@DisplayName("정상적으로 강의를 삭제한다")
+	void deleteLecture_success() {
+		// given
+		LectureCreateRequest createRequest = LectureCreateRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhoto(PHOTO)
+			.build();
+
+		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
+		Long lectureId = createResponse.lectureId();
+
+		// when
+		lectureAdminFacade.delete(lectureId);
+
+		// then
+		Lecture deletedLecture = lectureRepository.findById(lectureId)
+			.orElseThrow();
+	}
+}

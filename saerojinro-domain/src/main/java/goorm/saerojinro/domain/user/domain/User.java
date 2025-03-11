@@ -95,10 +95,6 @@ public class User extends BaseTimeEntity implements UserDetails {
 		this.profileImage = profileImage;
 	}
 
-	public void updateRole(BaseRole role){
-		this.role = role;
-	}
-
 	public void updateInterest(Category interest){
 		this.interest = interest;
 	}
