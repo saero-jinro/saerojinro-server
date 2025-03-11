@@ -1,6 +1,7 @@
 	package goorm.saerojinro.admin.file.application;
 
 	import goorm.saerojinro.admin.file.request.FileSaveRequest;
+	import goorm.saerojinro.admin.file.response.FileReadResponse;
 	import goorm.saerojinro.admin.file.response.FileSaveResponse;
 	import goorm.saerojinro.domain.file.application.FileCommandService;
 	import goorm.saerojinro.domain.file.application.FileQueryService;
@@ -14,6 +15,7 @@
 	@RequiredArgsConstructor
 	public class FileAdminFacade {
 		private final FileCommandService fileCommandService;
+		private final FileQueryService fileQueryService;
 		private final FileStorageService fileStorageService;
 
 		@Transactional
@@ -30,5 +32,12 @@
 		private String extractFileName(String uri) {
 			int idx = uri.lastIndexOf('/');
 			return (idx != -1) ? uri.substring(idx + 1) : uri;
+		}
+
+		@Transactional(readOnly = true)
+		public FileReadResponse findById(Long id) {
+			File file = fileQueryService.getFileById(id);
+
+			return FileReadResponse.from(file);
 		}
 	}
