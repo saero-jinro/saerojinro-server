@@ -3,9 +3,7 @@ package goorm.saerojinro.api.lecture.application;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_VIEW;
 
-import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
+import goorm.saerojinro.api.lecture.presentation.response.*;
 import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
