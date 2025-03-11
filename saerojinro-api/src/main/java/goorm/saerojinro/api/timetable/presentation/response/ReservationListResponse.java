@@ -30,7 +30,7 @@ public record ReservationListResponse(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.currentReservation(currentReservation)
-			.capacity(Math.toIntExact(lecture.getMaxCapacity()))
+			.capacity((int) (lecture.getMaxCapacity() * 0.8))
 			.location(lecture.getLocation())
 			.speakerName(lecture.getSpeaker().getName())
 			.build();

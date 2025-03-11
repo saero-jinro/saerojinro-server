@@ -37,7 +37,7 @@ public class TimetableFacade {
 				.getAllByLectureId(reservation.getLecture().getId());
 
 			reservationListResponseList.add(
-				ReservationListResponse.from(reservation, (int) (thisLectureReservationList.size() * 0.8))
+				ReservationListResponse.from(reservation, thisLectureReservationList.size())
 			);
 		}
 
@@ -46,7 +46,7 @@ public class TimetableFacade {
 				.getAllByLectureId(wishList.getLecture().getId());
 
 			wishListResponseList.add(
-				WishlistListResponse.from(wishList, (int) (thisLectureReservationList.size() * 0.8))
+				WishlistListResponse.from(wishList, thisLectureReservationList.size())
 			);
 		}
 
