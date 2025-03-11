@@ -11,6 +11,7 @@ import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class TimetableFacade {
 	private final ReservationQueryService reservationQueryService;
 	private final WishListQueryService wishListQueryService;
 
+	@Transactional(readOnly = true)
 	public TimetableResponse getTimetable(Long attendeeId) {
 		User user = userQueryService.getById(attendeeId);
 		List<Reservation> reservationList = reservationQueryService.getAllReservationByUser(user);

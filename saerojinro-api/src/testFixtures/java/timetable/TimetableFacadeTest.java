@@ -20,7 +20,6 @@ import mock.repository.FakeReservationRepository;
 import mock.repository.FakeSpeakerRepository;
 import mock.repository.FakeUserRepository;
 import mock.repository.FakeWishListRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -99,8 +98,8 @@ public class TimetableFacadeTest {
 		assertNotNull(timetable);
 		assertEquals(1, timetable.reservation().size());
 		assertEquals("Lecture 1", timetable.reservation().get(0).title());
-		assertEquals(LocalDateTime.parse("2025-01-01T00:00:00"),  timetable.reservation().get(0).startTime());
-		assertEquals(LocalDateTime.parse("2025-01-01T01:00:00"),  timetable.reservation().get(0).endTime());
+		assertEquals(LocalDateTime.parse("2025-01-01T00:00:00"), timetable.reservation().get(0).startTime());
+		assertEquals(LocalDateTime.parse("2025-01-01T01:00:00"), timetable.reservation().get(0).endTime());
 		assertEquals(1, timetable.wishlist().size());
 		assertEquals(10, timetable.wishlist().get(0).capacity());
 		assertEquals("Room 1", timetable.wishlist().get(0).location());

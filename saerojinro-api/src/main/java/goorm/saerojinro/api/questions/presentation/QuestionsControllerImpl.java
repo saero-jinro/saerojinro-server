@@ -48,7 +48,7 @@ public class QuestionsControllerImpl implements QuestionsController{
     }
 
     @Override
-    @DeleteMapping("/{lectureId]/{questionsId}")
+    @DeleteMapping("/{lectureId}/{questionsId}")
     public ResponseEntity<Void> delete(@PathVariable("questionsId") Long questionsId) {
         questionsFacade.delete(questionsId);
         return ResponseEntity.noContent().build();
