@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -126,7 +127,7 @@ public class LectureFacadeTest {
 		LocalDate date = LocalDate.of(2025, 3, 1);
 
 		// when
-		LectureListResponseByAll response = lectureFacade.getByDate(date);
+		LectureListResponseByDate response = lectureFacade.getByDate(date);
 
 		// then
 		assertNotNull(response);
