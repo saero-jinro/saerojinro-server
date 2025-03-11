@@ -3,7 +3,6 @@ package goorm.saerojinro.api.timetable.application;
 import goorm.saerojinro.api.timetable.presentation.response.ReservationListResponse;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import goorm.saerojinro.api.timetable.presentation.response.WishlistListResponse;
-import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -36,7 +35,7 @@ public class TimetableFacade {
 				.getAllByLectureId(reservation.getLecture().getId());
 
 			reservationListResponseList.add(
-				ReservationListResponse.from(reservation, thisLectureReservationList.size())
+				ReservationListResponse.from(reservation, (int) (thisLectureReservationList.size() * 0.8))
 			);
 		}
 
@@ -45,7 +44,7 @@ public class TimetableFacade {
 				.getAllByLectureId(wishList.getLecture().getId());
 
 			wishListResponseList.add(
-				WishlistListResponse.from(wishList, thisLectureReservationList.size())
+				WishlistListResponse.from(wishList, (int) (thisLectureReservationList.size() * 0.8))
 			);
 		}
 

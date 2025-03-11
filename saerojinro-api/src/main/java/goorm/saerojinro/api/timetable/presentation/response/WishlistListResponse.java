@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.timetable.presentation.response;
 
+import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import lombok.Builder;
 
@@ -13,17 +14,22 @@ public record WishlistListResponse(
 	LocalDateTime startTime,
 	LocalDateTime endTime,
 	int currentReservation,
-	int capacity
+	int capacity,
+	String location,
+	String speakerName
 ) {
 	public static WishlistListResponse from(WishList wishList, int currentReservation) {
+		Lecture lecture = wishList.getLecture();
 		return WishlistListResponse.builder()
 			.wishlistId(wishList.getId())
 			.userId(wishList.getUser().getId())
-			.lectureId(wishList.getLecture().getId())
-			.startTime(wishList.getLecture().getStartTime())
-			.endTime(wishList.getLecture().getEndTime())
+			.lectureId(lecture.getId())
+			.startTime(lecture.getStartTime())
+			.endTime(lecture.getEndTime())
 			.currentReservation(currentReservation)
-			.capacity(Math.toIntExact(wishList.getLecture().getMaxCapacity()))
+			.capacity(Math.toIntExact(lecture.getMaxCapacity()))
+			.location(lecture.getLocation())
+			.speakerName(lecture.getSpeaker().getName())
 			.build();
 	}
 }
