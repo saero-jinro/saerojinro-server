@@ -48,6 +48,6 @@ public record 	LectureCreateRequest(
 	@Schema(description = "상세 약력", example = "OO 회사 / 프로젝트 OO 담당", requiredMode = REQUIRED)
 	@NotNull String speakerFilmography,
 
-	@Schema(description = "강연자 사진", example = "강연자 사진 URI", requiredMode = REQUIRED)
-	@NotNull String speakerPhoto
+	@Schema(description = "강연자 사진", example = "https://example.com/speaker_photo.jpg", requiredMode = REQUIRED)
+	@NotNull String speakerPhotoUri
 ) {}
