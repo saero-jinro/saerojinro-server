@@ -47,7 +47,7 @@ public class ReviewFacade {
 
     @Transactional
     public ReviewCreateResponse create(Long lectureId, ReviewCreateRequest request){
-        User user = userQueryService.getById(request.userId());
+        User user = userQueryService.me();
         Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
         if (!reservationQueryService.existsCheck(user, lecture) || LocalDateTime.now().isBefore(lecture.getEndTime())) {
