@@ -33,4 +33,11 @@ public class FakeFileRepository implements FileRepository {
 			.filter(file -> file.getId().equals(id))
 			.findFirst();
 	}
+
+	@Override
+	public Optional<File> findByUri(String uri) {
+		return data.stream()
+			.filter(file -> file.getPhysicalPath().equals(uri))
+			.findFirst();
+	}
 }

@@ -3,6 +3,7 @@ package lecture.application;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -31,13 +32,31 @@ public class LectureCommandServiceTest {
 	private static final String LOCATION = "room A";
 	private static final Category CATEGORY = Category.BACKEND;
 
+	private static final String NAME = "Cole palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 / CEO";
+	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
+	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/sk/2024/03/18/SK007_20240318_261101.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
+
 	private static final Speaker speaker = Speaker.builder()
-		.name("Cole palmer")
-		.email("google@mail.com")
-		.position("00 기업 CEO")
-		.introduction("안녕하세요 반가워용")
-		.filmography("AA 기업  - 백엔드 개발")
-		.photo("Photo uri")
+		.name(NAME)
+		.email(EMAIL)
+		.position(POSITION)
+		.introduction(INTRODUCTION)
+		.filmography(FILMOGRAPHY)
+		.file(file)
 		.build();
 
 	@BeforeEach

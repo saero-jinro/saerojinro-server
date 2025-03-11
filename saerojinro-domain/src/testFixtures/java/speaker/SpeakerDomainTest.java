@@ -1,5 +1,6 @@
 package speaker;
 
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,18 @@ public class SpeakerDomainTest {
 	private static final String POSITION = "00 기업 CEO";
 	private static final String  INTRODUCTION = "AA 기업  - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
-	private static final String PHOTO = "Photo uri";
+
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
 
 	@BeforeEach
 	void setUp() {
@@ -24,7 +36,7 @@ public class SpeakerDomainTest {
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
-			.photo(PHOTO)
+			.file(file)
 			.build();
 	}
 
@@ -36,6 +48,7 @@ public class SpeakerDomainTest {
 		assertEquals(POSITION, speaker.getPosition());
 		assertEquals(INTRODUCTION, speaker.getIntroduction());
 		assertEquals(FILMOGRAPHY, speaker.getFilmography());
-		assertEquals(PHOTO, speaker.getPhoto());
+		assertEquals(LOGICAL_NAME, speaker.getFile().getLogicalName());
+		assertEquals(EXTENSION, speaker.getFile().getExtension());
 	}
 }

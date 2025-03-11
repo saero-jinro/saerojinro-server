@@ -1,8 +1,10 @@
 package file.application;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import goorm.saerojinro.admin.file.application.FileAdminFacade;
 import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileReadResponse;
 import goorm.saerojinro.admin.file.response.FileSaveResponse;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
@@ -11,8 +13,9 @@ import mock.repository.FakeFileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestTemplate;
 
 public class FileAdminFacadeTest {
 
@@ -21,21 +24,32 @@ public class FileAdminFacadeTest {
 	private FileQueryService fileQueryService;
 	private FileStorageService fileStorageService;
 
+	private RestTemplate mockRestTemplate;
+
 	private static final String TEST_FILE_URI = "http://example.com/test.jpg";
 
 	@BeforeEach
 	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+
 		FakeFileRepository fakeFileRepository = new FakeFileRepository();
 		fileCommandService = new FileCommandService(fakeFileRepository);
 		fileQueryService = new FileQueryService(fakeFileRepository);
+
 		fileStorageService = new FileStorageService();
+		mockRestTemplate = mock(RestTemplate.class);
+		ReflectionTestUtils.setField(fileStorageService, "restTemplate", mockRestTemplate);
+
 		fileAdminFacade = new FileAdminFacade(fileCommandService, fileQueryService, fileStorageService);
 	}
 
 	@Test
 	@DisplayName("파일 저장에 성공한다")
 	public void saveFile_Success() {
-		// given
+//		 given
+		byte[] data = TEST_FILE_URI.getBytes();
+		when(mockRestTemplate.getForObject(TEST_FILE_URI, byte[].class)).thenReturn(data);
+
 		FileSaveRequest request = new FileSaveRequest(TEST_FILE_URI);
 
 		// when
@@ -50,12 +64,14 @@ public class FileAdminFacadeTest {
 	@DisplayName("파일 조회에 성공한다")
 	public void findById_Success() {
 		// given
+		byte[] dummyData = "dummy image data".getBytes();
+		when(mockRestTemplate.getForObject(TEST_FILE_URI, byte[].class)).thenReturn(dummyData);
+
 		FileSaveRequest request = new FileSaveRequest(TEST_FILE_URI);
 		FileSaveResponse saveResponse = fileAdminFacade.saveFile(request);
-		Long fileId = saveResponse.id();
 
 		// when
-		FileReadResponse readResponse = fileAdminFacade.findById(fileId);
+		var readResponse = fileAdminFacade.findById(saveResponse.id());
 
 		// then
 		assertNotNull(readResponse.id());

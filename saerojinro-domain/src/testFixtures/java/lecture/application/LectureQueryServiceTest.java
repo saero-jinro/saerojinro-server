@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -22,6 +23,18 @@ public class LectureQueryServiceTest {
 	private LectureQueryService lectureQueryService;
 	private FakeLectureRepository fakeLectureRepository;
 
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
+
 	@BeforeEach
 	void setUp() {
 		fakeLectureRepository = new FakeLectureRepository();
@@ -33,7 +46,7 @@ public class LectureQueryServiceTest {
 			.position("00 기업 CEO")
 			.introduction("안녕하세요 반가워용")
 			.filmography("AA 기업  - 백엔드 개발")
-			.photo("Photo uri")
+			.file(file)
 			.build();
 
 		Lecture lecture1 = Lecture.create(

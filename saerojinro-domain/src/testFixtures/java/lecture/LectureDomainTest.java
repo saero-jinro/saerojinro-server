@@ -1,6 +1,7 @@
 package lecture;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.domain.User;
@@ -15,14 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final Speaker speaker = Speaker.builder()
-		.name("Cole Palmer")
-		.email("google@mail.com")
-		.position("00 기업 CEO")
-		.introduction("안녕하세요 반가워용")
-		.filmography("AA 기업  - 백엔드 개발")
-		.photo("Photo uri")
-		.build();
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
+
+	private static final String NAME = "Cole palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 / CEO";
+	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
+	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
@@ -31,6 +34,22 @@ class LectureDomainTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
+
+	private static final Speaker speaker = Speaker.builder()
+		.name(NAME)
+		.email(EMAIL)
+		.position(POSITION)
+		.introduction(INTRODUCTION)
+		.filmography(FILMOGRAPHY)
+		.file(file)
+		.build();
 
 	private Lecture lecture;
 
