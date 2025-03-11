@@ -3,6 +3,8 @@ package goorm.saerojinro.admin.lecture.application;
 import goorm.saerojinro.admin.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.domain.file.application.FileQueryService;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
@@ -16,16 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 	private final SpeakerCommandService speakerCommandService;
+	private final FileQueryService fileQueryService;
 
 	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
+		File file = fileQueryService.getFileById(request.speakerPhotoFileId());
+		String storedImageUri = file.getPhysicalPath();
+
 		Speaker speaker = speakerCommandService.create(
 			request.speakerName(),
 			request.speakerEmail(),
 			request.speakerPosition(),
 			request.speakerIntroduction(),
 			request.speakerFilmography(),
-			request.speakerPhoto()
+			storedImageUri
 		);
 
 		Lecture lecture = lectureCommandService.create(

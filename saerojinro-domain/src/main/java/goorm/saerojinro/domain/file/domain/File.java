@@ -7,7 +7,7 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "lecture")
+@Table(name = "file")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class File extends BaseTimeEntity {
@@ -22,18 +22,16 @@ public class File extends BaseTimeEntity {
 	private String physicalPath;
 
 	@Column(nullable = false)
-	private String fileSize;
+	private Long fileSize;
 
 	@Column(nullable = false)
 	private String extension;
 
 	public static File create(String logicalName, String physicalPath, Long fileSize, String extension) {
-		String readableFileSize = fileSize == null ? "0" : fileSize.toString();
-
 		return File.builder()
 			.logicalName(logicalName)
 			.physicalPath(physicalPath)
-			.fileSize(readableFileSize)
+			.fileSize(fileSize)
 			.extension(extension)
 			.build();
 	}
