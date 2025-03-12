@@ -36,7 +36,10 @@ public record LectureDetailResponse(
 	String speakerPosition,
 
 	@Schema(description = "한 줄 소개", example = "안녕하세요 OO 기업에서 OO를 담당하는 OOO 입니다.", requiredMode = REQUIRED)
-	String speakerIntroduction
+	String speakerIntroduction,
+
+	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
+	String image
 ) {
 	public static LectureDetailResponse from(Lecture lecture) {
 		return LectureDetailResponse.builder()
