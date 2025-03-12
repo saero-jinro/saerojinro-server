@@ -29,7 +29,7 @@ public class TimetableFacade {
 		if (user == null)
 			return TimetableResponse.of(new ArrayList<>(), new ArrayList<>());
 
-		List<Reservation> reservationList = reservationQueryService.getAllReservationByUser(user);
+		List<Reservation> reservationList = reservationQueryService.getAllReservationByUser(user.getId());
 		List<WishList> wishListList = wishListQueryService.getAllByUser(user);
 
 		List<ReservationListResponse> reservationListResponseList = new ArrayList<>();
