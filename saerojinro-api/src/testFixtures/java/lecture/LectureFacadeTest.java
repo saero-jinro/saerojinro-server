@@ -33,15 +33,10 @@ public class LectureFacadeTest {
 
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
-	private FakeLectureRepository lectureRepository;
-	private FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
-	private UserQueryService userQueryService;
+	private final FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 
 	private Lecture lecture1;
 	private Lecture lecture2;
-
-	private Speaker speaker;
-	private Speaker speaker2;
 
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
@@ -51,28 +46,18 @@ public class LectureFacadeTest {
 	private static final String FILMOGRAPHY = "Location";
 	private static final String PHOTO = "Photo uri";
 
-
 	@BeforeEach
 	void setUp() {
-		lectureRepository = new FakeLectureRepository();
+		FakeLectureRepository lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
 
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
-		userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
+		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
 		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService);
 
-		speaker = Speaker.builder()
+		Speaker speaker = Speaker.builder()
 			.name(NAME)
 			.email(EMAIL)
-			.position(POSITION)
-			.introduction(INTRODUCTION)
-			.filmography(FILMOGRAPHY)
-			.photo(PHOTO)
-			.build();
-
-		speaker2 = Speaker.builder()
-			.name(NAME)
-			.email(EMAIL_2)
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
@@ -130,8 +115,8 @@ public class LectureFacadeTest {
 		assertEquals(2, response.totalCount());
 		assertEquals(2, response.lectures().size());
 
-		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertEquals("Cole Palmer", response.lectures().get(0).speakerName());
+		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
+		assertEquals(lecture1.getSpeaker().getName(), response.lectures().get(0).speakerName());
 	}
 
 	@Test
@@ -140,8 +125,8 @@ public class LectureFacadeTest {
 		LectureDetailResponse detail = lectureFacade.getById(1L);
 
 		assertNotNull(detail);
-		assertEquals("Lecture One", detail.title());
-		assertEquals("Contents One", detail.contents());
+		assertEquals(lecture1.getTitle(), detail.title());
+		assertEquals(lecture1.getContents(), detail.contents());
 	}
 
 	@Test
@@ -162,7 +147,7 @@ public class LectureFacadeTest {
 		// then
 		assertNotNull(response);
 		assertEquals(2, response.lectures().size());
-		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertEquals("Lecture Two", response.lectures().get(1).title());
+		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
+		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
 	}
 }
