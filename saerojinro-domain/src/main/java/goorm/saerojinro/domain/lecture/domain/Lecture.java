@@ -2,7 +2,6 @@ package goorm.saerojinro.domain.lecture.domain;
 
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,15 +23,17 @@ public class Lecture extends BaseTimeEntity {
 	@JoinColumn(name = "speaker_id", nullable = false)
 	private Speaker speaker;
 
+	@Column(nullable = false)
+	private String thumbnailUri;
+
+	@Column(nullable = false)
+	private String materialsUri;
+
 	@Column(nullable = false, unique = true)
 	private String title;
 
 	@Column(nullable = false)
 	private String contents;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "file_id", nullable = false)
-	private File thumbnail;
 
 	@Column(nullable = false)
 	private Long maxCapacity;
@@ -50,13 +51,15 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Category category;
 
-	public static Lecture create(Speaker speaker, String title, String contents, File thumbnail, Long maxCapacity,
+	public static Lecture create(Speaker speaker, String title, String contents,
+								 String thumbnailUri, String materialsUri, Long maxCapacity,
 								 LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		return Lecture.builder()
 			.speaker(speaker)
 			.title(title)
 			.contents(contents)
-			.thumbnail(thumbnail)
+			.thumbnailUri(thumbnailUri)
+			.materialsUri(materialsUri)
 			.maxCapacity(maxCapacity)
 			.startTime(startTime)
 			.endTime(endTime)

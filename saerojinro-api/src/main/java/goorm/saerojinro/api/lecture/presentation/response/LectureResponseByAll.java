@@ -14,6 +14,9 @@ public record LectureResponseByAll(
 	@Schema(description = "카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	Category category,
 
+	@Schema(description = "강의 썸네일 Uri", example = "uploads/lecture/thumbnail/123456789.jpg", requiredMode = REQUIRED)
+	String thumbnailUri,
+
 	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = REQUIRED)
 	String title,
 
@@ -35,6 +38,7 @@ public record LectureResponseByAll(
 	public static LectureResponseByAll from(Lecture lecture) {
 		return LectureResponseByAll.builder()
 			.category(lecture.getCategory())
+			.thumbnailUri(lecture.getThumbnailUri())
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
 			.speakerName(lecture.getSpeaker().getName())
