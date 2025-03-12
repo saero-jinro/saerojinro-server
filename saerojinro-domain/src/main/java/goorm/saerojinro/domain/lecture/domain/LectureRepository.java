@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import goorm.saerojinro.common.domain.Category;
+
 public interface LectureRepository {
 	Lecture save(Lecture lecture);
 
@@ -18,4 +20,6 @@ public interface LectureRepository {
 	List<Lecture> findByStartTime(LocalDateTime time);
 
 	List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime);
+
+	List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime);
 }

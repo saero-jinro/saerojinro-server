@@ -1,5 +1,6 @@
 package goorm.saerojinro.infra.repository.impl;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.infra.repository.jpa.LectureJpaRepository;
@@ -48,5 +49,10 @@ public class LectureRepositoryImpl implements LectureRepository {
 	@Override
 	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
 		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(startTime, endTime);
+	}
+
+	@Override
+	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
+		return lectureJpaRepository.findByCategoryInAndStartTime(categories, lectureTime);
 	}
 }
