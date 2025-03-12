@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.wishlist.presentation;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
-import goorm.saerojinro.api.wishlist.presentation.response.WishListDeleteResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,5 +41,5 @@ public interface WishListController {
             description = "유저 ID와 강의 ID를 통해 즐겨찾기를 삭제 합니다.",
             responses = @ApiResponse(responseCode = "204")
     )
-    ResponseEntity<WishListDeleteResponse> delete(@PathVariable("lectureId") Long lectureId);
+    ResponseEntity<Void> delete(@PathVariable("lectureId") Long lectureId);
 }

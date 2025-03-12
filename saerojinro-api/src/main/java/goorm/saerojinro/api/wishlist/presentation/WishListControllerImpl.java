@@ -2,7 +2,6 @@ package goorm.saerojinro.api.wishlist.presentation;
 
 import goorm.saerojinro.api.wishlist.application.WishListFacade;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
-import goorm.saerojinro.api.wishlist.presentation.response.WishListDeleteResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class WishListControllerImpl implements WishListController{
 
     @Override
     @DeleteMapping("/{lectureId}")
-    public ResponseEntity<WishListDeleteResponse> delete(@PathVariable("lectureId") Long lectureId) {
+    public ResponseEntity<Void> delete(@PathVariable("lectureId") Long lectureId) {
         wishListFacade.delete(lectureId);
         return ResponseEntity.noContent().build();
     }

@@ -107,13 +107,12 @@ public class WishListFacadeTest {
     @DisplayName("delete 는 해당하는 아이디와 강의에 대한 즐겨찾기 정보를 삭제한다.")
     public void delete_Success(){
         // given
-        WishListCreateResponse createResponse = wishListFacade.create(LECTURE_ID);
-        long createdWishListId = createResponse.id();
+        wishListFacade.create(LECTURE_ID);
 
         // when
-        WishListDeleteResponse deleteResponse = wishListFacade.delete(LECTURE_ID);
+        wishListFacade.delete(LECTURE_ID);
 
         // then
-        assertNotNull(deleteResponse);
+        assertTrue(wishListFacade.getAllWishList().wishLists().isEmpty());
     }
 }

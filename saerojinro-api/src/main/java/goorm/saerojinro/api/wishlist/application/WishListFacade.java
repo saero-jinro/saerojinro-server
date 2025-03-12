@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.wishlist.application;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
-import goorm.saerojinro.api.wishlist.presentation.response.WishListDeleteResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -36,12 +35,11 @@ public class WishListFacade {
 		return WishListCreateResponse.from(wishList);
 	}
 
-	public WishListDeleteResponse delete(Long lectureId) {
+	public void delete(Long lectureId) {
 		User user = userQueryService.me();
 
 		WishList wishList = wishListQueryService.getByUserAndLectureId(user, lectureId);
 		wishListCommandService.delete(wishList);
-		return WishListDeleteResponse.from(wishList);
 	}
 
 }
