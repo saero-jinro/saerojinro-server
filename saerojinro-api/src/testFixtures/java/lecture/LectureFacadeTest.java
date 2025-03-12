@@ -9,13 +9,16 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
+import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.producer.FakeLogEventProducer;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
+import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeUserRepository;
 
 import java.time.LocalDate;
@@ -49,10 +52,10 @@ public class LectureFacadeTest {
 	void setUp() {
 		FakeLectureRepository lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
-
+		FakeLogEventRepository fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
-		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService);
+		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService));
 
 		Speaker speaker = Speaker.builder()
 			.name(NAME)
