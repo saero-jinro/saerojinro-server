@@ -32,6 +32,13 @@ public class ReservationQueryService {
         return reservationRepository.findAllByLectureId(lectureId);
     }
 
+    public void validateReservationByUserAndStartTime(Long userId, LocalDateTime startTime) {
+        if (existsCheckByUserAndStartTime(userId, startTime)) {
+            throw new ReservationExistException();
+        }
+    }
+
+
     public int countByLectureId(Long lectureId) {
         return reservationRepository.countByLectureId(lectureId);
     }
