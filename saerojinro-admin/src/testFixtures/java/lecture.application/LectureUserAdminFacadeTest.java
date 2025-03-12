@@ -7,10 +7,14 @@ import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequ
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.application.FileCommandService;
+import goorm.saerojinro.domain.file.application.FileQueryService;
+import goorm.saerojinro.domain.file.application.FileStorageService;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
-import goorm.saerojinro.domain.speaker.domain.Speaker;
+import mock.repository.FakeFileRepository;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeSpeakerRepository;
 
@@ -25,8 +29,13 @@ public class LectureUserAdminFacadeTest {
 	private LectureAdminFacade lectureAdminFacade;
 	private LectureCommandService lectureCommandService;
 	private SpeakerCommandService speakerCommandService;
+	private FileQueryService fileQueryService;
+	private FileCommandService fileCommandService;
+	private FileStorageService fileStorageService;
+
 	private FakeLectureRepository lectureRepository;
 	private FakeSpeakerRepository speakerRepository;
+	private FakeFileRepository fileRepository;
 
 	private static final String TITLE = "Lecture Title";
 	private static final String CONTENTS = "Lecture Contents";
@@ -40,27 +49,35 @@ public class LectureUserAdminFacadeTest {
 	private static final String POSITION = "00 기업 CEO";
 	private static final String INTRODUCTION = "AA 기업 - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
-	private static final String PHOTO = "Photo uri";
 
-	private static final Speaker VALID_SPEAKER = Speaker.builder()
-		.id(1L)
-		.email(EMAIL)
-		.position(POSITION)
-		.introduction(INTRODUCTION)
-		.filmography(FILMOGRAPHY)
-		.photo(PHOTO)
+	private static final String LOGICAL_NAME = "speaker_photo";
+	private static final String PHYSICAL_PATH = "uploads/file_1680123456.jpg";
+	private static final Long FILE_SIZE = 12345L;
+	private static final String EXTENSION = "jpg";
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
 		.build();
 
 	@BeforeEach
 	public void setUp() {
 		lectureRepository = new FakeLectureRepository();
 		speakerRepository = new FakeSpeakerRepository();
+		fileRepository = new FakeFileRepository();
+
 		lectureCommandService = new LectureCommandService(lectureRepository);
 		speakerCommandService = new SpeakerCommandService(speakerRepository);
+		fileQueryService = new FileQueryService(fileRepository);
+		fileCommandService = new FileCommandService(fileRepository);
+		fileStorageService = new FileStorageService();
 
-		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService);
+		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService, fileQueryService);
 
-		speakerRepository.save(VALID_SPEAKER);
+		File file = File.create(LOGICAL_NAME, PHYSICAL_PATH, FILE_SIZE, EXTENSION);
+		fileRepository.save(file);
 	}
 
 	@Test
@@ -70,6 +87,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest request = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -79,7 +97,7 @@ public class LectureUserAdminFacadeTest {
 			.speakerPosition(POSITION)
 			.speakerIntroduction(INTRODUCTION)
 			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhoto(PHOTO)
+			.speakerPhotoUri(PHYSICAL_PATH)
 			.build();
 
 		// when
@@ -97,6 +115,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest createRequest = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -106,7 +125,7 @@ public class LectureUserAdminFacadeTest {
 			.speakerPosition(POSITION)
 			.speakerIntroduction(INTRODUCTION)
 			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhoto(PHOTO)
+			.speakerPhotoUri(PHYSICAL_PATH)
 			.build();
 
 		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
@@ -143,6 +162,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest createRequest = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -152,7 +172,7 @@ public class LectureUserAdminFacadeTest {
 			.speakerPosition(POSITION)
 			.speakerIntroduction(INTRODUCTION)
 			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhoto(PHOTO)
+			.speakerPhotoUri(PHYSICAL_PATH)
 			.build();
 
 		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);

@@ -29,7 +29,7 @@ public record LectureResponseByDate(
 	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
 	String speakerName,
 
-	@Schema(description = "강연자 사진", example = "강연자 사진 URI", requiredMode = REQUIRED)
+	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
 	String image
 ) {
 	public static LectureResponseByDate from(Lecture lecture) {
@@ -40,7 +40,7 @@ public record LectureResponseByDate(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.speakerName(lecture.getSpeaker().getName())
-			.image(lecture.getSpeaker().getPhoto())
+			.image(lecture.getSpeaker().getFile().getPhysicalPath())
 			.build();
 	}
 }
