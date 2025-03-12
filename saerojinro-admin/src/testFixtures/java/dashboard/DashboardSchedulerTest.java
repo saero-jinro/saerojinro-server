@@ -84,6 +84,7 @@ public class DashboardSchedulerTest {
 		assertEquals(0, all.get(1).getWishlist());
 
 		assertEquals(TITLE, all.get(0).getTitle());
+		assertEquals(SPEAKER, all.get(0).getSpeaker());
 		assertEquals(TITLE + "1", all.get(1).getTitle());
 	}
 }
