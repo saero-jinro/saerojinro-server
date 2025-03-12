@@ -148,4 +148,16 @@ public class ReservationQueryServiceTest {
         assertEquals(LECTURE_TITLE, reservationList.get(0).getLecture().getTitle());
         assertEquals(LECTURE_CONTENTS, reservationList.get(0).getLecture().getContents());
     }
+
+    @Test
+    @DisplayName("countByLectureId 는 Lecture 별 예약의 수를 반환할 수 있다.")
+    public void countByLectureId_Success(){
+        // given
+
+        // when
+        int count = reservationQueryService.countByLectureId(LECTURE_ID);
+
+        // then
+        assertEquals(1, count);
+    }
 }

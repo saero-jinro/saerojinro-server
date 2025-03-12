@@ -19,4 +19,6 @@ public interface ReservationRepository {
     void delete(Reservation reservation);
 
 	List<Reservation> findAllByLectureId(Long lectureId);
+
+    int countByLectureId(Long lectureId);
 }

@@ -46,8 +46,4 @@ public class UserCommandService {
 	public void delete(User user) {
 		user.delete();
 	}
-
-	public void updateRole(User user, BaseRole role) {
-		user.updateRole(role);
-	}
 }

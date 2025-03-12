@@ -17,6 +17,7 @@ public class FakeSpeakerRepository implements SpeakerRepository {
 	public Speaker save(Speaker speaker) {
 		Speaker saved = Speaker.builder()
 			.id(sequence.getAndIncrement())
+			.name(speaker.getName())
 			.email(speaker.getEmail())
 			.position(speaker.getPosition())
 			.introduction(speaker.getIntroduction())
