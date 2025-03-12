@@ -8,6 +8,7 @@ import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -46,8 +47,18 @@ public class LectureFacadeTest {
 	private static final String POSITION = "00 기업 CEO";
 	private static final String  INTRODUCTION = "AA 기업  - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
-	private static final String PHOTO = "Photo uri";
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/sk/2024/03/18/SK007_20240318_261101.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
 
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
+  
 	@BeforeEach
 	void setUp() {
 		FakeLectureRepository lectureRepository = new FakeLectureRepository();
@@ -63,7 +74,7 @@ public class LectureFacadeTest {
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
-			.photo(PHOTO)
+			.file(file)
 			.build();
 
 		lecture1 = Lecture.builder()

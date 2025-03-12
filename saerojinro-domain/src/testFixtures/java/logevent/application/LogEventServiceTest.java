@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
+import goorm.saerojinro.domain.file.domain.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,18 @@ public class LogEventServiceTest {
 	private LogEventService logEventService;
 	private User user;
 	private Lecture lecture;
+
+	private static final String LOGICAL_NAME = "FileDomain";
+	private static final String PHYSICAL_PATH = "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/sk/2024/03/18/SK007_20240318_261101.jpg";
+	private static final Long FILE_SIZE = 1024L;
+	private static final String EXTENSION = ".java";
+
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
 
 	@BeforeEach
 	public void init() {
@@ -56,6 +69,7 @@ public class LogEventServiceTest {
 			Speaker.builder().build(),
 			"Lecture One",
 			"Content One",
+			file,
 			100L,
 			LocalDateTime.of(2025, 3, 1, 10, 0),
 			LocalDateTime.of(2025, 3, 1, 12, 0),
