@@ -1,5 +1,7 @@
 package goorm.saerojinro.domain.logevent.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,4 +29,11 @@ public class LogEventService {
 
 		return logEventRepository.save(logEvent);
 	}
+
+	@Transactional(readOnly = true)
+	public List<LogEvent> getLogEventsByUser() {
+		User user = userQueryService.me();
+		return logEventRepository.findRecentLogByUserId(user.getId());
+	}
+
 }

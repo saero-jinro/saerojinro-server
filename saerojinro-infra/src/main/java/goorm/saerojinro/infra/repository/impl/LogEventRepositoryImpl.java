@@ -1,5 +1,7 @@
 package goorm.saerojinro.infra.repository.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
@@ -15,5 +17,10 @@ public class LogEventRepositoryImpl implements LogEventRepository {
 	@Override
 	public LogEvent save(LogEvent logEvent) {
 		return eventLogJpaRepository.save(logEvent);
+	}
+
+	@Override
+	public List<LogEvent> findRecentLogByUserId(Long userId) {
+		return eventLogJpaRepository.findRecentLogByUserId(userId);
 	}
 }
