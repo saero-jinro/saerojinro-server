@@ -27,9 +27,9 @@ public class FileAdminControllerImpl implements FileAdminController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping(value = "/lecture/resource", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<FileSaveResponse> uploadLectureResource(@RequestPart(value = "file") MultipartFile file) {
-		FileSaveResponse response = fileAdminFacade.saveLectureResource(file);
+	@PostMapping(value = "/lecture/materials", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<FileSaveResponse> uploadLectureMaterials(@RequestPart(value = "file") MultipartFile file) {
+		FileSaveResponse response = fileAdminFacade.saveLectureMaterials(file);
 		return ResponseEntity.ok(response);
 	}
 }

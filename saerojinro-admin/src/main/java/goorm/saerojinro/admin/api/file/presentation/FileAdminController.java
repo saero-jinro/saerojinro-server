@@ -52,6 +52,6 @@ public interface FileAdminController {
 			)
 		}
 	)
-	ResponseEntity<FileSaveResponse> uploadLectureResource(@RequestPart(value = "file") MultipartFile file
+	ResponseEntity<FileSaveResponse> uploadLectureMaterials(@RequestPart(value = "file") MultipartFile file
 	);
 }
