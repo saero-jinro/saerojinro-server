@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
-import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 
 public class LectureRecommendationServiceTest {
 	private LectureRecommendationService lectureRecommendationService;
