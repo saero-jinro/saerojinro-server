@@ -2,6 +2,7 @@ package lecture.application;
 
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static goorm.saerojinro.common.domain.Category.DEVOPS;
+import static goorm.saerojinro.common.domain.Category.FRONTEND;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,14 +33,17 @@ public class LectureRecommendationServiceTest {
 		// given
 		List<LogEvent> logEvents = new ArrayList<>();
 
+		logEvents.add(LogEvent.create("record0", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
 		logEvents.add(LogEvent.create("record1", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
 		logEvents.add(LogEvent.create("record2", null, null, LECTURE_RESERVATION_SUCCESS, BACKEND));
+		logEvents.add(LogEvent.create("record3", null, null, LECTURE_RESERVATION_SUCCESS, FRONTEND));
 
 		// when
 		Map<Category, Integer> result = lectureRecommendationService.getRecommendationCategories(logEvents);
 
 		// then
-		assertEquals(result.get(BACKEND), 1);
-		assertEquals(result.get(DEVOPS), 2);
+		assertEquals(result.get(BACKEND), 3);
+		assertEquals(result.get(DEVOPS), 1);
+		assertEquals(result.get(FRONTEND), 2);
 	}
 }
