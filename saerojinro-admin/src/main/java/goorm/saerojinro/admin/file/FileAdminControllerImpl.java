@@ -2,7 +2,6 @@ package goorm.saerojinro.admin.file;
 
 import goorm.saerojinro.admin.file.application.FileAdminFacade;
 import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileReadResponse;
 import goorm.saerojinro.admin.file.response.FileSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +17,6 @@ public class FileAdminControllerImpl implements FileAdminController {
 	@PostMapping
 	public ResponseEntity<FileSaveResponse> create(@RequestBody FileSaveRequest request) {
 		FileSaveResponse response = fileAdminFacade.saveFile(request);
-		return ResponseEntity.ok(response);
-	}
-
-	@Override
-	@GetMapping("/{id}")
-	public ResponseEntity<FileReadResponse> findById(@PathVariable Long id) {
-		FileReadResponse response = fileAdminFacade.findById(id);
 		return ResponseEntity.ok(response);
 	}
 }

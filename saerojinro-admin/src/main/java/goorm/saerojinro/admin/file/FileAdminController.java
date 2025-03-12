@@ -1,7 +1,6 @@
 package goorm.saerojinro.admin.file;
 
 import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileReadResponse;
 import goorm.saerojinro.admin.file.response.FileSaveResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "File", description = "운영자 파일 API")
@@ -26,16 +24,4 @@ public interface FileAdminController {
 	)
 	ResponseEntity<FileSaveResponse> create(@RequestBody FileSaveRequest request
 	);
-
-	@Operation(
-		summary = "파일 조회",
-		description = "운영자가 파일 조회",
-		responses = {
-			@ApiResponse(
-				responseCode = "200",
-				content = @Content(schema = @Schema(implementation = FileReadResponse.class))
-			)
-		}
-	)
-	ResponseEntity<FileReadResponse> findById(@PathVariable Long id);
 }
