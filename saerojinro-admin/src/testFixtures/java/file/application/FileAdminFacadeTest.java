@@ -77,4 +77,17 @@ public class FileAdminFacadeTest {
 		assertNotNull(readResponse.id());
 		assertEquals(saveResponse.physicalPath(), readResponse.physicalPath());
 	}
+
+	@Test
+	@DisplayName("URI에 슬래시가 없으면 전체 문자열을 반환한다")
+	public void extractFileName_noSlash() {
+		// given
+		String uriWithoutSlash = "testfile";
+
+		// when
+		String logicalName = (String) ReflectionTestUtils.invokeMethod(fileAdminFacade, "extractFileName", uriWithoutSlash);
+
+		// then
+		assertEquals(uriWithoutSlash, logicalName);
+	}
 }
