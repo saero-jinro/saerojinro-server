@@ -1,20 +1,16 @@
 package goorm.saerojinro.domain.reservation.domain;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.user.domain.User;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository {
 
-    boolean existByUserAndLecture(User user, Lecture lecture);
+    boolean existByUserIdAndStartTime(Long userId, LocalDateTime startTime);
 
-    boolean existByUserAndStartTime(User user, Lecture lecture);
+    List<Reservation> findByUserId(Long userId);
 
-    List<Reservation> findByUser(User user);
-
-    Optional<Reservation> findByUserAndLecture(User user, Lecture lecture);
+    Optional<Reservation> findByUserIdAndLectureId(Long userId, Long lectureId);
 
     Reservation save(Reservation reservation);
 

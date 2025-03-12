@@ -15,8 +15,7 @@ public class ReservationCommandService {
     private final ReservationRepository reservationRepository;
 
     public Reservation create(User user, Lecture lecture){
-
-        Reservation reservation = Reservation.createReservation(user, lecture);
+        Reservation reservation = Reservation.create(user, lecture);
         return reservationRepository.save(reservation);
     }
 

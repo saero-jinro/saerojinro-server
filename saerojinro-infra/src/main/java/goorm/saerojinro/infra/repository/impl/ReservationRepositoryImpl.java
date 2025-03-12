@@ -8,6 +8,7 @@ import goorm.saerojinro.infra.repository.jpa.ReservationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,22 +18,18 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private final ReservationJpaRepository reservationJpaRepository;
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture){
-        return reservationJpaRepository.existsByUserAndLecture(user, lecture);
-    }
-    @Override
-    public boolean existByUserAndStartTime(User user, Lecture lecture) {
-        return reservationJpaRepository.existsByUserAndStartTime(user.getId(), lecture.getStartTime());
+    public boolean existByUserIdAndStartTime(Long userId, LocalDateTime startTime) {
+        return reservationJpaRepository.existsByUserIdAndStartTime(userId, startTime);
     }
 
     @Override
-    public List<Reservation> findByUser(User user) {
-        return reservationJpaRepository.findAllByUser(user);
+    public List<Reservation> findByUserId(Long userId) {
+        return reservationJpaRepository.findAllByUserId(userId);
     }
 
     @Override
-    public Optional<Reservation> findByUserAndLecture(User user, Lecture lecture) {
-        return reservationJpaRepository.findByUserAndLecture(user, lecture);
+    public Optional<Reservation> findByUserIdAndLectureId(Long userId, Long lectureId) {
+        return reservationJpaRepository.findByUserIdAndLectureId(userId, lectureId);
     }
 
     @Override

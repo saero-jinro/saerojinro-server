@@ -10,24 +10,22 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/attendees")
+@RequestMapping("/api/reservations")
 public class ReservationControllerImpl implements ReservationController {
 
     private final ReservationFacade reservationFacade;
 
     @Override
-    @PostMapping("/{id}/reservations/{lectureId}")
-    public ResponseEntity<ReservationCreateResponse> create(@PathVariable("id") Long attendeeId,
-                                                            @PathVariable("lectureId") Long lectureId) {
-        ReservationCreateResponse response = reservationFacade.create(attendeeId, lectureId);
+    @PostMapping("/{lectureId}")
+    public ResponseEntity<ReservationCreateResponse> create(@PathVariable("lectureId") Long lectureId) {
+        ReservationCreateResponse response = reservationFacade.create(lectureId);
         return ResponseEntity.status(CREATED).body(response);
     }
 
     @Override
-    @DeleteMapping("/{id}/reservations/{lectureId}")
-    public ResponseEntity<Void> cancel(@PathVariable("id") Long attendeeId,
-                                                            @PathVariable("lectureId") Long lectureId) {
-        reservationFacade.cancel(attendeeId, lectureId);
+    @DeleteMapping("/{lectureId}")
+    public ResponseEntity<Void> cancel(@PathVariable("lectureId") Long lectureId) {
+        reservationFacade.cancel(lectureId);
         return ResponseEntity.noContent().build();
     }
 }

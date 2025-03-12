@@ -22,8 +22,7 @@ public interface ReservationController {
             )
         }
     )
-    ResponseEntity<ReservationCreateResponse> create(@PathVariable("id") Long attendeeId,
-                                                     @PathVariable("lectureId") Long lectureId);
+    ResponseEntity<ReservationCreateResponse> create(@PathVariable("lectureId") Long lectureId);
 
     @Operation(
         summary = "예약 취소",
@@ -35,6 +34,5 @@ public interface ReservationController {
             )
         }
     )
-    ResponseEntity<Void> cancel(@PathVariable("id") Long attendeeId,
-                                                     @PathVariable("lectureId") Long lectureId);
+    ResponseEntity<Void> cancel(@PathVariable("lectureId") Long lectureId);
 }

@@ -13,17 +13,15 @@ import java.util.Optional;
 
 public interface ReservationJpaRepository extends JpaRepository<Reservation, Long> {
 
-    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END " +
-            "FROM Reservation r JOIN r.lecture l " +
-            "WHERE r.user.id = :userId AND l.startTime = :startTime")
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
+            "WHERE r.user.id = :userId " +
+            "AND r.lecture.startTime = :startTime")
     boolean existsByUserAndStartTime(@Param("userId") Long userId,
                                      @Param("startTime") LocalDateTime startTime);
 
-    boolean existsByUserAndLecture(User user, Lecture lecture);
+    List<Reservation> findAllByUserId(Long userId);
 
-    List<Reservation> findAllByUser(User user);
-
-    Optional<Reservation> findByUserAndLecture(User user, Lecture lecture);
+    Optional<Reservation> findByUserIdAndLectureId(Long userId, Long lectureId);
 
 	List<Reservation> findAllByLectureId(Long lectureId);
 }

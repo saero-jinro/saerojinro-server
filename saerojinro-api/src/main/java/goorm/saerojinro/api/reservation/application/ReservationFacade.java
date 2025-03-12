@@ -22,32 +22,22 @@ public class ReservationFacade {
     private final ReservationCommandService reservationCommandService;
 
     @Transactional
-    public ReservationCreateResponse create(Long userId, Long lectureId) {
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+    public ReservationCreateResponse create(Long lectureId) {
+        User user = userQueryService.me();
+        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
 
-        if(reservationQueryService.existsCheckByStartTime(user, lecture)){
-            throw new ReservationExistException();
-        }
+        reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
 
         Reservation reservation = reservationCommandService.create(user, lecture);
         return ReservationCreateResponse.from(reservation);
     }
 
     @Transactional
-    public void cancel(Long userId, Long lectureId){
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+    public void cancel(Long lectureId){
+        User user = userQueryService.me();
 
-        Reservation reservation = reservationQueryService.getByUserAndLecture(user, lecture);
+        Reservation reservation = reservationQueryService.getByUserAndLecture(user.getId(), lectureId);
         reservationCommandService.cancel(reservation);
     }
 
-    private User getUser(Long userId) {
-        return userQueryService.getById(userId);
-    }
-
-    private Lecture getLecture(Long lectureId) {
-        return lectureQueryService.getByLectureId(lectureId);
-    }
 }
