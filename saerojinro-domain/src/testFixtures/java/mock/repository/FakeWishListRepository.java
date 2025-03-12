@@ -23,16 +23,16 @@ public class FakeWishListRepository implements WishListRepository {
     }
 
     @Override
-    public Optional<WishList> findByUserAndLecture(User user, Lecture lecture) {
+    public Optional<WishList> findByUserAndLectureId(User user, Long lectureId) {
         return data.stream()
                 .filter( w -> w.getUser().getId().equals(user.getId()) &&
-                        w.getLecture().getId().equals(lecture.getId()))
+                        w.getLecture().getId().equals(lectureId))
                 .findFirst();
     }
 
     @Override
     public boolean existsByUserAndLecture(User user, Lecture lecture) {
-        return findByUserAndLecture(user, lecture).isPresent();
+        return findByUserAndLectureId(user, lecture.getId()).isPresent();
     }
 
     @Override

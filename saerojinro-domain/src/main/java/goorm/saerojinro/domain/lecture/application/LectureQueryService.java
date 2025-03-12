@@ -19,7 +19,7 @@ public class LectureQueryService {
 		return lectureRepository.findAll();
 	}
 
-	public Lecture getByLectureId(Long lectureId) {
+	public Lecture getById(Long lectureId) {
 		return lectureRepository.findById(lectureId)
 			.orElseThrow(LectureNotFoundException::new);
 	}

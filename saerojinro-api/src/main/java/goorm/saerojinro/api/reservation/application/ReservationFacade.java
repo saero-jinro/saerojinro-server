@@ -23,7 +23,7 @@ public class ReservationFacade {
     @Transactional
     public ReservationCreateResponse create(Long lectureId) {
         User user = userQueryService.me();
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
+        Lecture lecture = lectureQueryService.getById(lectureId);
 
         reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
 

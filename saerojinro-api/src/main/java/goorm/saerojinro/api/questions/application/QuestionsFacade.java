@@ -37,7 +37,7 @@ public class QuestionsFacade {
 
     @Transactional(readOnly = true)
     public QuestionsListResponse getByLecture(Long lectureId){
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
+        Lecture lecture = lectureQueryService.getById(lectureId);
         List<Questions> questionsList = questionsQueryService.getByLecture(lecture);
 
         return QuestionsListResponse.from(questionsList);
@@ -46,7 +46,7 @@ public class QuestionsFacade {
     @Transactional
     public QuestionsCreateResponse create(Long lectureId, QuestionsCreateRequest request){
         User user = userQueryService.me();
-        Lecture lecture = lectureQueryService.getByLectureId(lectureId);
+        Lecture lecture = lectureQueryService.getById(lectureId);
 
         Questions questions = questionsCommandService.create(user, lecture, request.content());
 

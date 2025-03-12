@@ -19,8 +19,8 @@ public class WishListQueryService {
         return wishListRepository.findAllByUser(user);
     }
 
-    public WishList getByUserAndLecture(User user, Lecture lecture){
-        return wishListRepository.findByUserAndLecture(user, lecture)
+    public WishList getByUserAndLectureId(User user, Long lectureId){
+        return wishListRepository.findByUserAndLectureId(user, lectureId)
                 .orElseThrow(WishListNotFoundException::new);
     }
 
