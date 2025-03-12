@@ -31,8 +31,6 @@ public class DashboardSchedulerTest {
 
 	private final String TITLE = "title";
 	private final String SPEAKER = "speaker";
-	private final int RESERVATION = 1;
-	private final int WISHLIST = 2;
 	private final LocalDateTime START_TIME = LocalDateTime.now();
 
 	@BeforeEach
@@ -69,20 +67,13 @@ public class DashboardSchedulerTest {
 	}
 
 	@Test
-	@DisplayName("refreshDashboard는 기존의 dashboard가 있으면 ")
-	public void refreshDashboard_Success() {
+	@DisplayName("refreshDashboard lecture의 정보로 dashboard를 새로 생성한다")
+	public void refreshDashboard_delivery_to_initDashboard() {
 		// given
-		dashboardRepository.save(
-			Dashboard.of(1L, TITLE, SPEAKER, RESERVATION, WISHLIST, RESERVATION + WISHLIST, START_TIME)
-		);
-		dashboardRepository.save(
-			Dashboard.of(2L, TITLE, SPEAKER, 0, 0, 0, START_TIME)
-		);
-
-		// when -> 현재 reservation, wishlist가 없으니 모두 0으로 초기화되어야함
+		// when
 		dashboardScheduler.refreshDashboard();
 
-		// then
+		// then 현재 reservation, wishlist가 없으니 모두 0으로 초기화되어야함
 		List<Dashboard> all = dashboardRepository.findAll();
 		assertEquals(2, all.size());
 		assertEquals(0, all.get(0).getSum());
@@ -91,34 +82,7 @@ public class DashboardSchedulerTest {
 		assertEquals(0, all.get(1).getSum());
 		assertEquals(0, all.get(1).getReservation());
 		assertEquals(0, all.get(1).getWishlist());
-	}
 
-	@Test
-	@DisplayName("refreshDashboard")
-	public void refreshDashboard_delivery_to_initDashboard() {
-		// given
-		// when
-		dashboardScheduler.refreshDashboard();
-
-		// then
-		List<Dashboard> all = dashboardRepository.findAll();
-		assertEquals(2, all.size());
-		assertEquals(0, all.get(0).getSum());
-		assertEquals(TITLE, all.get(0).getTitle());
-		assertEquals(TITLE + "1", all.get(1).getTitle());
-	}
-
-	@Test
-	@DisplayName("initDashboard")
-	public void initDashboard_Success() {
-		// given
-		// when
-		dashboardScheduler.initDashboard();
-
-		// then
-		List<Dashboard> all = dashboardRepository.findAll();
-		assertEquals(2, all.size());
-		assertEquals(0, all.get(0).getSum());
 		assertEquals(TITLE, all.get(0).getTitle());
 		assertEquals(TITLE + "1", all.get(1).getTitle());
 	}

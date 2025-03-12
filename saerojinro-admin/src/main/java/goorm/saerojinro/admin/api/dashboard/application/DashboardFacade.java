@@ -5,7 +5,6 @@ import goorm.saerojinro.admin.api.dashboard.presentation.response.LectureRankRes
 import goorm.saerojinro.admin.api.dashboard.presentation.response.TimeRankResponse;
 import goorm.saerojinro.domain.dashboard.application.DashboardService;
 import goorm.saerojinro.domain.dashboard.domain.Dashboard;
-import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

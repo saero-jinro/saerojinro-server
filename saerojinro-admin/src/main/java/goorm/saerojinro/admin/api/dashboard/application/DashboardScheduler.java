@@ -24,42 +24,10 @@ public class DashboardScheduler {
 
 	@Scheduled(cron = "0 0 * * * *")
 	public void refreshDashboard() {
-		List<Dashboard> all = dashboardService.findAll();
-		if (all.isEmpty()) {
-			initDashboard();
-			return;
-		}
-
-		Map<Long, Integer> reservationCounts = new HashMap<>();
-		for (Dashboard dashboard : all) {
-			int count = reservationQueryService.countByLectureId(dashboard.getId());
-			reservationCounts.put(dashboard.getId(), count);
-		}
-
-		// wishlist
-		Map<Long, Integer> wishlistCounts = new HashMap<>();
-		for (Dashboard dashboard : all) {
-			int count = wishListQueryService.countByLectureId(dashboard.getId());
-			wishlistCounts.put(dashboard.getId(), count);
-		}
-
-		// dashboard 생성
-		for (Dashboard dashboard : all) {
-			Long id = dashboard.getId();
-			Integer reservation = reservationCounts.get(id);
-			Integer wishlist = wishlistCounts.get(id);
-
-			dashboardService.save(
-				Dashboard.from(dashboard, reservation, wishlist, reservation + wishlist)
-			);
-		}
-	}
-
-	public void initDashboard() {
 		// 전체 lecture 조회
 		List<Lecture> lectureList = lectureQueryService.getAllLecture();
 
-		// reserv, wishlist 조회
+		// reservation, wishlist 조회
 		Map<Long, Integer> reservationCounts = new HashMap<>();
 		for (Lecture lecture : lectureList) {
 			int count = reservationQueryService.countByLectureId(lecture.getId());
