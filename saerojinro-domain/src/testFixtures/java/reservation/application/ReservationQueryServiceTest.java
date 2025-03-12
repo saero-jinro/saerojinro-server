@@ -5,9 +5,11 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ReservationQueryServiceTest {
     private ReservationQueryService reservationQueryService;
@@ -132,12 +135,34 @@ public class ReservationQueryServiceTest {
     @Test
     @DisplayName("countByLectureId 는 Lecture 별 예약의 수를 반환할 수 있다.")
     public void countByLectureId_Success(){
-        // given
-
         // when
         int count = reservationQueryService.countByLectureId(LECTURE_ID);
 
         // then
         assertEquals(1, count);
+    }
+
+    @Test
+    @DisplayName("validateReservationByUserAndStartTime 는 강의 시작 시간이 중복되는 예약이 있을 시, 예외를 던진다.")
+    public void valid_ReservationExistException(){
+        // given
+        Lecture lecture = createLecture();
+
+        // then
+        assertThrows(ReservationExistException.class, () ->
+                reservationQueryService.validateReservationByUserAndStartTime(USER_ID, lecture.getStartTime())
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationByUserAndStartTime 는 예약이 없을 경우 예외를 발생시키지 않는다.")
+    public void valid_NoReservationExist(){
+        // given
+        LocalDateTime nonDuplicateStartTime = LocalDateTime.of(2025, 3, 2, 10, 0);
+
+        // then
+        assertDoesNotThrow(() ->
+                reservationQueryService.validateReservationByUserAndStartTime(USER_ID, nonDuplicateStartTime)
+        );
     }
 }
