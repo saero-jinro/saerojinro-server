@@ -10,6 +10,7 @@ import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
+import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
 import mock.repository.FakeWishListRepository;
@@ -44,12 +45,14 @@ public class WishListFacadeTest {
         FakeUserRepository userRepository = new FakeUserRepository();
         FakeLectureRepository lectureRepository = new FakeLectureRepository();
         WishListQueryService wishListQueryService = new WishListQueryService(wishListRepository);
+        FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 
         wishListFacade = new WishListFacade(
-                wishListQueryService,
-                new WishListCommandService(wishListRepository, wishListQueryService),
-                new UserQueryService(userRepository, new BCryptPasswordEncoder()),
-                new LectureQueryService(lectureRepository)
+            wishListQueryService,
+            new WishListCommandService(wishListRepository, wishListQueryService),
+            new UserQueryService(userRepository, new BCryptPasswordEncoder()),
+            new LectureQueryService(lectureRepository),
+            fakeEventLogProducer
         );
 
         user = userRepository.save(User.builder()

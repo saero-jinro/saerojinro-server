@@ -2,7 +2,7 @@ package logevent.application;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_REGISTER;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
@@ -69,7 +69,7 @@ public class LogEventServiceTest {
 	public void save_Success() {
 		// given
 		String record = "record";
-		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_REGISTER, BACKEND);
+		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND);
 
 		// when
 		LogEvent response = logEventService.save(record, logEventDto);

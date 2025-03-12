@@ -1,7 +1,6 @@
 package logevent.domain;
 
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_REGISTER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +21,7 @@ public class LogEventDomainTest {
 		String record = "record";
 		User user = User.builder().build();
 		Lecture lecture = Lecture.builder().build();
-		LogEventType logEventType = LECTURE_REGISTER;
+		LogEventType logEventType = LogEventType.LECTURE_RESERVATION_SUCCESS;
 		Category category = BACKEND;
 
 		// when
