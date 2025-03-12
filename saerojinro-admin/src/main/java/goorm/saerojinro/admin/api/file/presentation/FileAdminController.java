@@ -1,7 +1,7 @@
-package goorm.saerojinro.admin.file;
+package goorm.saerojinro.admin.api.file.presentation;
 
-import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileSaveResponse;
+import goorm.saerojinro.admin.api.file.presentation.request.FileSaveRequest;
+import goorm.saerojinro.admin.api.file.presentation.response.FileSaveResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

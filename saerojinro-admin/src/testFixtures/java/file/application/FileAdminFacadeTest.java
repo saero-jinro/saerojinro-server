@@ -3,9 +3,9 @@ package file.application;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import goorm.saerojinro.admin.file.application.FileAdminFacade;
-import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileSaveResponse;
+import goorm.saerojinro.admin.api.file.application.FileAdminFacade;
+import goorm.saerojinro.admin.api.file.presentation.request.FileSaveRequest;
+import goorm.saerojinro.admin.api.file.presentation.response.FileSaveResponse;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
 import goorm.saerojinro.domain.file.application.FileStorageService;

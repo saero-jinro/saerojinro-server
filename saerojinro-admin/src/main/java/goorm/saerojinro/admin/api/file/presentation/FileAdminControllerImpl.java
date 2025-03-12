@@ -1,8 +1,8 @@
-package goorm.saerojinro.admin.file;
+package goorm.saerojinro.admin.api.file.presentation;
 
-import goorm.saerojinro.admin.file.application.FileAdminFacade;
-import goorm.saerojinro.admin.file.request.FileSaveRequest;
-import goorm.saerojinro.admin.file.response.FileSaveResponse;
+import goorm.saerojinro.admin.api.file.application.FileAdminFacade;
+import goorm.saerojinro.admin.api.file.presentation.request.FileSaveRequest;
+import goorm.saerojinro.admin.api.file.presentation.response.FileSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

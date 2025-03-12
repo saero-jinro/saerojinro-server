@@ -1,8 +1,8 @@
-	package goorm.saerojinro.admin.file.application;
+	package goorm.saerojinro.admin.api.file.application;
 
-	import goorm.saerojinro.admin.file.request.FileSaveRequest;
-	import goorm.saerojinro.admin.file.response.FileReadResponse;
-	import goorm.saerojinro.admin.file.response.FileSaveResponse;
+	import goorm.saerojinro.admin.api.file.presentation.request.FileSaveRequest;
+	import goorm.saerojinro.admin.api.file.presentation.response.FileReadResponse;
+	import goorm.saerojinro.admin.api.file.presentation.response.FileSaveResponse;
 	import goorm.saerojinro.domain.file.application.FileCommandService;
 	import goorm.saerojinro.domain.file.application.FileQueryService;
 	import goorm.saerojinro.domain.file.domain.File;

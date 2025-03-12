@@ -1,4 +1,4 @@
-package goorm.saerojinro.admin.file.request;
+package goorm.saerojinro.admin.api.file.presentation.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
