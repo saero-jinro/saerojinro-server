@@ -26,7 +26,6 @@ public class DashboardScheduler {
 	@Transactional
 	@Scheduled(cron = "0 0 * * * *")
 	public void refreshDashboard() {
-		System.out.println("Refreshing Dashboard NOW!!!!");
 		// 전체 lecture 조회
 		List<Lecture> lectureList = lectureQueryService.getAllLecture();
 
