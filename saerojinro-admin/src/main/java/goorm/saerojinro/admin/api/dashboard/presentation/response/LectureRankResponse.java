@@ -1,7 +1,6 @@
 package goorm.saerojinro.admin.api.dashboard.presentation.response;
 
 import goorm.saerojinro.domain.dashboard.domain.Dashboard;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 

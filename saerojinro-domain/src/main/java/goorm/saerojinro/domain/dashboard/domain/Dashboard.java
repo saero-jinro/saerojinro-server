@@ -29,4 +29,29 @@ public class Dashboard {
 	private int sum;
 
 	private LocalDateTime startTime;
+
+	public static Dashboard of(Long id, String title, String speaker,
+							   int reservation, int wishlist, int sum, LocalDateTime startTime) {
+		return Dashboard.builder()
+			.id(id)
+			.title(title)
+			.speaker(speaker)
+			.reservation(reservation)
+			.wishlist(wishlist)
+			.sum(sum)
+			.startTime(startTime)
+			.build();
+	}
+
+	public static Dashboard from(Dashboard dashboard, int reservation, int wishlist, int sum) {
+		return Dashboard.builder()
+			.id(dashboard.getId())
+			.title(dashboard.getTitle())
+			.speaker(dashboard.getSpeaker())
+			.reservation(reservation)
+			.wishlist(wishlist)
+			.sum(sum)
+			.startTime(dashboard.getStartTime())
+			.build();
+	}
 }

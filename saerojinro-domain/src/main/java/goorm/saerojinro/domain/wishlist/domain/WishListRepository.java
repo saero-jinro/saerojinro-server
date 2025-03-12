@@ -17,4 +17,6 @@ public interface WishListRepository {
     WishList save(WishList wishList);
 
     void delete(WishList wishList);
+
+	int countByLectureId(Long lectureId);
 }

@@ -49,4 +49,12 @@ public class FakeWishListRepository implements WishListRepository {
 
     @Override
     public void delete(WishList wishList) { data.remove(wishList); }
+
+    @Override
+    public int countByLectureId(Long lectureId) {
+        return data.stream()
+            .filter(w -> w.getLecture().getId().equals(lectureId))
+            .toList()
+            .size();
+    }
 }

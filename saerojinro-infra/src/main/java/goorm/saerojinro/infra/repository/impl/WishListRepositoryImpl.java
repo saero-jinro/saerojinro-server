@@ -40,4 +40,9 @@ public class WishListRepositoryImpl implements WishListRepository {
     public void delete(WishList wishList) {
         wishListJpaRepository.delete(wishList);
     }
+
+    @Override
+    public int countByLectureId(Long lectureId) {
+        return wishListJpaRepository.countByLectureId(lectureId);
+    }
 }

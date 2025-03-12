@@ -27,4 +27,8 @@ public class WishListQueryService {
     public boolean existCheck(User user, Lecture lecture){
         return wishListRepository.existsByUserAndLecture(user, lecture);
     }
+
+    public int countByLectureId(Long lectureId) {
+        return wishListRepository.countByLectureId(lectureId);
+    }
 }
