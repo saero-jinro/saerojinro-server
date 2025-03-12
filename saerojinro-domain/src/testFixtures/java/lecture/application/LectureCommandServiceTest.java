@@ -73,7 +73,7 @@ public class LectureCommandServiceTest {
 	void createLecture_success() {
 		// when
 		Lecture createdLecture = lectureCommandService.create(
-			speaker, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			speaker, TITLE, CONTENTS, file, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// then
@@ -94,7 +94,7 @@ public class LectureCommandServiceTest {
 	void updateLecture_success() {
 		//given
 		Lecture createdLecture = lectureCommandService.create(
-			speaker, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			speaker, TITLE, CONTENTS, file,MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when
@@ -123,7 +123,7 @@ public class LectureCommandServiceTest {
 	void deleteLecture_success() {
 		//given
 		Lecture createdLecture = lectureCommandService.create(
-			null, TITLE, CONTENTS, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
+			null, TITLE, CONTENTS, file, MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY
 		);
 
 		// when

@@ -59,6 +59,7 @@ class LectureDomainTest {
 			speaker,
 			TITLE,
 			CONTENTS,
+			file,
 			MAX_CAPACITY,
 			START_TIME,
 			END_TIME,
@@ -73,6 +74,7 @@ class LectureDomainTest {
 		assertNotNull(lecture);
 		assertEquals(TITLE, lecture.getTitle());
 		assertEquals(CONTENTS, lecture.getContents());
+		assertEquals(file, lecture.getThumbnail());
 		assertEquals(MAX_CAPACITY, lecture.getMaxCapacity());
 		assertEquals(START_TIME, lecture.getStartTime());
 		assertEquals(END_TIME, lecture.getEndTime());

@@ -1,6 +1,7 @@
 package goorm.saerojinro.admin.api.lecture.presentation.request;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -17,6 +18,9 @@ public record 	LectureCreateRequest(
 
 	@Schema(description = "강의 내용", example = "Part 1: 온오프라인 경험을 연결하는 네이버 지도가 공간지능과 만나 제공하게 될 미래 모습을 소개합니다.", requiredMode = REQUIRED)
 	@NotNull String contents,
+
+	@Schema(description = "강의 썸네일", example = "https://example.com/lecture_photo.jpg", requiredMode = REQUIRED)
+	@NotNull String lecturePhotoUri,
 
 	@Schema(description = "강의 수용 인원", example = "100", requiredMode = REQUIRED)
 	@NotNull @Positive Long maxCapacity,

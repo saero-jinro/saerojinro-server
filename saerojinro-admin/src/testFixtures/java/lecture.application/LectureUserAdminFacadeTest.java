@@ -55,6 +55,13 @@ public class LectureUserAdminFacadeTest {
 	private static final Long FILE_SIZE = 12345L;
 	private static final String EXTENSION = "jpg";
 
+	private static final File file = File.builder()
+		.logicalName(LOGICAL_NAME)
+		.physicalPath(PHYSICAL_PATH)
+		.fileSize(FILE_SIZE)
+		.extension(EXTENSION)
+		.build();
+
 	@BeforeEach
 	public void setUp() {
 		lectureRepository = new FakeLectureRepository();
@@ -80,6 +87,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest request = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -107,6 +115,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest createRequest = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -153,6 +162,7 @@ public class LectureUserAdminFacadeTest {
 		LectureCreateRequest createRequest = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
+			.lecturePhotoUri(PHYSICAL_PATH)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
