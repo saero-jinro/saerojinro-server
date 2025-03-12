@@ -1,4 +1,4 @@
-package dashboard.application;
+package dashboard;
 
 import goorm.saerojinro.admin.api.dashboard.application.DashboardScheduler;
 import goorm.saerojinro.domain.dashboard.application.DashboardService;

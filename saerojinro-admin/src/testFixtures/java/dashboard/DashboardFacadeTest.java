@@ -1,4 +1,4 @@
-package dashboard.application;
+package dashboard;
 
 import goorm.saerojinro.admin.api.dashboard.application.DashboardFacade;
 import goorm.saerojinro.admin.api.dashboard.presentation.response.DashboardResponse;

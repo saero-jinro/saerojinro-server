@@ -42,16 +42,4 @@ public class Dashboard {
 			.startTime(startTime)
 			.build();
 	}
-
-	public static Dashboard from(Dashboard dashboard, int reservation, int wishlist, int sum) {
-		return Dashboard.builder()
-			.id(dashboard.getId())
-			.title(dashboard.getTitle())
-			.speaker(dashboard.getSpeaker())
-			.reservation(reservation)
-			.wishlist(wishlist)
-			.sum(sum)
-			.startTime(dashboard.getStartTime())
-			.build();
-	}
 }
