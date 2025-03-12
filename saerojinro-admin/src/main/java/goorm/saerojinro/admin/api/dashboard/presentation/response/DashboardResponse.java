@@ -58,7 +58,7 @@ public record DashboardResponse(
 
 	private static List<TimeRankResponse> buildTimeRankResponse(List<LocalDateTime> times) {
 		return times.stream()
-			.map(t -> TimeRankResponse.from(times.indexOf(t) + 1, t))
+			.map(t -> TimeRankResponse.from(t, times.indexOf(t) + 1))
 			.toList();
 	}
 }

@@ -20,7 +20,7 @@ public record TimeRankResponse(
 	@Schema(description = "시작시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
 	LocalDateTime startTime
 ) {
-	public static TimeRankResponse from(int rank, LocalDateTime startTime) {
+	public static TimeRankResponse from(LocalDateTime startTime, int rank) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M월 d일 E요일", Locale.KOREAN);
 
 		return TimeRankResponse.builder()
