@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @RedisHash(value = "dashboard", timeToLive = 60 * 60 * 24)
@@ -16,9 +18,15 @@ public class Dashboard {
 	@Id
 	private Long id;
 
+	private String title;
+
+	private String speaker;
+
 	private int reservation;
 
 	private int wishlist;
 
 	private int sum;
+
+	private LocalDateTime startTime;
 }

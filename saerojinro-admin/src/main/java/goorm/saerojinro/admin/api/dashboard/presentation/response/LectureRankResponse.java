@@ -1,5 +1,6 @@
 package goorm.saerojinro.admin.api.dashboard.presentation.response;
 
+import goorm.saerojinro.domain.dashboard.domain.Dashboard;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public record LectureRankResponse(
 	@Schema(description = "순위", example = "1", requiredMode = REQUIRED)
 	int rank,
 
-	@Schema(description = "제목", example = "클린코드란", requiredMode = REQUIRED)
+	@Schema(description = "제목", example = "그렇게 하는거 아닌데", requiredMode = REQUIRED)
 	String title,
 
 	@Schema(description = "강연자 이름", example = "마틴 파울러", requiredMode = REQUIRED)
@@ -26,14 +27,14 @@ public record LectureRankResponse(
 	@Schema(description = "현재 즐겨찾기 인원", example = "20", requiredMode = REQUIRED)
 	int wishlist
 ) {
-	public static LectureRankResponse from(Lecture lecture, int rank, int reservation, int wishlist) {
+	public static LectureRankResponse from(Dashboard dashboard, int rank) {
 		return LectureRankResponse.builder()
-			.lectureId(lecture.getId())
+			.lectureId(dashboard.getId())
 			.rank(rank)
-			.title(lecture.getTitle())
-			.speaker(lecture.getSpeaker().getName())
-			.reservation(reservation)
-			.wishlist(wishlist)
+			.title(dashboard.getTitle())
+			.speaker(dashboard.getSpeaker())
+			.reservation(dashboard.getReservation())
+			.wishlist(dashboard.getWishlist())
 			.build();
 	}
 }

@@ -9,12 +9,11 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record DashboardResponse(
-
 	@Schema(description = "강의 상위 리스트",
 		example = "[{"
 			+ "\"lectureId\": 1, "
 			+ "\"rank\": 1, "
-			+ "\"title\": \"클린코드란\", "
+			+ "\"title\": \"클린코드 그렇게 하는거 아닌데\", "
 			+ "\"speaker\": \"마틴 파울러\", "
 			+ "\"reservation\": \"50\", "
 			+ "\"wishlist\": \"20\"}]",
@@ -25,7 +24,7 @@ public record DashboardResponse(
 		example = "[{"
 			+ "\"lectureId\": 1, "
 			+ "\"rank\": 1, "
-			+ "\"title\": \"클린코드란\", "
+			+ "\"title\": \"개발 그렇게 하는거 아닌데\", "
 			+ "\"speaker\": \"마틴 파울러\", "
 			+ "\"reservation\": \"50\", "
 			+ "\"wishlist\": \"20\"}]",
