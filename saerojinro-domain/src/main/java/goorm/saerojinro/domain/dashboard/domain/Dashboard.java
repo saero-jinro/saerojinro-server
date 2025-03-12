@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@RedisHash(value = "dashboard", timeToLive = 60 * 60 * 24)
+@RedisHash(value = "dashboard")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dashboard {

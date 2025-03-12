@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +23,10 @@ public class DashboardScheduler {
 	private final ReservationQueryService reservationQueryService;
 	private final WishListQueryService wishListQueryService;
 
+	@Transactional
 	@Scheduled(cron = "0 0 * * * *")
 	public void refreshDashboard() {
+		System.out.println("Refreshing Dashboard NOW!!!!");
 		// 전체 lecture 조회
 		List<Lecture> lectureList = lectureQueryService.getAllLecture();
 
