@@ -10,6 +10,7 @@ import goorm.saerojinro.domain.file.application.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class FileAdminFacade {
 
 	@Transactional
 	public FileSaveResponse saveLecturePhoto(FileSaveRequest request) {
-		String baseDir = "lecture/";
+		String baseDir = "lecture/thumbnail/";
 		String logicalName = extractFileName(request.uri());
 		String storedPath = fileStorageService.storeFileFromUri(request.uri(), baseDir);
 		Long fileSize = fileStorageService.getFileSize(storedPath);
@@ -42,6 +43,18 @@ public class FileAdminFacade {
 		return FileSaveResponse.from(file);
 	}
 
+	@Transactional
+	public FileSaveResponse saveLectureResource(MultipartFile file) {
+		String baseDir = "lecture/resource/";
+		String logicalName = file.getOriginalFilename();
+		String storedPath = fileStorageService.storeFile(file,baseDir);
+		Long fileSize = fileStorageService.getFileSize(storedPath);
+		String extension = fileStorageService.getFileExtension(storedPath);
+		File savedFile = fileCommandService.save(logicalName, storedPath, fileSize, extension);
+
+		return FileSaveResponse.from(savedFile);
+	}
+
 	@Transactional(readOnly = true)
 	public FileReadResponse findById(Long id) {
 		File file = fileQueryService.getFileById(id);
@@ -53,4 +66,5 @@ public class FileAdminFacade {
 		int idx = uri.lastIndexOf('/');
 		return (idx != -1) ? uri.substring(idx + 1) : uri;
 	}
+
 }
