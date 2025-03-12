@@ -43,4 +43,21 @@ public class FileQueryServiceTest {
 		assertEquals(FILE_SIZE, savedFile.getFileSize());
 		assertEquals(EXTENSION, savedFile.getExtension());
 	}
+	@Test
+	@DisplayName("파일 URI로 파일 조회 성공")
+	void getFileByUri_success() {
+		//given
+		String fileUri = "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/sk/2024/03/18/SK007_20240318_261101.jpg";
+
+		//when
+		File savedFile = fileQueryService.getFileByUri(fileUri);
+
+		//then
+		assertNotNull(savedFile);
+		assertEquals(PHYSICAL_PATH, savedFile.getPhysicalPath());
+		assertEquals(LOGICAL_NAME, savedFile.getLogicalName());
+		assertEquals(FILE_SIZE, savedFile.getFileSize());
+		assertEquals(EXTENSION, savedFile.getExtension());
+	}
+
 }
