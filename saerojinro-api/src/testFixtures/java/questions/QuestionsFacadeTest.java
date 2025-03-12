@@ -10,7 +10,6 @@ import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.questions.application.QuestionsCommandService;
 import goorm.saerojinro.domain.questions.application.QuestionsQueryService;
-import goorm.saerojinro.domain.questions.domain.Questions;
 import goorm.saerojinro.domain.questions.exception.QuestionsNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -112,7 +111,7 @@ public class QuestionsFacadeTest {
     public void getAll_Success(){
         // given
         QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        questionsFacade.create(LECTURE_ID, createRequest);
 
         // when
         QuestionsListResponse response = questionsFacade.getAll();
@@ -126,7 +125,7 @@ public class QuestionsFacadeTest {
     public void getByLecture_Success(){
         // given
         QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        questionsFacade.create(LECTURE_ID, createRequest);
 
         // when
         QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
