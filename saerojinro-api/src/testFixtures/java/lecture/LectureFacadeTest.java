@@ -147,7 +147,7 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("존재하지 않는 강의 ID면 예외를 반환한다")
 	void getByLectureId_notFound() {
-		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getByLectureId(999L));
+		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getById(999L));
 	}
 
 	@Test
