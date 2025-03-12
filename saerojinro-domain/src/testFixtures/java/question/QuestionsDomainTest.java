@@ -2,7 +2,7 @@ package question;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.questions.domain.Questions;
+import goorm.saerojinro.domain.question.domain.Question;
 import goorm.saerojinro.domain.user.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 public class QuestionsDomainTest {
-    private Questions questions;
+    private Question questions;
 
     private static final Long USER_ID = 1L;
     private static final Long LECTURE_ID = 1L;
@@ -44,7 +44,7 @@ public class QuestionsDomainTest {
                 .category(CATEGORY)
                 .build();
 
-        questions = Questions.create(user,lecture, CONTENT);
+        questions = Question.create(user,lecture, CONTENT);
     }
 
     @Test

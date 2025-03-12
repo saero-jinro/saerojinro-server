@@ -1,20 +1,20 @@
-package questions;
+package question;
 
-import goorm.saerojinro.api.questions.application.QuestionsFacade;
-import goorm.saerojinro.api.questions.presentation.request.QuestionsCreateRequest;
-import goorm.saerojinro.api.questions.presentation.request.QuestionsUpdateRequest;
-import goorm.saerojinro.api.questions.presentation.response.QuestionsCreateResponse;
-import goorm.saerojinro.api.questions.presentation.response.QuestionsListResponse;
+import goorm.saerojinro.api.question.application.QuestionFacade;
+import goorm.saerojinro.api.question.presentation.request.QuestionCreateRequest;
+import goorm.saerojinro.api.question.presentation.request.QuestionUpdateRequest;
+import goorm.saerojinro.api.question.presentation.response.QuestionCreateResponse;
+import goorm.saerojinro.api.question.presentation.response.QuestionListResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.questions.application.QuestionsCommandService;
-import goorm.saerojinro.domain.questions.application.QuestionsQueryService;
-import goorm.saerojinro.domain.questions.exception.QuestionsNotAuthorizedException;
+import goorm.saerojinro.domain.question.application.QuestionCommandService;
+import goorm.saerojinro.domain.question.application.QuestionQueryService;
+import goorm.saerojinro.domain.question.exception.QuestionNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeLectureRepository;
-import mock.repository.FakeQuestionsRepository;
+import mock.repository.FakeQuestionRepository;
 import mock.repository.FakeUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,12 +31,12 @@ import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class QuestionsFacadeTest {
-    private QuestionsFacade questionsFacade;
+public class QuestionFacadeTest {
+    private QuestionFacade questionFacade;
 
     private FakeUserRepository userRepository;
     private FakeLectureRepository lectureRepository;
-    private FakeQuestionsRepository questionsRepository;
+    private FakeQuestionRepository questionsRepository;
 
     private User admin;
     private User attendee;
@@ -58,11 +58,11 @@ public class QuestionsFacadeTest {
         userRepository = new FakeUserRepository();
         UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
 
-        questionsRepository = new FakeQuestionsRepository();
-        QuestionsQueryService  questionsQueryService = new QuestionsQueryService(questionsRepository);
-        QuestionsCommandService questionsCommandService = new QuestionsCommandService(questionsRepository);
+        questionsRepository = new FakeQuestionRepository();
+        QuestionQueryService questionsQueryService = new QuestionQueryService(questionsRepository);
+        QuestionCommandService questionCommandService = new QuestionCommandService(questionsRepository);
 
-        questionsFacade = new QuestionsFacade(questionsQueryService, questionsCommandService, userQueryService, lectureQueryService);
+        questionFacade = new QuestionFacade(questionsQueryService, questionCommandService, userQueryService, lectureQueryService);
 
         admin = userRepository.save(
                 User.builder()
@@ -110,38 +110,38 @@ public class QuestionsFacadeTest {
     @DisplayName("getAll 은 전체 질문 조회 response 를 반환한다.")
     public void getAll_Success(){
         // given
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        questionFacade.create(LECTURE_ID, createRequest);
 
         // when
-        QuestionsListResponse response = questionsFacade.getAll();
+        QuestionListResponse response = questionFacade.getAll();
 
         // then
-        assertThat(response.questionsList()).hasSize(1);
+        assertThat(response.questionList()).hasSize(1);
     }
 
     @Test
     @DisplayName("getByLecture 은 강의에 해당하는 질문 조회 response 를 반환한다.")
     public void getByLecture_Success(){
         // given
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        questionFacade.create(LECTURE_ID, createRequest);
 
         // when
-        QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
+        QuestionListResponse response = questionFacade.getByLecture(LECTURE_ID);
 
         // then
-        assertThat(response.questionsList()).hasSize(1);
+        assertThat(response.questionList()).hasSize(1);
     }
 
     @Test
     @DisplayName("create 는 질문 데이터 생성하고, 질문 생성 response 를 반환한다.")
     public void create_Success(){
         // given
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
 
         // when
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
 
         // then
         assertNotNull(createResponse);
@@ -152,26 +152,26 @@ public class QuestionsFacadeTest {
     @Test
     @DisplayName("update 는 질문 데이터를 수정한다.")
     public void update_Success(){
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
         Long questionId = createResponse.id();
 
         // when
         String updatedContent = "수정된 질문 입니다.";
-        QuestionsUpdateRequest updateRequest = new QuestionsUpdateRequest(updatedContent);
-        questionsFacade.update(questionId, updateRequest);
+        QuestionUpdateRequest updateRequest = new QuestionUpdateRequest(updatedContent);
+        questionFacade.update(questionId, updateRequest);
 
         // then
-        QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
-        assertThat(response.questionsList()).hasSize(1);
+        QuestionListResponse response = questionFacade.getByLecture(LECTURE_ID);
+        assertThat(response.questionList()).hasSize(1);
     }
 
     @Test
-    @DisplayName("update 는 질문 작성자가 아닌 유저가 수정할 때, QuestionsNotAuthorizedException 을 반환한다.")
-    public void update_QuestionsNotAuthorizedException(){
+    @DisplayName("update 는 질문 작성자가 아닌 유저가 수정할 때, QuestionNotAuthorizedException 을 반환한다.")
+    public void update_QuestionNotAuthorizedException(){
         // given
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
         Long questionId = createResponse.id();
 
         SecurityContext contextByAdminUser = SecurityContextHolder.getContext();
@@ -180,11 +180,11 @@ public class QuestionsFacadeTest {
         );
 
         String updatedContent = "수정된 질문 입니다.";
-        QuestionsUpdateRequest updateRequest = new QuestionsUpdateRequest(updatedContent);
+        QuestionUpdateRequest updateRequest = new QuestionUpdateRequest(updatedContent);
 
         // then
-        assertThrows(QuestionsNotAuthorizedException.class,
-                () -> questionsFacade.update(questionId, updateRequest));
+        assertThrows(QuestionNotAuthorizedException.class,
+                () -> questionFacade.update(questionId, updateRequest));
 
     }
 
@@ -195,16 +195,16 @@ public class QuestionsFacadeTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(attendee, attendee.getPassword(), attendee.getAuthorities())
         );
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
         Long questionId = createResponse.id();
 
         // when
-        questionsFacade.delete(questionId);
+        questionFacade.delete(questionId);
 
         // then
-        QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
-        assertThat(response.questionsList()).isEmpty();
+        QuestionListResponse response = questionFacade.getByLecture(LECTURE_ID);
+        assertThat(response.questionList()).isEmpty();
     }
 
     @Test
@@ -214,8 +214,8 @@ public class QuestionsFacadeTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(attendee, attendee.getPassword(), attendee.getAuthorities())
         );
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
         Long questionId = createResponse.id();
 
         SecurityContextHolder.getContext().setAuthentication(
@@ -223,22 +223,22 @@ public class QuestionsFacadeTest {
         );
 
         // when
-        questionsFacade.delete(questionId);
+        questionFacade.delete(questionId);
 
         // then
-        QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
-        assertThat(response.questionsList()).isEmpty();
+        QuestionListResponse response = questionFacade.getByLecture(LECTURE_ID);
+        assertThat(response.questionList()).isEmpty();
     }
 
     @Test
-    @DisplayName("delete 는 질문 작성자가 아닌 유저가 삭제할 때, QuestionsNotAuthorizedException 을 반환한다.")
-    public void delete_QuestionsNotAuthorizedException_NotMatchedUser(){
+    @DisplayName("delete 는 질문 작성자가 아닌 유저가 삭제할 때, QuestionNotAuthorizedException 을 반환한다.")
+    public void delete_QuestionNotAuthorizedException_NotMatchedUser(){
         // given
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(admin, admin.getPassword(), admin.getAuthorities())
         );
-        QuestionsCreateRequest createRequest = new QuestionsCreateRequest(CONTENT);
-        QuestionsCreateResponse createResponse = questionsFacade.create(LECTURE_ID, createRequest);
+        QuestionCreateRequest createRequest = new QuestionCreateRequest(CONTENT);
+        QuestionCreateResponse createResponse = questionFacade.create(LECTURE_ID, createRequest);
         Long questionId = createResponse.id();
 
         SecurityContextHolder.getContext().setAuthentication(
@@ -246,8 +246,8 @@ public class QuestionsFacadeTest {
         );
 
         // then
-        assertThrows(QuestionsNotAuthorizedException.class,
-                () -> questionsFacade.delete(questionId));
+        assertThrows(QuestionNotAuthorizedException.class,
+                () -> questionFacade.delete(questionId));
     }
 
 }

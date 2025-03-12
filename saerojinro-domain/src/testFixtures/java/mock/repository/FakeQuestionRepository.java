@@ -1,9 +1,9 @@
 package mock.repository;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.questions.domain.Questions;
-import goorm.saerojinro.domain.questions.domain.QuestionsRepository;
-import goorm.saerojinro.domain.questions.exception.QuestionsNotFoundException;
+import goorm.saerojinro.domain.question.domain.Question;
+import goorm.saerojinro.domain.question.domain.QuestionRepository;
+import goorm.saerojinro.domain.question.exception.QuestionNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,35 +11,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class FakeQuestionsRepository implements QuestionsRepository {
-    private List<Questions> data = Collections.synchronizedList(new ArrayList<>());
+public class FakeQuestionRepository implements QuestionRepository {
+    private List<Question> data = Collections.synchronizedList(new ArrayList<>());
     private AtomicLong sequence = new AtomicLong(1);
 
     @Override
-    public List<Questions> findAll() {
+    public List<Question> findAll() {
         return data.stream()
                 .toList();
     }
 
     @Override
-    public List<Questions> findByLecture(Lecture lecture) {
+    public List<Question> findByLecture(Lecture lecture) {
         return data.stream()
                 .filter( q -> q.getLecture().getId().equals(lecture.getId()))
                 .toList();
     }
 
     @Override
-    public Optional<Questions> findById(Long id) {
+    public Optional<Question> findById(Long id) {
         return Optional.ofNullable(data.stream()
                 .filter(q -> q.getId().equals(id))
                 .findFirst()
-                .orElseThrow(QuestionsNotFoundException::new));
+                .orElseThrow(QuestionNotFoundException::new));
     }
 
     @Override
-    public Questions save(Questions questions) {
+    public Question save(Question questions) {
 
-        Questions newQuestions = Questions.builder()
+        Question newQuestions = Question.builder()
                 .id(sequence.getAndIncrement())
                 .user(questions.getUser())
                 .lecture(questions.getLecture())
@@ -51,7 +51,7 @@ public class FakeQuestionsRepository implements QuestionsRepository {
     }
 
     @Override
-    public void delete(Questions questions) {
+    public void delete(Question questions) {
         data.remove(questions);
     }
 }

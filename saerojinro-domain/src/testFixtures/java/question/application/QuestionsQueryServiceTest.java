@@ -2,10 +2,10 @@ package question.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.questions.application.QuestionsQueryService;
-import goorm.saerojinro.domain.questions.domain.Questions;
+import goorm.saerojinro.domain.question.application.QuestionQueryService;
+import goorm.saerojinro.domain.question.domain.Question;
 import goorm.saerojinro.domain.user.domain.User;
-import mock.repository.FakeQuestionsRepository;
+import mock.repository.FakeQuestionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 public class QuestionsQueryServiceTest {
-    private QuestionsQueryService questionsQueryService;
+    private QuestionQueryService questionsQueryService;
 
     private static final Long USER_ID = 1L;
     private static final Long LECTURE_ID = 1L;
@@ -32,8 +32,8 @@ public class QuestionsQueryServiceTest {
 
     @BeforeEach
     void init(){
-        FakeQuestionsRepository questionsRepository = new FakeQuestionsRepository();
-        questionsQueryService = new QuestionsQueryService(questionsRepository);
+        FakeQuestionRepository questionsRepository = new FakeQuestionRepository();
+        questionsQueryService = new QuestionQueryService(questionsRepository);
 
         User user = User.builder()
                 .id(USER_ID)
@@ -49,7 +49,7 @@ public class QuestionsQueryServiceTest {
                 .category(CATEGORY)
                 .build();
 
-        Questions questions = Questions.create(user,lecture, CONTENT);
+        Question questions = Question.create(user,lecture, CONTENT);
         questionsRepository.save(questions);
     }
 
@@ -71,8 +71,8 @@ public class QuestionsQueryServiceTest {
                 .build();
     }
 
-    public Questions createQuestions(User user, Lecture lecture, String content){
-        return Questions.builder()
+    public Question createQuestions(User user, Lecture lecture, String content){
+        return Question.builder()
                 .user(user)
                 .lecture(lecture)
                 .content(content)
@@ -83,7 +83,7 @@ public class QuestionsQueryServiceTest {
     @DisplayName("getAll 은 모든 질문 데이터를 조회합니다.")
     public void getAll_Success(){
         // when
-        List<Questions> result = questionsQueryService.getAll();
+        List<Question> result = questionsQueryService.getAll();
 
         // then
         Assertions.assertNotNull(result);
@@ -99,7 +99,7 @@ public class QuestionsQueryServiceTest {
         Lecture lecture = createLecture();
 
         // when
-        List<Questions> result = questionsQueryService.getByLecture(lecture);
+        List<Question> result = questionsQueryService.getByLecture(lecture);
 
         // then
         Assertions.assertNotNull(result);
@@ -114,12 +114,12 @@ public class QuestionsQueryServiceTest {
         // given
         Lecture lecture = createLecture();
 
-        List<Questions> resultList = questionsQueryService.getByLecture(lecture);
-        Questions questions = resultList.get(0);
+        List<Question> resultList = questionsQueryService.getByLecture(lecture);
+        Question questions = resultList.get(0);
         Long questionsId = questions.getId();
 
         // when
-        Questions result = questionsQueryService.getById(questionsId);
+        Question result = questionsQueryService.getById(questionsId);
 
         // then
         assertThat(result.getId()).isEqualTo(questionsId);
