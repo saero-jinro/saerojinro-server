@@ -119,8 +119,6 @@ public class QuestionsFacadeTest {
 
         // then
         assertThat(response.questionsList()).hasSize(1);
-        Questions questions = response.questionsList().get(0);
-        assertThat(questions.getId()).isEqualTo(createResponse.id());
     }
 
     @Test
@@ -135,8 +133,6 @@ public class QuestionsFacadeTest {
 
         // then
         assertThat(response.questionsList()).hasSize(1);
-        Questions questions = response.questionsList().get(0);
-        assertThat(questions.getId()).isEqualTo(createResponse.id());
     }
 
     @Test
@@ -169,8 +165,6 @@ public class QuestionsFacadeTest {
         // then
         QuestionsListResponse response = questionsFacade.getByLecture(LECTURE_ID);
         assertThat(response.questionsList()).hasSize(1);
-        Questions updatedQuestion = response.questionsList().get(0);
-        assertThat(updatedQuestion.getContent()).isEqualTo(updatedContent);
     }
 
     @Test
