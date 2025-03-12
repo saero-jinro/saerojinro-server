@@ -1,8 +1,15 @@
 package goorm.saerojinro.api.reservation.application;
 
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
+
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
+import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
@@ -19,17 +26,32 @@ public class ReservationFacade {
     private final LectureQueryService lectureQueryService;
     private final ReservationQueryService reservationQueryService;
     private final ReservationCommandService reservationCommandService;
+    private final LogEventProducer logEventProducer;
 
     @Transactional
     public ReservationCreateResponse create(Long lectureId) {
         User user = userQueryService.me();
         Lecture lecture = lectureQueryService.getById(lectureId);
+        LogEventType logEventType;
 
-        reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
+        try {
+            reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
+            Reservation reservation = reservationCommandService.create(user, lecture);
 
-        Reservation reservation = reservationCommandService.create(user, lecture);
-        return ReservationCreateResponse.from(reservation);
+            logEventType = LECTURE_RESERVATION_SUCCESS;
+            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
+            logEventProducer.sendMessage(logEventDto);
+
+            return ReservationCreateResponse.from(reservation);
+        } catch (CustomException e) {
+            logEventType = LECTURE_RESERVATION_FAIL;
+            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
+            logEventProducer.sendMessage(logEventDto);
+
+            throw e;
+        }
     }
+
 
     @Transactional
     public void cancel(Long lectureId){
