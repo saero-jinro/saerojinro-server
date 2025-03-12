@@ -1,8 +1,11 @@
 package goorm.saerojinro.admin.api.dashboard.presentation.response;
 
+import goorm.saerojinro.domain.dashboard.domain.Dashboard;
+import goorm.saerojinro.domain.dashboard.dto.DashboardAggregation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
@@ -39,15 +42,23 @@ public record DashboardResponse(
 		requiredMode = REQUIRED)
 	List<TimeRankResponse> timeRank
 ) {
-	public static DashboardResponse of(
-		List<LectureRankResponse> lectureHighRank,
-		List<LectureRankResponse> lectureLowRank,
-		List<TimeRankResponse> timeRank
-	) {
+	public static DashboardResponse from(DashboardAggregation data) {
 		return DashboardResponse.builder()
-			.lectureHighRank(lectureHighRank)
-			.lectureLowRank(lectureLowRank)
-			.timeRank(timeRank)
+			.lectureHighRank(buildLectureRankResponse(data.top10Dashboards()))
+			.lectureLowRank(buildLectureRankResponse(data.bottom10Dashboards()))
+			.timeRank(buildTimeRankResponse(data.top10Times()))
 			.build();
+	}
+
+	private static List<LectureRankResponse> buildLectureRankResponse(List<Dashboard> dashboards) {
+		return dashboards.stream()
+			.map(d -> LectureRankResponse.from(d, dashboards.indexOf(d) + 1))
+			.toList();
+	}
+
+	private static List<TimeRankResponse> buildTimeRankResponse(List<LocalDateTime> times) {
+		return times.stream()
+			.map(t -> TimeRankResponse.from(times.indexOf(t) + 1, t))
+			.toList();
 	}
 }

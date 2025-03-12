@@ -3,6 +3,7 @@ package dashboard.application;
 import goorm.saerojinro.domain.dashboard.application.DashboardService;
 import goorm.saerojinro.domain.dashboard.domain.Dashboard;
 import goorm.saerojinro.domain.dashboard.domain.DashboardRepository;
+import goorm.saerojinro.domain.dashboard.dto.DashboardAggregation;
 import mock.repository.FakeDashboardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,10 +43,14 @@ public class DashboardServiceTest {
 		);
 
 		// when
-		List<Dashboard> all = dashboardService.findAll();
+		DashboardAggregation all = dashboardService.findAll();
 
 		//then
-		assertEquals(2, all.size());
+		assertEquals(1L, all.top10Dashboards().get(0).getId());
+		assertEquals(2L, all.top10Dashboards().get(1).getId());
+		assertEquals(2L, all.bottom10Dashboards().get(0).getId());
+		assertEquals(1L, all.bottom10Dashboards().get(1).getId());
+		assertEquals(START_TIME, all.top10Times().get(0));
 	}
 
 	@Test
