@@ -5,6 +5,7 @@ import goorm.saerojinro.api.wishlist.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
@@ -64,15 +65,20 @@ public class WishListFacadeTest {
             new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
         );
 
+        Speaker speaker = Speaker.builder()
+            .name("박민준")
+            .build();
+
         Lecture lecture = Lecture.builder()
-                .id(LECTURE_ID)
-                .title(LECTURE_TITLE)
-                .contents(LECTURE_CONTENTS)
-                .startTime(START_TIME)
-                .endTime(END_TIME)
-                .location(LOCATION)
-                .category(CATEGORY)
-                .build();
+            .id(LECTURE_ID)
+            .title(LECTURE_TITLE)
+            .contents(LECTURE_CONTENTS)
+            .startTime(START_TIME)
+            .endTime(END_TIME)
+            .location(LOCATION)
+            .category(CATEGORY)
+            .speaker(speaker)
+            .build();
 
         lectureRepository.save(lecture);
     }
@@ -88,8 +94,8 @@ public class WishListFacadeTest {
 
         // then
         assertNotNull(response);
-        assertEquals(1, response.wishLists().size());
-        assertEquals(LECTURE_ID, response.wishLists().get(0).getLecture().getId());
+        assertEquals(1, response.response().size());
+        assertEquals("박민준", response.response().get(0).speaker());
     }
 
     @Test
@@ -113,6 +119,6 @@ public class WishListFacadeTest {
         wishListFacade.delete(LECTURE_ID);
 
         // then
-        assertTrue(wishListFacade.getAllWishList().wishLists().isEmpty());
+        assertTrue(wishListFacade.getAllWishList().response().isEmpty());
     }
 }

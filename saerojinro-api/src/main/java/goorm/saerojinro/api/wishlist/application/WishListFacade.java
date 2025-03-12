@@ -1,6 +1,7 @@
 package goorm.saerojinro.api.wishlist.application;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
+import goorm.saerojinro.api.wishlist.presentation.response.WishListDetailResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -11,6 +12,7 @@ import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,12 +24,14 @@ public class WishListFacade {
 	private final UserQueryService userQueryService;
 	private final LectureQueryService lectureQueryService;
 
+	@Transactional(readOnly = true)
 	public WishListResponse getAllWishList() {
 		User user = userQueryService.me();
 		List<WishList> wishLists = wishListQueryService.getAllByUser(user);
 		return WishListResponse.from(wishLists);
 	}
 
+	@Transactional
 	public WishListCreateResponse create(Long lectureId) {
 		User user = userQueryService.me();
 		Lecture lecture = lectureQueryService.getById(lectureId);
@@ -35,6 +39,7 @@ public class WishListFacade {
 		return WishListCreateResponse.from(wishList);
 	}
 
+	@Transactional
 	public void delete(Long lectureId) {
 		User user = userQueryService.me();
 
