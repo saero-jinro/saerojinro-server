@@ -21,14 +21,14 @@ public class LectureControllerImpl implements LectureController {
 	@Override
 	@GetMapping
 	public ResponseEntity<LectureListResponseByAll> getAllLecture() {
-		LectureListResponseByAll response = lectureFacade.getAllLecture();
+		LectureListResponseByAll response = lectureFacade.getAll();
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
-	@GetMapping("/{lectureId}")
-	public ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long lectureId) {
-		LectureDetailResponse response = lectureFacade.getByLectureId(lectureId);
+	@GetMapping("/{id}")
+	public ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long id) {
+		LectureDetailResponse response = lectureFacade.getById(id);
 		return ResponseEntity.ok(response);
 	}
 

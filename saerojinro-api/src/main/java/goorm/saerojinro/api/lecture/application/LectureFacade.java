@@ -25,7 +25,7 @@ public class LectureFacade {
 	private final UserQueryService userQueryService;
 
 	@Transactional(readOnly = true)
-	public LectureListResponseByAll getAllLecture() {
+	public LectureListResponseByAll getAll() {
 		List<LectureResponseByAll> responses = lectureService.getAllLecture().stream()
 			.map(LectureResponseByAll::from)
 			.toList();
@@ -33,8 +33,8 @@ public class LectureFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public LectureDetailResponse getByLectureId(long lectureId) {
-		Lecture lecture = lectureService.getById(lectureId);
+	public LectureDetailResponse getById(Long id) {
+		Lecture lecture = lectureService.getById(id);
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
