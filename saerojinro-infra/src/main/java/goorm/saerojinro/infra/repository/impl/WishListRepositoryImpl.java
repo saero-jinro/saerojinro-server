@@ -22,8 +22,8 @@ public class WishListRepositoryImpl implements WishListRepository {
     }
 
     @Override
-    public Optional<WishList> findByUserAndLecture(User user, Lecture lecture) {
-        return wishListJpaRepository.findByUserAndLecture(user, lecture);
+    public Optional<WishList> findByUserAndLectureId(User user, Long lectureId) {
+        return wishListJpaRepository.findByUserAndLectureId(user, lectureId);
     }
 
     @Override

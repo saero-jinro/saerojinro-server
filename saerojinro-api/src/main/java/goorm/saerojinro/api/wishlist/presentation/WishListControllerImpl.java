@@ -12,30 +12,28 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/attendees")
+@RequestMapping("/api/wishlist")
 public class WishListControllerImpl implements WishListController{
     private final WishListFacade wishListFacade;
 
     @Override
-    @GetMapping("/{id}/wishlist")
-    public ResponseEntity<WishListResponse> getAllWishList(@PathVariable("id") Long attendeeId){
-        WishListResponse response = wishListFacade.getAllWishList(attendeeId);
-        return ResponseEntity.status(OK).body(response);
+    @GetMapping
+    public ResponseEntity<WishListResponse> getAllWishList(){
+        WishListResponse response = wishListFacade.getAllWishList();
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    @PostMapping("/{id}/wishlist/{lectureId}")
-    public ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long attendeeId,
-                                                         @PathVariable("lectureId") Long lectureId) {
-        WishListCreateResponse response = wishListFacade.create(attendeeId, lectureId);
+    @PostMapping("/{lectureId}")
+    public ResponseEntity<WishListCreateResponse> create(@PathVariable("lectureId") Long lectureId) {
+        WishListCreateResponse response = wishListFacade.create(lectureId);
         return ResponseEntity.status(CREATED).body(response);
     }
 
     @Override
-    @DeleteMapping("/{id}/wishlist/{lectureId}")
-    public ResponseEntity<WishListDeleteResponse> delete(@PathVariable("id") Long attendeeId,
-                                                         @PathVariable("lectureId") Long lectureId) {
-        WishListDeleteResponse response = wishListFacade.delete(attendeeId, lectureId);
-        return ResponseEntity.status(OK).body(response);
+    @DeleteMapping("/{lectureId}")
+    public ResponseEntity<WishListDeleteResponse> delete(@PathVariable("lectureId") Long lectureId) {
+        wishListFacade.delete(lectureId);
+        return ResponseEntity.noContent().build();
     }
 }

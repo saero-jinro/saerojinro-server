@@ -34,7 +34,7 @@ public class LectureFacade {
 
 	@Transactional(readOnly = true)
 	public LectureDetailResponse getByLectureId(long lectureId) {
-		Lecture lecture = lectureService.getByLectureId(lectureId);
+		Lecture lecture = lectureService.getById(lectureId);
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
