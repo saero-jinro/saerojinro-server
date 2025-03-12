@@ -2,6 +2,7 @@ package goorm.saerojinro.api.lecture.presentation.response;
 
 import java.util.List;
 
+import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -15,9 +16,12 @@ public record LectureListResponseByAll(
 	@Schema(description = "총 강의 개수", example = "10")
 	long totalCount
 ) {
-	public static LectureListResponseByAll from(List<LectureResponseByAll> lectures) {
+	public static LectureListResponseByAll from(List<Lecture> lectures) {
 		return LectureListResponseByAll.builder()
-			.lectures(lectures)
+			.lectures(lectures.stream()
+				.map(LectureResponseByAll::from)
+				.toList()
+			)
 			.totalCount(lectures != null ? lectures.size() : 0)
 			.build();
 	}

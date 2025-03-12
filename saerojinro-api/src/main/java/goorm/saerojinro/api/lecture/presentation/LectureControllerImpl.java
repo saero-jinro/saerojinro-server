@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RestController
@@ -33,12 +34,19 @@ public class LectureControllerImpl implements LectureController {
 	}
 
 	@Override
-	@GetMapping(("/date"))
+	@GetMapping("/date")
 	public ResponseEntity<LectureListResponseByDate> getByDate(@RequestParam("day") String day) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 		LocalDate localDate = LocalDate.parse(day, formatter);
 
 		LectureListResponseByDate response = lectureFacade.getByDate(localDate);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/recommendations")
+	public ResponseEntity<LectureListResponseByAll> getRecommendationLectures(LocalDateTime lectureStartTime) {
+		LectureListResponseByAll response = lectureFacade.getRecommendationLectures(lectureStartTime);
 		return ResponseEntity.ok(response);
 	}
 }
