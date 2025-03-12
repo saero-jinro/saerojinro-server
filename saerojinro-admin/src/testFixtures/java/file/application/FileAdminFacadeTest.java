@@ -44,8 +44,8 @@ public class FileAdminFacadeTest {
 	}
 
 	@Test
-	@DisplayName("파일 저장에 성공한다")
-	public void saveFile_Success() {
+	@DisplayName("강의 썸네일저장에 성공한다")
+	public void saveLecturePhoto_Success() {
 //		 given
 		byte[] data = TEST_FILE_URI.getBytes();
 		when(mockRestTemplate.getForObject(TEST_FILE_URI, byte[].class)).thenReturn(data);
@@ -53,7 +53,24 @@ public class FileAdminFacadeTest {
 		FileSaveRequest request = new FileSaveRequest(TEST_FILE_URI);
 
 		// when
-		FileSaveResponse response = fileAdminFacade.saveFile(request);
+		FileSaveResponse response = fileAdminFacade.saveLecturePhoto(request);
+
+		// then
+		assertNotNull(response.id());
+		assertNotNull(response.physicalPath());
+	}
+
+	@Test
+	@DisplayName("강의 썸네일저장에 성공한다")
+	public void saveSpeakerPhoto_Success() {
+//		 given
+		byte[] data = TEST_FILE_URI.getBytes();
+		when(mockRestTemplate.getForObject(TEST_FILE_URI, byte[].class)).thenReturn(data);
+
+		FileSaveRequest request = new FileSaveRequest(TEST_FILE_URI);
+
+		// when
+		FileSaveResponse response = fileAdminFacade.saveSpeakerPhoto(request);
 
 		// then
 		assertNotNull(response.id());
@@ -68,7 +85,7 @@ public class FileAdminFacadeTest {
 		when(mockRestTemplate.getForObject(TEST_FILE_URI, byte[].class)).thenReturn(dummyData);
 
 		FileSaveRequest request = new FileSaveRequest(TEST_FILE_URI);
-		FileSaveResponse saveResponse = fileAdminFacade.saveFile(request);
+		FileSaveResponse saveResponse = fileAdminFacade.saveLecturePhoto(request);
 
 		// when
 		var readResponse = fileAdminFacade.findById(saveResponse.id());

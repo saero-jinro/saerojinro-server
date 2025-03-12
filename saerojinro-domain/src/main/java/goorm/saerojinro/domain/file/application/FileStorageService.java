@@ -5,6 +5,7 @@ import goorm.saerojinro.domain.file.exception.FileSaveFailedException;
 import goorm.saerojinro.domain.file.exception.FileSizeRetrievalFailedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,19 +15,26 @@ import java.nio.file.Paths;
 @Service
 public class FileStorageService {
 
-	private final RestTemplate restTemplate = new RestTemplate();
-	private final String uploadDir = "uploads/";
+	private static final String DEFAULT_UPLOAD_DIR = "uploads/";
 
-	public String storeFileFromUri(String fileUri) {
-		byte[] fileBytes = restTemplate.getForObject(fileUri, byte[].class);
+	private final RestTemplate restTemplate;
+
+	public FileStorageService() {
+		this.restTemplate = new RestTemplate();
+	}
+
+	public String storeFileFromUri(String fileUri, String baseDir) {
+		String encodedUrl = encodeUrl(fileUri);
+
+		byte[] fileBytes = restTemplate.getForObject(encodedUrl, byte[].class);
 		if (fileBytes == null) {
 			throw new FileDownloadFailedException();
 		}
 
-		// 파일명 생성 (현재 시간 기반, 확장자는 추출)
 		String extension = extractExtension(fileUri);
-		String fileName = "file_" + System.currentTimeMillis() + extension;
-		Path path = Paths.get(uploadDir, fileName);
+		String fileName = System.currentTimeMillis() + extension;
+
+		Path path = Paths.get(DEFAULT_UPLOAD_DIR, baseDir, fileName);
 		try {
 			Files.createDirectories(path.getParent());
 			Files.write(path, fileBytes);
@@ -36,9 +44,27 @@ public class FileStorageService {
 		return path.toString();
 	}
 
+	private String encodeUrl(String fileUri) {
+		try {
+			String encodedUrl = UriComponentsBuilder.fromUriString(fileUri)
+				.encode()
+				.toUriString();
+
+			//
+			return encodedUrl.replace("(", "%28").replace(")", "%29");
+		} catch (Exception e) {
+			return fileUri;
+		}
+	}
+
 	private String extractExtension(String fileUri) {
-		int idx = fileUri.lastIndexOf('.');
-		return (idx != -1) ? fileUri.substring(idx) : "";
+		int queryIdx = fileUri.indexOf('?');
+		String uriWithoutQuery = (queryIdx != -1)
+			? fileUri.substring(0, queryIdx)
+			: fileUri;
+
+		int idx = uriWithoutQuery.lastIndexOf('.');
+		return (idx != -1) ? uriWithoutQuery.substring(idx) : "";
 	}
 
 	public Long getFileSize(String storedPath) {

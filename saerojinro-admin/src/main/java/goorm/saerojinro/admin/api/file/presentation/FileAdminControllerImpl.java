@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.*;
 public class FileAdminControllerImpl implements FileAdminController {
 	private final FileAdminFacade fileAdminFacade;
 
-	@Override
-	@PostMapping
-	public ResponseEntity<FileSaveResponse> create(@RequestBody FileSaveRequest request) {
-		FileSaveResponse response = fileAdminFacade.saveFile(request);
+	@PostMapping("/lecture")
+	public ResponseEntity<FileSaveResponse> saveLecturePhoto(FileSaveRequest request) {
+		FileSaveResponse response = fileAdminFacade.saveLecturePhoto(request);
 		return ResponseEntity.ok(response);
 	}
+
+	@PostMapping("/speaker")
+	public ResponseEntity<FileSaveResponse> saveSpeakerPhoto(FileSaveRequest request) {
+		FileSaveResponse response = fileAdminFacade.saveSpeakerPhoto(request);
+		return ResponseEntity.ok(response);	}
 }
