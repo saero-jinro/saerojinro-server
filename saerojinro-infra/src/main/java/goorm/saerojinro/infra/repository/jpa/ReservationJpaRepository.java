@@ -16,7 +16,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
             "WHERE r.user.id = :userId " +
             "AND r.lecture.startTime = :startTime")
-    boolean existsByUserAndStartTime(@Param("userId") Long userId,
+    boolean existsByUserIdAndStartTime(@Param("userId") Long userId,
                                      @Param("startTime") LocalDateTime startTime);
 
     List<Reservation> findAllByUserId(Long userId);
