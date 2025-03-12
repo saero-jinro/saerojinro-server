@@ -40,7 +40,6 @@ public class LectureFacadeTest {
 
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
-	private static final String EMAIL_2 = "google_2@mail.com";
 	private static final String POSITION = "00 기업 CEO";
 	private static final String  INTRODUCTION = "AA 기업  - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
@@ -138,7 +137,6 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("주어진 날짜에 해당하는 강의를 조회할 수 있다")
 	void getByDate_success() {
-		// given: lecture1, lecture2 모두 2025-03-01에 시작
 		LocalDate date = LocalDate.of(2025, 3, 1);
 
 		// when

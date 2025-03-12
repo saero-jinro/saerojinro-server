@@ -51,7 +51,7 @@ public class ReservationFacade {
             throw e;
         }
     }
-    
+
     @Transactional
     public void cancel(Long lectureId){
         User user = userQueryService.me();
