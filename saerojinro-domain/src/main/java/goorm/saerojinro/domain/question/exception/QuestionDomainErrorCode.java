@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.questions.exception;
+package goorm.saerojinro.domain.question.exception;
 
 import goorm.saerojinro.common.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
-public enum QuestionsDomainErrorCode implements ExceptionCode {
+public enum QuestionDomainErrorCode implements ExceptionCode {
     QUESTIONS_NOT_FOUND(NOT_FOUND, "해당하는 질문 데이터가 없습니다."),
     FORBIDDEN_QUESTIONS(FORBIDDEN, "해당하는 질문 데이터에 대한 권한이 없습니다.");
 

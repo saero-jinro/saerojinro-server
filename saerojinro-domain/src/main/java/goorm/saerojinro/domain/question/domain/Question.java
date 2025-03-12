@@ -1,4 +1,4 @@
-package goorm.saerojinro.domain.questions.domain;
+package goorm.saerojinro.domain.question.domain;
 
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -14,7 +14,7 @@ import static jakarta.persistence.GenerationType.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Questions extends BaseTimeEntity {
+public class Question extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -30,8 +30,8 @@ public class Questions extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    public static Questions create(User user, Lecture lecture, String content){
-        return Questions.builder()
+    public static Question create(User user, Lecture lecture, String content){
+        return Question.builder()
                 .user(user)
                 .lecture(lecture)
                 .content(content)
