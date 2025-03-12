@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DashboardFacade {
 	private final DashboardService dashboardService;
-	private final LectureQueryService lectureQueryService;
 
 	public DashboardResponse getDashboard() {
 		List<Dashboard> dashboardList = dashboardService.findAll();
@@ -32,7 +31,7 @@ public class DashboardFacade {
 			.toList();
 
 		List<Dashboard> low = dashboardList.stream()
-			.sorted(Comparator.comparing(Dashboard::getSum).reversed())
+			.sorted(Comparator.comparing(Dashboard::getSum))
 			.limit(10)
 			.toList();
 

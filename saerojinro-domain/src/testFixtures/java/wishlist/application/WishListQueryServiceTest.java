@@ -129,4 +129,15 @@ public class WishListQueryServiceTest {
         // then
         assertThat(isExist).isTrue();
     }
+
+    @Test
+    @DisplayName("countByLectureId 는 강의 아이디로 즐겨찾기 수를 확인 한다.")
+    public void countByLectureId_Success(){
+        // given
+        // when
+        int count = wishListQueryService.countByLectureId(LECTURE_ID);
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
 }
