@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WishListRepository {
-
     List<WishList> findAllByUser(User user);
 
-    Optional<WishList> findByUserAndLecture(User user, Lecture lecture);
+    Optional<WishList> findByUserAndLectureId(User user, Long lectureId);
 
     boolean existsByUserAndLecture(User user, Lecture lecture);
 

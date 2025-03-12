@@ -79,7 +79,7 @@ public class LectureCommandServiceTest {
 		);
 
 		// when
-		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
+		Lecture findLecture = lectureQueryService.getById(createdLecture.getId());
 		lectureCommandService.update(
 			findLecture.getId(), "updated title", "updated contents",
 			MAX_CAPACITY, START_TIME, END_TIME, LOCATION, CATEGORY);
@@ -108,7 +108,7 @@ public class LectureCommandServiceTest {
 		);
 
 		// when
-		Lecture findLecture = lectureQueryService.getByLectureId(createdLecture.getId());
+		Lecture findLecture = lectureQueryService.getById(createdLecture.getId());
 		lectureCommandService.delete(findLecture.getId());
 
 		// then

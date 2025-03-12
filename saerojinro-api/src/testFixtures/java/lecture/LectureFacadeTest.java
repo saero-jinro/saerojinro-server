@@ -121,9 +121,9 @@ public class LectureFacadeTest {
 
 	@Test
 	@DisplayName("전체 강의 목록을 리스트로 조회할 수 있다")
-	void getAllLecture_success() {
+	void getAll_success() {
 		// when
-		LectureListResponseByAll response = lectureFacade.getAllLecture();
+		LectureListResponseByAll response = lectureFacade.getAll();
 
 		// then
 		assertNotNull(response);
@@ -136,8 +136,8 @@ public class LectureFacadeTest {
 
 	@Test
 	@DisplayName("강의 아이디로 강의 상세 정보를 조회할 수 있다")
-	void getByLectureId_success() {
-		LectureDetailResponse detail = lectureFacade.getByLectureId(1L);
+	void getById_success() {
+		LectureDetailResponse detail = lectureFacade.getById(1L);
 
 		assertNotNull(detail);
 		assertEquals("Lecture One", detail.title());
@@ -147,7 +147,7 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("존재하지 않는 강의 ID면 예외를 반환한다")
 	void getByLectureId_notFound() {
-		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getByLectureId(999L));
+		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getById(999L));
 	}
 
 	@Test

@@ -22,7 +22,7 @@ public class LogEventService {
 	@Transactional
 	public LogEvent save(String record, LogEventDto logEventDto) {
 		User user = userQueryService.getById(logEventDto.userId());
-		Lecture lecture = lectureQueryService.getByLectureId(logEventDto.lectureId());
+		Lecture lecture = lectureQueryService.getById(logEventDto.lectureId());
 		LogEvent logEvent = LogEvent.create(record, user, lecture, logEventDto.logEventType(), logEventDto.category());
 
 		return logEventRepository.save(logEvent);

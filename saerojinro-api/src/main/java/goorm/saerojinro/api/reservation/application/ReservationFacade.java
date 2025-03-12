@@ -1,6 +1,5 @@
 package goorm.saerojinro.api.reservation.application;
 
-import goorm.saerojinro.api.reservation.presentation.response.ReservationCancelResponse;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -22,31 +21,22 @@ public class ReservationFacade {
     private final ReservationCommandService reservationCommandService;
 
     @Transactional
-    public ReservationCreateResponse create(Long userId, Long lectureId) {
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+    public ReservationCreateResponse create(Long lectureId) {
+        User user = userQueryService.me();
+        Lecture lecture = lectureQueryService.getById(lectureId);
+
+        reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
 
         Reservation reservation = reservationCommandService.create(user, lecture);
-
         return ReservationCreateResponse.from(reservation);
     }
 
     @Transactional
-    public ReservationCancelResponse cancel(Long userId, Long lectureId){
-        User user = getUser(userId);
-        Lecture lecture = getLecture(lectureId);
+    public void cancel(Long lectureId){
+        User user = userQueryService.me();
 
-        Reservation reservation = reservationQueryService.getByUserAndLecture(user, lecture);
+        Reservation reservation = reservationQueryService.getByUserAndLecture(user.getId(), lectureId);
         reservationCommandService.cancel(reservation);
-
-        return ReservationCancelResponse.from(reservation);
     }
 
-    private User getUser(Long userId) {
-        return userQueryService.getById(userId);
-    }
-
-    private Lecture getLecture(Long lectureId) {
-        return lectureQueryService.getByLectureId(lectureId);
-    }
 }

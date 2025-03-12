@@ -85,7 +85,8 @@ public class NotificationUserAdminFacadeTest {
 	void sendNotificationByLectureId_Success() {
 		// given
 		Lecture lecture = Lecture.builder().id(1L).build();
-		reservationRepository.save(Reservation.createReservation(user, lecture));
+
+		reservationRepository.save(Reservation.create(user, lecture));
 
 		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)

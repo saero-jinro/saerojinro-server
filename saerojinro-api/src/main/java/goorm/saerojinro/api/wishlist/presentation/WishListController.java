@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.wishlist.presentation;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
-import goorm.saerojinro.api.wishlist.presentation.response.WishListDeleteResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "WishList", description = "즐겨찾기 API")
 public interface WishListController {
-
     @Operation(
             summary = "즐겨찾기 조회",
             description = "유저 ID로 즐겨찾기 목록을 조회 합니다.",
@@ -24,7 +22,7 @@ public interface WishListController {
                     )
             }
     )
-    ResponseEntity<WishListResponse> getAllWishList(@PathVariable("id") Long attendeeId);
+    ResponseEntity<WishListResponse> getAllWishList();
 
     @Operation(
             summary = "즐겨찾기 생성",
@@ -36,19 +34,12 @@ public interface WishListController {
                     )
             }
     )
-    ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long attendeeId,
-                                                  @PathVariable("lectureId") Long lectureId);
+    ResponseEntity<WishListCreateResponse> create(@PathVariable("lectureId") Long lectureId);
 
     @Operation(
             summary = "즐겨찾기 삭제",
             description = "유저 ID와 강의 ID를 통해 즐겨찾기를 삭제 합니다.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = WishListDeleteResponse.class))
-                    )
-            }
+            responses = @ApiResponse(responseCode = "204")
     )
-    ResponseEntity<WishListDeleteResponse> delete(@PathVariable("id") Long attendeeId,
-                                                  @PathVariable("lectureId") Long lectureId);
+    ResponseEntity<Void> delete(@PathVariable("lectureId") Long lectureId);
 }

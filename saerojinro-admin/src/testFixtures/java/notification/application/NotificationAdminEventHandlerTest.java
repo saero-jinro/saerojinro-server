@@ -81,7 +81,7 @@ public class NotificationAdminEventHandlerTest {
 		);
 		emitterRepository.save(1L);
 		Lecture lecture = Lecture.builder().id(1L).build();
-		reservationRepository.save(Reservation.createReservation(userEntity, lecture));
+		reservationRepository.save(Reservation.create(userEntity, lecture));
 
 		event = CommonEvent.builder()
 			.eventType(BROADCAST_NOTICE)

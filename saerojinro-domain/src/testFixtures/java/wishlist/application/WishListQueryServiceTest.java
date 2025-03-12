@@ -91,17 +91,16 @@ public class WishListQueryServiceTest {
 
     @Test
     @DisplayName("getByUserAndLecture 는 유저 아이디와 강의 아이디에 해당하는 즐겨찾기 정보를 조회할 수 있다.")
-    public void getByUserAndLecture_Success(){
+    public void getByUserAndLectureId_Success(){
         // given
         User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
 
         // when
-        WishList findWishList = wishListQueryService.getByUserAndLecture(user, lecture);
+        WishList findWishList = wishListQueryService.getByUserAndLectureId(user, LECTURE_ID);
 
         // then
         assertThat(findWishList.getUser().getId()).isEqualTo(user.getId());
-        assertThat(findWishList.getLecture().getId()).isEqualTo(lecture.getId());
+        assertThat(findWishList.getLecture().getId()).isEqualTo(LECTURE_ID);
     }
 
     @Test
@@ -109,11 +108,10 @@ public class WishListQueryServiceTest {
     public void getByUserAndLecture_WishListNotFoundException(){
         // given
         User user = createUser(2L);
-        Lecture lecture = createLecture(LECTURE_ID);
 
         // then
         assertThrows(WishListNotFoundException.class,
-                () -> wishListQueryService.getByUserAndLecture(user, lecture));
+                () -> wishListQueryService.getByUserAndLectureId(user, LECTURE_ID));
     }
 
     @Test

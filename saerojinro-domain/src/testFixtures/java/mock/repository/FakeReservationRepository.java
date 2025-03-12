@@ -1,11 +1,9 @@
 package mock.repository;
 
-
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
-import goorm.saerojinro.domain.user.domain.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,22 +32,24 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture) {
-        return findByUserAndLecture(user, lecture).isPresent();
+    public boolean existByUserIdAndStartTime(Long userId, LocalDateTime startTime) {
+        return data.stream()
+                .anyMatch(r -> r.getUser().getId().equals(userId) &&
+                        r.getLecture().getStartTime().equals(startTime));
     }
 
     @Override
-    public List<Reservation> findByUser(User user) {
+    public List<Reservation> findByUserId(Long userId) {
         return data.stream()
-                .filter( r -> r.getUser().getId().equals(user.getId()))
+                .filter( r -> r.getUser().getId().equals(userId))
                 .toList();
     }
 
     @Override
-    public Optional<Reservation> findByUserAndLecture(User user, Lecture lecture) {
+    public Optional<Reservation> findByUserIdAndLectureId(Long userId, Long lectureId) {
         return data.stream()
-                .filter( r -> r.getUser().getId().equals(user.getId()) &&
-                        r.getLecture().getId().equals(lecture.getId()))
+                .filter( r -> r.getUser().getId().equals(userId) &&
+                        r.getLecture().getId().equals(lectureId))
                 .findFirst();
     }
 
