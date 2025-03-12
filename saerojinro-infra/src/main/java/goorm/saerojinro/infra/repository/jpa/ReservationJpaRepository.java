@@ -1,8 +1,6 @@
 package goorm.saerojinro.infra.repository.jpa;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
-import goorm.saerojinro.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

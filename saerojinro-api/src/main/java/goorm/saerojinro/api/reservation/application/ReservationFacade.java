@@ -6,7 +6,6 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
-import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;

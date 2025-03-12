@@ -1,9 +1,7 @@
 package goorm.saerojinro.infra.repository.impl;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
-import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.infra.repository.jpa.ReservationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
