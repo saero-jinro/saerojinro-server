@@ -41,12 +41,12 @@ public class ReservationDomainTest {
                 .category(CATEGORY)
                 .build();
 
-        reservation = Reservation.createReservation(user, lecture);
+        reservation = Reservation.create(user, lecture);
     }
 
     @Test
     @DisplayName("Reservation 을 생성한다.")
-    void createReservation_Success(){
+    void create_Success(){
         assertNotNull(reservation);
         assertThat(reservation.getUser().getId()).isEqualTo(USER_ID);
         assertThat(reservation.getLecture().getId()).isEqualTo(LECTURE_ID);

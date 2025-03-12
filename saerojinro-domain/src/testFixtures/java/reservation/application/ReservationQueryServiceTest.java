@@ -49,17 +49,13 @@ public class ReservationQueryServiceTest {
                 .category(CATEGORY)
                 .build();
 
-        Reservation reservation = Reservation.createReservation(user, lecture);
+        Reservation reservation = Reservation.create(user, lecture);
         reservationRepository.save(reservation);
     }
 
-    private User createUser(Long id) {
-        return User.builder().id(id).build();
-    }
-
-    private Lecture createLecture(Long id) {
+    private Lecture createLecture() {
         return Lecture.builder()
-                .id(id)
+                .id(LECTURE_ID)
                 .title(LECTURE_TITLE)
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
@@ -72,12 +68,9 @@ public class ReservationQueryServiceTest {
     @Test
     @DisplayName("getAllReservationByUser 는 유저에 해당하는 모든 예약 정보를 조회 할 수 있다.")
     public void getAllReservationByUser_Success(){
-        //given
-        User user = createUser(USER_ID);
-
         //when
         List<Reservation> findReservations = reservationQueryService.getAllReservationByUser(
-                user);
+                USER_ID);
 
         //then
         assertThat(findReservations)
@@ -93,44 +86,33 @@ public class ReservationQueryServiceTest {
     @Test
     @DisplayName("getByUserAndLecture 는 해당하는 유저와 강의에 대한 예약 정보를 조회 할 수 있다")
     public void getByUserAndLecture_Success(){
-        //given
-        User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
-
         //when
         Reservation findReservation = reservationQueryService.getByUserAndLecture(
-                user, lecture);
+                USER_ID, LECTURE_ID);
 
         //then
         assertThat(findReservation.getUser().getId()).isEqualTo(USER_ID);
         assertThat(findReservation.getLecture().getId()).isEqualTo(LECTURE_ID);
-
     }
 
     @Test
     @DisplayName("getByUserAndLecture 는 해당하는 예약 정보가 없을 시, ReservationNotFoundException 예외를 발생 시킨다.")
     public void getByUserAndLecture_ReservationNotFoundException(){
-        //given
-        User user = createUser(2L);
-        Lecture lecture = createLecture(LECTURE_ID);
-
         //then
         assertThrows(ReservationNotFoundException.class,
-                () -> reservationQueryService.getByUserAndLecture(user, lecture));
-
+                () -> reservationQueryService.getByUserAndLecture(2L, LECTURE_ID));
     }
 
     @Test
     @DisplayName("existsCheck 는 해당하는 유저와 강의에 대한 예약 정보가 존재하는지 확인 할 수 있다.")
     public void existsCheck_Success(){
-        //given
-        User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
+        // given
+        Lecture lecture = createLecture();
 
-        //when
-        boolean isExist = reservationQueryService.existsCheckByStartTime(user, lecture);
+        // when
+        boolean isExist = reservationQueryService.existsCheckByUserAndStartTime(USER_ID, lecture.getStartTime());
 
-        //then
+        // then
         assertThat(isExist).isTrue();
     }
 

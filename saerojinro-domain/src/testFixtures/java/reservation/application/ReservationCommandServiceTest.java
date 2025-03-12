@@ -84,7 +84,7 @@ public class ReservationCommandServiceTest {
         reservationCommandService.cancel(reservation);
 
         // then
-        boolean exists = reservationQueryService.existsCheckByStartTime(user, lecture);
+        boolean exists = reservationQueryService.existsCheckByUserAndStartTime(USER_ID, lecture.getStartTime());
         assertThat(exists).isFalse();
     }
 
