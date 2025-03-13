@@ -3,8 +3,6 @@ package goorm.saerojinro.admin.api.lecture.application;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
-import goorm.saerojinro.domain.file.application.FileQueryService;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
@@ -18,27 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 	private final SpeakerCommandService speakerCommandService;
-	private final FileQueryService fileQueryService;
 
 	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
-		File speakerPhoto = fileQueryService.getFileByUri(request.speakerPhotoUri());
-		File lecturePhoto = fileQueryService.getFileByUri(request.lecturePhotoUri());
-
 		Speaker speaker = speakerCommandService.create(
 			request.speakerName(),
 			request.speakerEmail(),
 			request.speakerPosition(),
 			request.speakerIntroduction(),
 			request.speakerFilmography(),
-			speakerPhoto
+			request.speakerPhotoUri()
 		);
 
 		Lecture lecture = lectureCommandService.create(
 			speaker,
 			request.title(),
 			request.contents(),
-			lecturePhoto,
+			request.thumbnailUri(),
+			request.materialsUri(),
 			request.maxCapacity(),
 			request.startTime(),
 			request.endTime(),

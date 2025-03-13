@@ -17,6 +17,9 @@ public record LectureDetailResponse(
 	@Schema(description = "강의 내용", example = "Part 1: 온오프라인 경험을 연결하는 네이버 지도가 공간지능과 만나 제공하게 될 미래 모습을 소개합니다.", requiredMode = REQUIRED)
 	String contents,
 
+	@Schema(description = "강의 자료 Uri", example = "uploads/lecture/materials/123456789.jpg")
+	String materialsUri,
+
 	@Schema(description = "강의 카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	Category category,
 
@@ -29,29 +32,19 @@ public record LectureDetailResponse(
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location,
 
-	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
-	String speakerName,
-
-	@Schema(description = "강연자 회사, 직급", example = "블라블라 스타트업 CEO", requiredMode = REQUIRED)
-	String speakerPosition,
-
-	@Schema(description = "한 줄 소개", example = "안녕하세요 OO 기업에서 OO를 담당하는 OOO 입니다.", requiredMode = REQUIRED)
-	String speakerIntroduction,
-
-	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
-	String image
+	@Schema(description = "강연자 ID", example = "1L", requiredMode = REQUIRED)
+	Long speakerId
 ) {
 	public static LectureDetailResponse from(Lecture lecture) {
 		return LectureDetailResponse.builder()
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
+			.materialsUri(lecture.getMaterialsUri())
 			.category(lecture.getCategory())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
-			.speakerName(lecture.getSpeaker().getName())
-			.speakerPosition(lecture.getSpeaker().getPosition())
-			.speakerIntroduction(lecture.getSpeaker().getIntroduction())
+			.speakerId(lecture.getSpeaker().getId())
 			.build();
 	}
 }

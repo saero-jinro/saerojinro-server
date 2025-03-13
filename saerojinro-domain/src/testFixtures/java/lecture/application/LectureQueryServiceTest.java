@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -27,54 +26,42 @@ public class LectureQueryServiceTest {
 	private Lecture lecture1;
 	private Lecture lecture2;
 
-	private static final String LOGICAL_NAME = "FileDomain";
-	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
-	private static final Long FILE_SIZE = 1024L;
-	private static final String EXTENSION = ".java";
+	private static final String NAME = "Cole palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 / CEO";
+	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
+	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+	private static final String IMAGE_URI = "uploads/speaker";
 
-	private static final File file = File.builder()
-		.logicalName(LOGICAL_NAME)
-		.physicalPath(PHYSICAL_PATH)
-		.fileSize(FILE_SIZE)
-		.extension(EXTENSION)
-		.build();
+	private static final String TITLE = "Title";
+	private static final String CONTENTS = "Contents";
+	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
+	private static final String MATERIAL_URI = "uploads/lecture/material";
+	private static final Long MAX_CAPACITY = 100L;
+	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
+	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
+	private static final String LOCATION = "Location";
+	private static final Category CATEGORY = Category.BACKEND;
 
 	@BeforeEach
 	void setUp() {
 		FakeLectureRepository fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		final Speaker SPEAKER = Speaker.builder()
-			.name("Cole palmer")
-			.email("google@mail.com")
-			.position("00 기업 CEO")
-			.introduction("안녕하세요 반가워용")
-			.filmography("AA 기업  - 백엔드 개발")
-			.file(file)
-			.build();
+		Speaker SPEAKER = Speaker.create(
+			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, IMAGE_URI
+		);
 
 		lecture1 = fakeLectureRepository.save(Lecture.create(
-			SPEAKER,
-			"Lecture One",
-			"Content One",
-			file,
-			100L,
-			LocalDateTime.of(2025, 3, 1, 10, 0),
-			LocalDateTime.of(2025, 3, 1, 12, 0),
-			"Location One",
-			BACKEND)
+				SPEAKER, TITLE, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
+				START_TIME, END_TIME, LOCATION, CATEGORY
+			)
 		);
 
 		lecture2 = fakeLectureRepository.save(Lecture.create(
-			SPEAKER,
-			"Lecture Two",
-			"Content Two",
-			file,
-			100L,
-			LocalDateTime.of(2025, 3, 1, 10, 0),
-			LocalDateTime.of(2025, 3, 1, 12, 0),
-			"Location Two",
-			FRONTEND)
+				SPEAKER, TITLE, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
+				START_TIME, END_TIME, LOCATION, CATEGORY
+			)
 		);
 	}
 

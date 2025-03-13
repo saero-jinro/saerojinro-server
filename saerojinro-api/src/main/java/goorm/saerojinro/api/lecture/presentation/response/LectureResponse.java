@@ -30,7 +30,7 @@ public record LectureResponse(
 	String speakerName,
 
 	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
-	String image
+	String speakerImageUri
 ) {
 	public static LectureResponse from(Lecture lecture) {
 		return LectureResponse.builder()
@@ -40,7 +40,7 @@ public record LectureResponse(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.speakerName(lecture.getSpeaker().getName())
-			.image(lecture.getSpeaker().getFile().getPhysicalPath())
+			.speakerImageUri(lecture.getSpeaker().getImageUri())
 			.build();
 	}
 }

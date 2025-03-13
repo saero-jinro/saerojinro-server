@@ -2,13 +2,16 @@ package mock.repository;
 
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class FakeReservationRepository implements ReservationRepository {
     private final List<Reservation> data = Collections.synchronizedList(new ArrayList<>());
@@ -66,5 +69,15 @@ public class FakeReservationRepository implements ReservationRepository {
             .filter(r -> r.getLecture().getId().equals(lectureId))
             .toList()
             .size();
+    }
+
+    @Override
+    public List<LectureReservationCountDto> countReservationAllLecture() {
+        Map<Long, Long> counts = data.stream()
+            .collect(Collectors.groupingBy(r -> r.getLecture().getId(), Collectors.counting()));
+
+        return counts.entrySet().stream()
+            .map(entry -> new LectureReservationCountDto(entry.getKey(), entry.getValue()))
+            .toList();
     }
 }

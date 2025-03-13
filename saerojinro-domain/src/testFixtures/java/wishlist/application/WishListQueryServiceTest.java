@@ -6,9 +6,9 @@ import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import goorm.saerojinro.domain.wishlist.exception.WishListNotFoundException;
 import mock.repository.FakeWishListRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WishListQueryServiceTest {
     private WishListQueryService wishListQueryService;
@@ -126,5 +127,28 @@ public class WishListQueryServiceTest {
 
         // then
         assertThat(isExist).isTrue();
+    }
+
+    @Test
+    @DisplayName("countByLectureId 는 강의 아이디로 즐겨찾기 수를 확인 한다.")
+    public void countByLectureId_Success(){
+        // given
+        // when
+        int count = wishListQueryService.countByLectureId(LECTURE_ID);
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("getWishlistAllLecture 는 lecture 별 Wishlist 의 개수를 센다.")
+    public void getWishlistAllLecture_Success(){
+        // when
+        List<LectureWishlistCountDto> allLecture = wishListQueryService.getWishlistAllLecture();
+
+        // then
+        assertEquals(1, allLecture.size());
+        assertEquals(1L, allLecture.get(0).lectureId());
+        assertEquals(1L, allLecture.get(0).wishlistCount());
     }
 }

@@ -7,14 +7,9 @@ import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequ
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.application.FileCommandService;
-import goorm.saerojinro.domain.file.application.FileQueryService;
-import goorm.saerojinro.domain.file.application.FileStorageService;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
-import mock.repository.FakeFileRepository;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeSpeakerRepository;
 
@@ -29,77 +24,62 @@ public class LectureUserAdminFacadeTest {
 	private LectureAdminFacade lectureAdminFacade;
 	private LectureCommandService lectureCommandService;
 	private SpeakerCommandService speakerCommandService;
-	private FileQueryService fileQueryService;
-	private FileCommandService fileCommandService;
-	private FileStorageService fileStorageService;
 
 	private FakeLectureRepository lectureRepository;
 	private FakeSpeakerRepository speakerRepository;
-	private FakeFileRepository fileRepository;
 
-	private static final String TITLE = "Lecture Title";
-	private static final String CONTENTS = "Lecture Contents";
+	private static final String NAME = "Cole palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 / CEO";
+	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
+	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+	private static final String IMAGE_URI = "uploads/speaker";
+
+	private static final String TITLE = "Title";
+	private static final String CONTENTS = "Contents";
+	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
+	private static final String MATERIAL_URI = "uploads/lecture/material";
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
-	private static final String LOCATION = "room A";
+	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
 
-	private static final String EMAIL = "google@mail.com";
-	private static final String POSITION = "00 기업 CEO";
-	private static final String INTRODUCTION = "AA 기업 - 백엔드 개발";
-	private static final String FILMOGRAPHY = "Location";
-
-	private static final String LOGICAL_NAME = "speaker_photo";
-	private static final String PHYSICAL_PATH = "uploads/file_1680123456.jpg";
-	private static final Long FILE_SIZE = 12345L;
-	private static final String EXTENSION = "jpg";
-
-	private static final File file = File.builder()
-		.logicalName(LOGICAL_NAME)
-		.physicalPath(PHYSICAL_PATH)
-		.fileSize(FILE_SIZE)
-		.extension(EXTENSION)
-		.build();
+	private static LectureCreateRequest request;
 
 	@BeforeEach
 	public void setUp() {
 		lectureRepository = new FakeLectureRepository();
 		speakerRepository = new FakeSpeakerRepository();
-		fileRepository = new FakeFileRepository();
 
 		lectureCommandService = new LectureCommandService(lectureRepository);
 		speakerCommandService = new SpeakerCommandService(speakerRepository);
-		fileQueryService = new FileQueryService(fileRepository);
-		fileCommandService = new FileCommandService(fileRepository);
-		fileStorageService = new FileStorageService();
 
-		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService, fileQueryService);
+		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService);
 
-		File file = File.create(LOGICAL_NAME, PHYSICAL_PATH, FILE_SIZE, EXTENSION);
-		fileRepository.save(file);
+		request = LectureCreateRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.thumbnailUri(THUMBNAIL_URI)
+			.materialsUri(MATERIAL_URI)
+			.maxCapacity(MAX_CAPACITY)
+			.startTime(START_TIME)
+			.endTime(END_TIME)
+			.location(LOCATION)
+			.category(CATEGORY)
+			.speakerName(NAME)
+			.speakerEmail(EMAIL)
+			.speakerPosition(POSITION)
+			.speakerIntroduction(INTRODUCTION)
+			.speakerFilmography(FILMOGRAPHY)
+			.speakerPhotoUri(IMAGE_URI)
+			.build();
 	}
 
 	@Test
 	@DisplayName("정상적으로 강의를 생성한다")
 	void createLecture_success() {
 		// given
-		LectureCreateRequest request = LectureCreateRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.lecturePhotoUri(PHYSICAL_PATH)
-			.maxCapacity(MAX_CAPACITY)
-			.startTime(START_TIME)
-			.endTime(END_TIME)
-			.location(LOCATION)
-			.category(CATEGORY)
-			.speakerEmail(EMAIL)
-			.speakerPosition(POSITION)
-			.speakerIntroduction(INTRODUCTION)
-			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhotoUri(PHYSICAL_PATH)
-			.build();
-
 		// when
 		LectureCreateResponse response = lectureAdminFacade.create(request);
 
@@ -112,23 +92,7 @@ public class LectureUserAdminFacadeTest {
 	@DisplayName("정상적으로 강의를 수정한다")
 	void updateLecture_success() {
 		// given
-		LectureCreateRequest createRequest = LectureCreateRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.lecturePhotoUri(PHYSICAL_PATH)
-			.maxCapacity(MAX_CAPACITY)
-			.startTime(START_TIME)
-			.endTime(END_TIME)
-			.location(LOCATION)
-			.category(CATEGORY)
-			.speakerEmail(EMAIL)
-			.speakerPosition(POSITION)
-			.speakerIntroduction(INTRODUCTION)
-			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhotoUri(PHYSICAL_PATH)
-			.build();
-
-		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
+		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
 		Long lectureId = createResponse.lectureId();
 
 		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
@@ -158,24 +122,8 @@ public class LectureUserAdminFacadeTest {
 	@Test
 	@DisplayName("정상적으로 강의를 삭제한다")
 	void deleteLecture_success() {
-		// given
-		LectureCreateRequest createRequest = LectureCreateRequest.builder()
-			.title(TITLE)
-			.contents(CONTENTS)
-			.lecturePhotoUri(PHYSICAL_PATH)
-			.maxCapacity(MAX_CAPACITY)
-			.startTime(START_TIME)
-			.endTime(END_TIME)
-			.location(LOCATION)
-			.category(CATEGORY)
-			.speakerEmail(EMAIL)
-			.speakerPosition(POSITION)
-			.speakerIntroduction(INTRODUCTION)
-			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhotoUri(PHYSICAL_PATH)
-			.build();
-
-		LectureCreateResponse createResponse = lectureAdminFacade.create(createRequest);
+		//given
+		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
 		Long lectureId = createResponse.lectureId();
 
 		// when

@@ -29,7 +29,6 @@ public class LectureAdminControllerImpl implements LectureAdminController {
 		return ResponseEntity.noContent().build();
 	}
 
-
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		lectureAdminFacade.delete(id);
