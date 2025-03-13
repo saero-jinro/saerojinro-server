@@ -7,8 +7,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.time.LocalDateTime;
 
 @Tag(name = "WishList", description = "즐겨찾기 API")
 public interface WishListController {
@@ -23,6 +26,20 @@ public interface WishListController {
             }
     )
     ResponseEntity<WishListResponse> getAllWishList();
+
+    @Operation(
+            summary = "시간대별 즐겨찾기 조회",
+            description = "유저 ID 와 시간대 별 즐겨찾기 목록을 조회 합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = WishListResponse.class))
+                    )
+            }
+    )
+    ResponseEntity<WishListResponse> getByUserAndStartTime(@PathVariable("startTime")
+                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                           LocalDateTime startTime);
 
     @Operation(
             summary = "즐겨찾기 생성",

@@ -9,6 +9,7 @@ import goorm.saerojinro.infra.repository.jpa.WishListJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,11 @@ public class WishListRepositoryImpl implements WishListRepository {
     @Override
     public Optional<WishList> findByUserAndLectureId(User user, Long lectureId) {
         return wishListJpaRepository.findByUserAndLectureId(user, lectureId);
+    }
+
+    @Override
+    public List<WishList> findByUserAndStartTime(User user, LocalDateTime startTime){
+        return wishListJpaRepository.findByUserAndStartTime(user, startTime);
     }
 
     @Override

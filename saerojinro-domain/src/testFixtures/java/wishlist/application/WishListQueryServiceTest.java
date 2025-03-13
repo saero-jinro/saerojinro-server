@@ -91,6 +91,25 @@ public class WishListQueryServiceTest {
     }
 
     @Test
+    @DisplayName("getByUserAndStartTime 은 유저 아이디와 강의 시작 시간에 해당하는 즐겨찾기 정보들을 조회할 수 있다.")
+    public void getByUserAndStartTime_Success(){
+        // given
+        User user = createUser(USER_ID);
+
+        // when
+        List<WishList> result = wishListQueryService.getByUserAndStartTime(user, START_TIME);
+
+        // then
+        assertThat(result)
+                .isNotNull()
+                .hasSize(1);
+
+        WishList wishList = result.get(0);
+        assertThat(wishList.getUser().getId()).isEqualTo(USER_ID);
+        assertThat(wishList.getLecture().getId()).isEqualTo(LECTURE_ID);
+    }
+
+    @Test
     @DisplayName("getByUserAndLecture 는 유저 아이디와 강의 아이디에 해당하는 즐겨찾기 정보를 조회할 수 있다.")
     public void getByUserAndLectureId_Success(){
         // given

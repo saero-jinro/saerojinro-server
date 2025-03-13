@@ -4,6 +4,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ public interface WishListRepository {
     List<WishList> findAllByUser(User user);
 
     Optional<WishList> findByUserAndLectureId(User user, Long lectureId);
+
+    List<WishList> findByUserAndStartTime(User user, LocalDateTime startTime);
 
     boolean existsByUserAndLecture(User user, Lecture lecture);
 
