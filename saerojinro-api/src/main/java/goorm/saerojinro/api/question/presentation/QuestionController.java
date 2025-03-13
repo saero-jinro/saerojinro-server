@@ -1,9 +1,9 @@
-package goorm.saerojinro.api.questions.presentation;
+package goorm.saerojinro.api.question.presentation;
 
-import goorm.saerojinro.api.questions.presentation.request.QuestionsCreateRequest;
-import goorm.saerojinro.api.questions.presentation.request.QuestionsUpdateRequest;
-import goorm.saerojinro.api.questions.presentation.response.QuestionsCreateResponse;
-import goorm.saerojinro.api.questions.presentation.response.QuestionsListResponse;
+import goorm.saerojinro.api.question.presentation.request.QuestionCreateRequest;
+import goorm.saerojinro.api.question.presentation.request.QuestionUpdateRequest;
+import goorm.saerojinro.api.question.presentation.response.QuestionCreateResponse;
+import goorm.saerojinro.api.question.presentation.response.QuestionListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "Questions", description = "질문 API")
-public interface QuestionsController {
+@Tag(name = "Question", description = "질문 API")
+public interface QuestionController {
 
     @Operation(
             summary = "모든 질문 조회 API",
@@ -24,8 +24,8 @@ public interface QuestionsController {
     )
     @ApiResponse(
             responseCode = "200",
-            content = @Content(schema = @Schema(implementation = QuestionsListResponse.class)))
-    ResponseEntity<QuestionsListResponse> getAllQuestions();
+            content = @Content(schema = @Schema(implementation = QuestionListResponse.class)))
+    ResponseEntity<QuestionListResponse> getAllQuestions();
 
     @Operation(
             summary = "강의 별 질문 조회 API",
@@ -33,8 +33,8 @@ public interface QuestionsController {
     )
     @ApiResponse(
             responseCode = "200",
-            content = @Content(schema = @Schema(implementation = QuestionsListResponse.class)))
-    ResponseEntity<QuestionsListResponse> getByLecture(@PathVariable("lectureId") Long lectureId);
+            content = @Content(schema = @Schema(implementation = QuestionListResponse.class)))
+    ResponseEntity<QuestionListResponse> getByLecture(@PathVariable("lectureId") Long lectureId);
 
     @Operation(
             summary = "강의 별 질문 생성 API",
@@ -42,13 +42,13 @@ public interface QuestionsController {
     )
     @ApiResponse(
             responseCode = "201",
-            content = @Content(schema = @Schema(implementation = QuestionsCreateResponse.class)))
-    ResponseEntity<QuestionsCreateResponse> create(
+            content = @Content(schema = @Schema(implementation = QuestionCreateResponse.class)))
+    ResponseEntity<QuestionCreateResponse> create(
             @PathVariable("lectureId") Long lectureId,
             @Parameter(
                     description = "질문 생성 request 객체 입니다.",
                     required = true
-            ) @Valid @RequestBody QuestionsCreateRequest request);
+            ) @Valid @RequestBody QuestionCreateRequest request);
 
     @Operation(
             summary = "강의 별 질문 수정 API",
@@ -63,7 +63,7 @@ public interface QuestionsController {
             @Parameter(
                     description = "질문 수정 request 객체 입니다.",
                     required = true
-            ) @Valid @RequestBody QuestionsUpdateRequest request);
+            ) @Valid @RequestBody QuestionUpdateRequest request);
 
     @Operation(
             summary = "강의 별 질문 삭제 API",

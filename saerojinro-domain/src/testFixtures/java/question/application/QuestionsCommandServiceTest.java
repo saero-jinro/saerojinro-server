@@ -2,11 +2,11 @@ package question.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.questions.application.QuestionsCommandService;
-import goorm.saerojinro.domain.questions.domain.Questions;
-import goorm.saerojinro.domain.questions.exception.QuestionsNotFoundException;
+import goorm.saerojinro.domain.question.application.QuestionCommandService;
+import goorm.saerojinro.domain.question.domain.Question;
+import goorm.saerojinro.domain.question.exception.QuestionNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
-import mock.repository.FakeQuestionsRepository;
+import mock.repository.FakeQuestionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 public class QuestionsCommandServiceTest {
-    private QuestionsCommandService questionsCommandService;
-    private FakeQuestionsRepository questionsRepository;
+    private QuestionCommandService questionCommandService;
+    private FakeQuestionRepository questionRepository;
 
     private User user;
     private Lecture lecture;
@@ -36,8 +36,8 @@ public class QuestionsCommandServiceTest {
 
     @BeforeEach
     void init(){
-        questionsRepository = new FakeQuestionsRepository();
-        questionsCommandService = new QuestionsCommandService(questionsRepository);
+        questionRepository = new FakeQuestionRepository();
+        questionCommandService = new QuestionCommandService(questionRepository);
 
         user = User.builder()
                 .id(USER_ID)
@@ -58,7 +58,7 @@ public class QuestionsCommandServiceTest {
     @DisplayName("create 는 질문 데이터를 생성하여 저장 합니다.")
     public void create_Success(){
         // when
-        Questions result = questionsCommandService.create(user, lecture, CONTENT);
+        Question result = questionCommandService.create(user, lecture, CONTENT);
 
         // then
         Assertions.assertNotNull(result);
@@ -70,11 +70,11 @@ public class QuestionsCommandServiceTest {
     @DisplayName("update 는 질문 데이터를 수정 합니다.")
     public void update_Success(){
         // given
-        Questions questions = questionsCommandService.create(user, lecture, CONTENT);
+        Question questions = questionCommandService.create(user, lecture, CONTENT);
         String content = "수정된 질문 입니다.";
 
         // when
-        questionsCommandService.update(questions, content);
+        questionCommandService.update(questions, content);
 
         // then
         assertThat(questions.getContent()).isEqualTo(content);
@@ -84,13 +84,13 @@ public class QuestionsCommandServiceTest {
     @DisplayName("delete 는 질문 데이터를 삭제 합니다.")
     public void delete_Success(){
         // given
-        Questions questions = questionsCommandService.create(user, lecture, CONTENT);
+        Question questions = questionCommandService.create(user, lecture, CONTENT);
 
         // when
-        questionsCommandService.delete(questions);
+        questionCommandService.delete(questions);
 
         // then
-        Assertions.assertThrows(QuestionsNotFoundException.class,
-                () -> questionsRepository.findById(questions.getId()));
+        Assertions.assertThrows(QuestionNotFoundException.class,
+                () -> questionRepository.findById(questions.getId()));
     }
 }
