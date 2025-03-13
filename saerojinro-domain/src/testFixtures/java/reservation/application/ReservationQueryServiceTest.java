@@ -5,11 +5,11 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ReservationQueryServiceTest {
     private ReservationQueryService reservationQueryService;
@@ -164,5 +165,17 @@ public class ReservationQueryServiceTest {
         assertDoesNotThrow(() ->
                 reservationQueryService.validateReservationByUserAndStartTime(USER_ID, nonDuplicateStartTime)
         );
+    }
+
+    @Test
+    @DisplayName("getReservationAllLecture 는 lecture 별 Reservation 의 개수를 센다.")
+    public void getReservationAllLecture_Success(){
+        // when
+        List<LectureReservationCountDto> allLecture = reservationQueryService.getReservationAllLecture();
+
+        // then
+        assertEquals(1, allLecture.size());
+        assertEquals(1L, allLecture.get(0).lectureId());
+        assertEquals(1L, allLecture.get(0).reservationCount());
     }
 }
