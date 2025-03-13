@@ -1,5 +1,7 @@
 package lecture.application;
 
+import static goorm.saerojinro.common.domain.Category.BACKEND;
+import static goorm.saerojinro.common.domain.Category.FRONTEND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -17,11 +19,14 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class LectureQueryServiceTest {
-
 	private LectureQueryService lectureQueryService;
 	private FakeLectureRepository fakeLectureRepository;
+
+	private Lecture lecture1;
+	private Lecture lecture2;
 
 	private static final String LOGICAL_NAME = "FileDomain";
 	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
@@ -49,7 +54,7 @@ public class LectureQueryServiceTest {
 			.file(file)
 			.build();
 
-		Lecture lecture1 = Lecture.create(
+		lecture1 = fakeLectureRepository.save(Lecture.create(
 			SPEAKER,
 			"Lecture One",
 			"Content One",
@@ -58,10 +63,10 @@ public class LectureQueryServiceTest {
 			LocalDateTime.of(2025, 3, 1, 10, 0),
 			LocalDateTime.of(2025, 3, 1, 12, 0),
 			"Location One",
-			Category.BACKEND
+			BACKEND)
 		);
 
-		Lecture lecture2 = Lecture.create(
+		lecture2 = fakeLectureRepository.save(Lecture.create(
 			SPEAKER,
 			"Lecture Two",
 			"Content Two",
@@ -70,11 +75,8 @@ public class LectureQueryServiceTest {
 			LocalDateTime.of(2025, 3, 1, 10, 0),
 			LocalDateTime.of(2025, 3, 1, 12, 0),
 			"Location Two",
-			Category.BACKEND
+			FRONTEND)
 		);
-
-		fakeLectureRepository.save(lecture1);
-		fakeLectureRepository.save(lecture2);
 	}
 
 	@Test
@@ -147,5 +149,20 @@ public class LectureQueryServiceTest {
 		assertEquals(2, lectureList.size());
 		assertEquals(LocalDateTime.of(2025, 3, 1, 10, 0),
 			lectureList.get(0).getStartTime());
+	}
+
+	@Test
+	@DisplayName("getRecommendedLectureByDate는 해당 시간에 맞는 강의 중 유저 활동 기반 강의 리스트를 조회한다.")
+	void getRecommendedLectureByDate_Success() {
+		// given
+		Map<Category, Integer> categoryPriorityMap = Map.of(BACKEND, 1, FRONTEND, 2);
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+
+		// when
+		List<Lecture> response = lectureQueryService.getRecommendedLectureByDate(categoryPriorityMap, startTime);
+
+		// then
+		assertEquals(lecture1.getTitle(), response.get(0).getTitle());
+		assertEquals(lecture2.getTitle(), response.get(1).getTitle());
 	}
 }
