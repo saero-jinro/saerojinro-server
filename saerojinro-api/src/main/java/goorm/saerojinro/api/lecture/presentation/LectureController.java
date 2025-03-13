@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,7 +73,7 @@ public interface LectureController {
 			)
 		}
 	)
-	ResponseEntity<LectureListResponseByAll> getRecommendationLectures(
+	ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(
 		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lectureStartTime
 	);
 }

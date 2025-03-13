@@ -61,10 +61,10 @@ public class LectureFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public LectureListResponseByAll getRecommendationLectures(LocalDateTime lectureStartTime) {
+	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
 		List<LogEvent> userLogEvents = logEventService.getLogEventsByUser();
 		Map<Category, Integer> categoryPriortyMap = lectureRecommendationService.getRecommendationCategories(userLogEvents);
 		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
-		return LectureListResponseByAll.from(getRecommendationLectures);
+		return LectureSummaryListResponse.from(getRecommendationLectures);
 	}
 }

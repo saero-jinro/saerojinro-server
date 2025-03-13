@@ -4,6 +4,7 @@ import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,6 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 @RequestMapping("/api/lectures")
 public class LectureControllerImpl implements LectureController {
-
 	private final LectureFacade lectureFacade;
 
 	@Override
@@ -45,8 +45,8 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping("/recommendations")
-	public ResponseEntity<LectureListResponseByAll> getRecommendationLectures(LocalDateTime lectureStartTime) {
-		LectureListResponseByAll response = lectureFacade.getRecommendationLectures(lectureStartTime);
+	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime lectureStartTime) {
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(lectureStartTime);
 		return ResponseEntity.ok(response);
 	}
 }

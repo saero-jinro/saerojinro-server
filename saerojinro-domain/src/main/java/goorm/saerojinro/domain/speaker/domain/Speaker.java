@@ -23,13 +23,13 @@ public class Speaker extends BaseTimeEntity {
 	private String email;
 
 	@Column(nullable = false)
-	private String position; // 기업 / 직급
+	private String position;
 
 	@Column(nullable = false)
-	private String introduction; // 강의 리스트에 보여줄 한 줄 소개
+	private String introduction;
 
 	@Column(nullable = false)
-	private String filmography; // 상세 정보 약력
+	private String filmography;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "file_id", nullable = false)

@@ -9,6 +9,7 @@ import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
@@ -181,11 +182,11 @@ public class LectureFacadeTest {
 		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
 
 		// when
-		LectureListResponseByAll response = lectureFacade.getRecommendationLectures(startTime);
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
 
 		// then
-		assertEquals(2, response.lectures().size());
-		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
-		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
+		assertEquals(2, response.responses().size());
+		assertEquals(lecture1.getTitle(), response.responses().get(0).title());
+		assertEquals(lecture2.getTitle(), response.responses().get(1).title());
 	}
 }
