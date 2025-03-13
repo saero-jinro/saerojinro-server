@@ -1,7 +1,6 @@
 package lecture;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.domain.User;
@@ -16,31 +15,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final String LOGICAL_NAME = "FileDomain";
-	private static final String PHYSICAL_PATH = "http://example.com/test.jpg";
-	private static final Long FILE_SIZE = 1024L;
-	private static final String EXTENSION = ".java";
-
 	private static final String NAME = "Cole palmer";
 	private static final String EMAIL = "google@mail.com";
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+	private static final String IMAGE_URI = "uploads/speaker";
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
+	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
+	private static final String MATERIAL_URI = "uploads/lecture/material";
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
-
-	private static final File file = File.builder()
-		.logicalName(LOGICAL_NAME)
-		.physicalPath(PHYSICAL_PATH)
-		.fileSize(FILE_SIZE)
-		.extension(EXTENSION)
-		.build();
 
 	private static final Speaker speaker = Speaker.builder()
 		.name(NAME)
@@ -48,7 +38,7 @@ class LectureDomainTest {
 		.position(POSITION)
 		.introduction(INTRODUCTION)
 		.filmography(FILMOGRAPHY)
-		.file(file)
+		.imageUri(IMAGE_URI)
 		.build();
 
 	private Lecture lecture;
@@ -59,7 +49,8 @@ class LectureDomainTest {
 			speaker,
 			TITLE,
 			CONTENTS,
-			file,
+			THUMBNAIL_URI,
+			MATERIAL_URI,
 			MAX_CAPACITY,
 			START_TIME,
 			END_TIME,
@@ -74,7 +65,6 @@ class LectureDomainTest {
 		assertNotNull(lecture);
 		assertEquals(TITLE, lecture.getTitle());
 		assertEquals(CONTENTS, lecture.getContents());
-		assertEquals(file, lecture.getThumbnail());
 		assertEquals(MAX_CAPACITY, lecture.getMaxCapacity());
 		assertEquals(START_TIME, lecture.getStartTime());
 		assertEquals(END_TIME, lecture.getEndTime());

@@ -5,6 +5,7 @@ import goorm.saerojinro.domain.file.exception.FileSaveFailedException;
 import goorm.saerojinro.domain.file.exception.FileSizeRetrievalFailedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -44,13 +45,24 @@ public class FileStorageService {
 		return path.toString();
 	}
 
+	public String storeFile(MultipartFile multipartFile, String baseDir) {
+		String fileName = multipartFile.getOriginalFilename();
+		Path path = Paths.get(DEFAULT_UPLOAD_DIR, baseDir, fileName);
+		try {
+			Files.createDirectories(path.getParent());
+			multipartFile.transferTo(path);
+		} catch (IOException e) {
+			throw new FileSaveFailedException();
+		}
+		return path.toString();
+	}
+
 	private String encodeUrl(String fileUri) {
 		try {
 			String encodedUrl = UriComponentsBuilder.fromUriString(fileUri)
 				.encode()
 				.toUriString();
 
-			//
 			return encodedUrl.replace("(", "%28").replace(")", "%29");
 		} catch (Exception e) {
 			return fileUri;

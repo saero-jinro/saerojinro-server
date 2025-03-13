@@ -1,7 +1,6 @@
 package goorm.saerojinro.domain.lecture.application;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -17,10 +16,10 @@ import java.time.LocalDateTime;
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
-	public Lecture create(Speaker speaker, String title, String contents, File thumbnail, Long maxCapacity,
+	public Lecture create(Speaker speaker, String title, String contents, String thumbnailUri, String materialsUri, Long maxCapacity,
 						  LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
-		Lecture lecture = Lecture.create(speaker, title, contents, thumbnail, maxCapacity, startTime, endTime, location, category);
+		Lecture lecture = Lecture.create(speaker, title, contents, thumbnailUri, materialsUri, maxCapacity, startTime, endTime, location, category);
 		return lectureRepository.save(lecture);
 	}
 
