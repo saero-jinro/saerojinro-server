@@ -5,7 +5,9 @@ import goorm.saerojinro.domain.dashboard.domain.Dashboard;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -31,22 +33,20 @@ public class DashboardScheduler {
 
 		// reservation, wishlist 조회
 		Map<Long, Integer> reservationCounts = new HashMap<>();
-		for (Lecture lecture : lectureList) {
-			int count = reservationQueryService.countByLectureId(lecture.getId());
-			reservationCounts.put(lecture.getId(), count);
+		for (LectureReservationCountDto l : reservationQueryService.getReservationAllLecture()) {
+			reservationCounts.put(l.lectureId(), Math.toIntExact(l.reservationCount()));
 		}
 
 		Map<Long, Integer> wishlistCounts = new HashMap<>();
-		for (Lecture lecture : lectureList) {
-			int count = wishListQueryService.countByLectureId(lecture.getId());
-			wishlistCounts.put(lecture.getId(), count);
+		for (LectureWishlistCountDto l : wishListQueryService.getWishlistAllLecture()) {
+			wishlistCounts.put(l.lectureId(), Math.toIntExact(l.wishlistCount()));
 		}
 
 		// dashboard 저장
 		for (Lecture lecture : lectureList) {
 			Long id = lecture.getId();
-			Integer reservation = reservationCounts.get(id);
-			Integer wishlist = wishlistCounts.get(id);
+			int reservation = reservationCounts.get(id) == null ? 0 : reservationCounts.get(id);
+			int wishlist = wishlistCounts.get(id) == null ? 0 : wishlistCounts.get(id);
 
 			dashboardService.save(
 				Dashboard.of(id, lecture.getTitle(), lecture.getSpeaker().getName(),

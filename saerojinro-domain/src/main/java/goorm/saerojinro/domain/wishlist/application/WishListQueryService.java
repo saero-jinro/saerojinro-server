@@ -4,6 +4,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import goorm.saerojinro.domain.wishlist.exception.WishListNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,9 @@ public class WishListQueryService {
 
     public int countByLectureId(Long lectureId) {
         return wishListRepository.countByLectureId(lectureId);
+    }
+
+    public List<LectureWishlistCountDto> getWishlistAllLecture(){
+        return wishListRepository.countWishlistAllLecture();
     }
 }

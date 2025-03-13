@@ -4,6 +4,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import goorm.saerojinro.infra.repository.jpa.WishListJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,5 +45,10 @@ public class WishListRepositoryImpl implements WishListRepository {
     @Override
     public int countByLectureId(Long lectureId) {
         return wishListJpaRepository.countByLectureId(lectureId);
+    }
+
+    @Override
+    public List<LectureWishlistCountDto> countWishlistAllLecture() {
+        return wishListJpaRepository.countWishlistAllLecture();
     }
 }

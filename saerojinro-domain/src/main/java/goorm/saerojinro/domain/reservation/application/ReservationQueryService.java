@@ -2,6 +2,7 @@ package goorm.saerojinro.domain.reservation.application;
 
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -42,4 +43,7 @@ public class ReservationQueryService {
         return reservationRepository.countByLectureId(lectureId);
     }
 
+    public List<LectureReservationCountDto> getReservationAllLecture(){
+        return reservationRepository.countReservationAllLecture();
+    }
 }

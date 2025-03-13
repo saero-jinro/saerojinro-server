@@ -2,6 +2,7 @@ package goorm.saerojinro.infra.repository.jpa;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,8 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
 	List<Reservation> findAllByLectureId(Long lectureId);
 
 	int countByLectureId(Long lectureId);
+
+	@Query("SELECT new goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto(r.lecture.id, COUNT(r)) " +
+		"FROM Reservation r GROUP BY r.lecture.id")
+	List<LectureReservationCountDto> countReservationAllLecture();
 }
