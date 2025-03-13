@@ -22,11 +22,6 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findAll() {
-		return lectureJpaRepository.findAll();
-	}
-
-	@Override
 	public Optional<Lecture> findById(Long id) {
 		return lectureJpaRepository.findById(id);
 	}

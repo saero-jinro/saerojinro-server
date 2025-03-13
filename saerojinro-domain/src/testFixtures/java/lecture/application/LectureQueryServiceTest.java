@@ -59,7 +59,7 @@ public class LectureQueryServiceTest {
 		);
 
 		lecture2 = fakeLectureRepository.save(Lecture.create(
-				SPEAKER, TITLE, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
+				SPEAKER, TITLE + 2, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
 				START_TIME, END_TIME, LOCATION, CATEGORY
 			)
 		);
@@ -73,7 +73,7 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lecture, "강의 객체는 null이면 안 됩니다.");
-		assertEquals("Lecture One", lecture.getTitle(), "강의 제목이 일치해야 합니다.");
+		assertEquals(TITLE, lecture.getTitle(), "강의 제목이 일치해야 합니다.");
 	}
 
 	@Test
@@ -92,8 +92,8 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lectures);
-		assertEquals("Lecture One", lectures.get(0).getTitle());
-		assertEquals("Lecture Two", lectures.get(1).getTitle());
+		assertEquals(TITLE, lectures.get(0).getTitle());
+		assertEquals(TITLE + 2, lectures.get(1).getTitle());
 	}
 
 	@Test
