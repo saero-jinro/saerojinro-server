@@ -15,4 +15,11 @@ public class FakeLogEventRepository implements LogEventRepository {
 		data.add(logEvent);
 		return logEvent;
 	}
+
+	@Override
+	public List<LogEvent> findRecentLogByUserId(Long userId) {
+		return data.stream()
+			.filter(logEvent -> logEvent.getUser().getId().equals(userId))
+			.toList();
+	}
 }

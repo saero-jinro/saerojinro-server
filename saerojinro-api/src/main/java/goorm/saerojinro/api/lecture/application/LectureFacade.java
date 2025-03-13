@@ -4,6 +4,10 @@ import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_VIEW;
 
 import goorm.saerojinro.api.lecture.presentation.response.*;
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -15,26 +19,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class LectureFacade {
-	private final LectureQueryService lectureService;
+	private final LectureQueryService lectureQueryService;
 	private final LogEventProducer logEventProducer;
 	private final UserQueryService userQueryService;
-
-	@Transactional(readOnly = true)
-	public LectureListResponseByAll getAll() {
-		List<LectureResponseByAll> responses = lectureService.getAllLecture().stream()
-			.map(LectureResponseByAll::from)
-			.toList();
-		return LectureListResponseByAll.from(responses);
-	}
+	private final LectureRecommendationService lectureRecommendationService;
+	private final LogEventService logEventService;
 
 	@Transactional(readOnly = true)
 	public LectureDetailResponse getById(Long id) {
-		Lecture lecture = lectureService.getById(id);
+		Lecture lecture = lectureQueryService.getById(id);
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
@@ -46,10 +46,18 @@ public class LectureFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public LectureListResponseByDate getByDate(LocalDate localDate) {
-		List<LectureResponseByDate> responses = lectureService.getByDate(localDate).stream()
-			.map(LectureResponseByDate::from)
+	public LectureListResponse getByDate(LocalDate localDate) {
+		List<LectureResponse> responses = lectureQueryService.getByDate(localDate).stream()
+			.map(LectureResponse::from)
 			.toList();
-		return LectureListResponseByDate.from(responses);
+		return LectureListResponse.from(responses);
+	}
+
+	@Transactional(readOnly = true)
+	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
+		List<LogEvent> userLogEvents = logEventService.getLogEventsByUser();
+		Map<Category, Integer> categoryPriortyMap = lectureRecommendationService.getRecommendationCategories(userLogEvents);
+		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
+		return LectureSummaryListResponse.from(getRecommendationLectures);
 	}
 }

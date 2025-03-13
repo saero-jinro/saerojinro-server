@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
-public record LectureResponseByDate(
+public record LectureResponse(
 	@Schema(description = "강의 고유 ID", example = "1", requiredMode = REQUIRED)
 	Long id,
 
@@ -32,8 +32,8 @@ public record LectureResponseByDate(
 	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
 	String speakerImageUri
 ) {
-	public static LectureResponseByDate from(Lecture lecture) {
-		return LectureResponseByDate.builder()
+	public static LectureResponse from(Lecture lecture) {
+		return LectureResponse.builder()
 			.id(lecture.getId())
 			.title(lecture.getTitle())
 			.category(lecture.getCategory())

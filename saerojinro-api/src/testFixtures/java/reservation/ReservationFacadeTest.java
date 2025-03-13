@@ -10,6 +10,7 @@ import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
@@ -51,6 +52,7 @@ public class ReservationFacadeTest {
         FakeReservationRepository reservationRepository = new FakeReservationRepository();
         FakeUserRepository userRepository = new FakeUserRepository();
         FakeLectureRepository lectureRepository = new FakeLectureRepository();
+        FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         reservationQueryService = new ReservationQueryService(reservationRepository);
@@ -58,7 +60,8 @@ public class ReservationFacadeTest {
                 new UserQueryService(userRepository, passwordEncoder),
                 new LectureQueryService(lectureRepository),
                 reservationQueryService,
-                new ReservationCommandService(reservationRepository)
+                new ReservationCommandService(reservationRepository),
+                fakeEventLogProducer
         );
 
         user = User.builder()

@@ -1,5 +1,6 @@
 package mock.repository;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 
@@ -29,11 +30,6 @@ public class FakeLectureRepository implements LectureRepository {
 			.build();
 		data.add(saved);
 		return saved;
-	}
-
-	@Override
-	public List<Lecture> findAll() {
-		return new ArrayList<>(data);
 	}
 
 	@Override
@@ -76,5 +72,18 @@ public class FakeLectureRepository implements LectureRepository {
 					!lecture.getEndTime().isAfter(endTime)
 			)
 			.toList();
+	}
+
+	@Override
+	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
+		return data.stream()
+			.filter(lecture -> categories.contains(lecture.getCategory()))
+			.filter(lecture -> lecture.getStartTime().isEqual(lectureTime))
+			.toList();
+	}
+
+	@Override
+	public List<Lecture> findAll() {
+		return data;
 	}
 }
