@@ -1,6 +1,7 @@
 package lecture;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.domain.User;
@@ -10,27 +11,23 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
+import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-	private static final String NAME = "Cole palmer";
+	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
-	private static final String IMAGE_URI = "uploads/speaker";
 
-	private static final String TITLE = "Title";
-	private static final String CONTENTS = "Contents";
-	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
-	private static final String MATERIAL_URI = "uploads/lecture/material";
-	private static final Long MAX_CAPACITY = 100L;
-	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
-	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
-	private static final String LOCATION = "Location";
-	private static final Category CATEGORY = Category.BACKEND;
+	private static final File SPEAKER_IMAGE_FILE = File.create(
+		"Speaker_Image",
+		"uploads/speaker/123456.jpg",
+		3000L,
+		"jpg"
+	);
 
 	private static final Speaker speaker = Speaker.builder()
 		.name(NAME)
@@ -38,8 +35,29 @@ class LectureDomainTest {
 		.position(POSITION)
 		.introduction(INTRODUCTION)
 		.filmography(FILMOGRAPHY)
-		.imageUri(IMAGE_URI)
+		.imageFile(SPEAKER_IMAGE_FILE)
 		.build();
+
+	private static final File THUMBNAIL_FILE = File.create(
+		"Thumbnail_LogicalName",
+		"uploads/lecture/thumbnail/123456.jpg",
+		5000L,
+		"jpg"
+	);
+	private static final File MATERIAL_FILE = File.create(
+		"Material_LogicalName",
+		"uploads/lecture/materials/발표자료.pdf",
+		10000L,
+		"pdf"
+	);
+
+	private static final String TITLE = "Title";
+	private static final String CONTENTS = "Contents";
+	private static final Long MAX_CAPACITY = 100L;
+	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
+	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
+	private static final String LOCATION = "Location";
+	private static final Category CATEGORY = Category.BACKEND;
 
 	private Lecture lecture;
 
@@ -49,8 +67,8 @@ class LectureDomainTest {
 			speaker,
 			TITLE,
 			CONTENTS,
-			THUMBNAIL_URI,
-			MATERIAL_URI,
+			THUMBNAIL_FILE,
+			MATERIAL_FILE,
 			MAX_CAPACITY,
 			START_TIME,
 			END_TIME,
@@ -70,7 +88,12 @@ class LectureDomainTest {
 		assertEquals(END_TIME, lecture.getEndTime());
 		assertEquals(LOCATION, lecture.getLocation());
 		assertEquals(CATEGORY, lecture.getCategory());
-		assertEquals("google@mail.com", lecture.getSpeaker().getEmail());
+		assertEquals(EMAIL, lecture.getSpeaker().getEmail());
+
+		assertNotNull(lecture.getThumbnailFile());
+		assertNotNull(lecture.getMaterialFile());
+		assertEquals("uploads/lecture/thumbnail/123456.jpg", lecture.getThumbnailFile().getPhysicalPath());
+		assertEquals("uploads/lecture/materials/발표자료.pdf", lecture.getMaterialFile().getPhysicalPath());
 	}
 
 	@Test
@@ -101,7 +124,7 @@ class LectureDomainTest {
 		// when
 		lecture.delete();
 
-		//then
+		// then
 		assertNotNull(lecture.getDeletedAt());
 	}
 }

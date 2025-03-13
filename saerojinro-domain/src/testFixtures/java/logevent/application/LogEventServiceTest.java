@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
+import goorm.saerojinro.domain.file.domain.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
@@ -52,17 +52,45 @@ public class LogEventServiceTest {
 			.build()
 		);
 
+		File thumbnailFile = File.create(
+			"Thumbnail_LogicalName",
+			"uploads/lecture/thumbnail/lecture1.jpg",
+			5000L,
+			"jpg"
+		);
+		File materialFile = File.create(
+			"Material_LogicalName",
+			"uploads/lecture/materials/lecture1.pdf",
+			10000L,
+			"pdf"
+		);
+
+		File speakerImage = File.create(
+			"Speaker_Image",
+			"uploads/speaker/speaker1.jpg",
+			3000L,
+			"jpg"
+		);
+		Speaker speaker = Speaker.create(
+			"Dummy Speaker",
+			"dummy@speaker.com",
+			"Position",
+			"Introduction",
+			"Filmography",
+			speakerImage
+		);
+
 		lecture = fakeLectureRepository.save(Lecture.create(
-			Speaker.builder().build(),
+			speaker,
 			"Lecture One",
 			"Content One",
-			"uploads/lecture/thumbnail",
-			"uploads/lecture/materialsUri",
+			thumbnailFile,
+			materialFile,
 			100L,
 			LocalDateTime.of(2025, 3, 1, 10, 0),
 			LocalDateTime.of(2025, 3, 1, 12, 0),
 			"Location One",
-			Category.BACKEND
+			BACKEND
 		));
 	}
 

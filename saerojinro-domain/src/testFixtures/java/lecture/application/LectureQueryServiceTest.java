@@ -28,12 +28,29 @@ public class LectureQueryServiceTest {
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
-	private static final String IMAGE_URI = "uploads/speaker";
+
+	private static final File SPEAKER_IMAGE_FILE = File.create(
+		"Speaker_Image",
+		"uploads/speaker/123456.jpg",
+		3000L,
+		"jpg"
+	);
+
+	private static final File THUMBNAIL_FILE = File.create(
+		"Thumbnail_LogicalName",
+		"uploads/lecture/thumbnail/123456.jpg",
+		5000L,
+		"jpg"
+	);
+	private static final File MATERIAL_FILE = File.create(
+		"Material_LogicalName",
+		"uploads/lecture/materials/발표자료.pdf",
+		10000L,
+		"pdf"
+	);
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
-	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
-	private static final String MATERIAL_URI = "uploads/lecture/material";
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
@@ -45,13 +62,26 @@ public class LectureQueryServiceTest {
 		fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		Speaker SPEAKER = Speaker.create(
-			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, IMAGE_URI
+		Speaker speaker = Speaker.create(
+			NAME,
+			EMAIL,
+			POSITION,
+			INTRODUCTION,
+			FILMOGRAPHY,
+			SPEAKER_IMAGE_FILE
 		);
 
 		Lecture lecture1 = Lecture.create(
-			SPEAKER, TITLE, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
-			START_TIME, END_TIME, LOCATION, CATEGORY
+			speaker,
+			TITLE,
+			CONTENTS,
+			THUMBNAIL_FILE,
+			MATERIAL_FILE,
+			MAX_CAPACITY,
+			START_TIME,
+			END_TIME,
+			LOCATION,
+			CATEGORY
 		);
 
 		fakeLectureRepository.save(lecture1);
@@ -119,7 +149,6 @@ public class LectureQueryServiceTest {
 		// then
 		assertNotNull(lectureList);
 		assertEquals(1, lectureList.size());
-		assertEquals(LocalDateTime.of(2025, 3, 1, 10, 0),
-			lectureList.get(0).getStartTime());
+		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 }

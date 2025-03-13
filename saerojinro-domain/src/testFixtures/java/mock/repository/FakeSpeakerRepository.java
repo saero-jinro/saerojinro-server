@@ -22,7 +22,7 @@ public class FakeSpeakerRepository implements SpeakerRepository {
 			.position(speaker.getPosition())
 			.introduction(speaker.getIntroduction())
 			.filmography(speaker.getFilmography())
-			.imageUri(speaker.getImageUri())
+			.imageFile(speaker.getImageFile())
 			.build();
 		data.add(saved);
 		return saved;

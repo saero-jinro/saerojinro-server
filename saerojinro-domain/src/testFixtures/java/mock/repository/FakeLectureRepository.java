@@ -21,6 +21,8 @@ public class FakeLectureRepository implements LectureRepository {
 			.speaker(lecture.getSpeaker())
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
+			.thumbnailFile(lecture.getThumbnailFile())
+			.materialFile(lecture.getMaterialFile())
 			.maxCapacity(lecture.getMaxCapacity())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())

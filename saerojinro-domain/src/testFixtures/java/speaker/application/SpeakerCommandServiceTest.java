@@ -1,5 +1,6 @@
 package speaker.application;
 
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.speaker.domain.SpeakerRepository;
@@ -8,8 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SpeakerCommandServiceTest {
 	private SpeakerCommandService speakerCommandService;
@@ -20,7 +20,18 @@ public class SpeakerCommandServiceTest {
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
-	private static final String IMAGE_URI = "uploads/speaker";
+
+	private static final String LOGICAL_NAME = "Speaker_Image";
+	private static final String PHYSICAL_PATH = "uploads/speaker/123456.jpg";
+	private static final Long FILE_SIZE = 3000L;
+	private static final String EXTENSION = "jpg";
+
+	private static final File SPEAKER_IMAGE_FILE = File.create(
+		LOGICAL_NAME,
+		PHYSICAL_PATH,
+		FILE_SIZE,
+		EXTENSION
+	);
 
 	@BeforeEach
 	void setUp() {
@@ -30,18 +41,20 @@ public class SpeakerCommandServiceTest {
 
 	@Test
 	@DisplayName("정상적으로 강연자를 생성한다")
-	void createLecture_success() {
+	void createSpeaker_success() {
 		// when
-		Speaker createSpeaker = speakerCommandService.create(
-			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, IMAGE_URI
+		Speaker createdSpeaker = speakerCommandService.create(
+			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE
 		);
 
 		// then
-		assertNotNull(createSpeaker);
-		assertEquals(EMAIL, createSpeaker.getEmail());
-		assertEquals(POSITION, createSpeaker.getPosition());
-		assertEquals(INTRODUCTION, createSpeaker.getIntroduction());
-		assertEquals(FILMOGRAPHY, createSpeaker.getFilmography());
-		assertEquals(IMAGE_URI, createSpeaker.getImageUri());
+		assertNotNull(createdSpeaker);
+		assertEquals(EMAIL, createdSpeaker.getEmail());
+		assertEquals(POSITION, createdSpeaker.getPosition());
+		assertEquals(INTRODUCTION, createdSpeaker.getIntroduction());
+		assertEquals(FILMOGRAPHY, createdSpeaker.getFilmography());
+
+		assertNotNull(createdSpeaker.getImageFile());
+		assertEquals(PHYSICAL_PATH, createdSpeaker.getImageFile().getPhysicalPath());
 	}
 }
