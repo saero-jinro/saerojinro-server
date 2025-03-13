@@ -2,6 +2,7 @@ package lecture;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.*;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
@@ -14,6 +15,7 @@ import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.producer.FakeLogEventProducer;
@@ -34,7 +36,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LectureFacadeTest {
-
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
 	private final FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
@@ -45,7 +46,7 @@ public class LectureFacadeTest {
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
 	private static final String POSITION = "00 기업 CEO";
-	private static final String  INTRODUCTION = "AA 기업  - 백엔드 개발";
+	private static final String INTRODUCTION = "AA 기업  - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
 	private static final String LOGICAL_NAME = "FileDomain";
 	private static final String PHYSICAL_PATH = "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/sk/2024/03/18/SK007_20240318_261101.jpg";
@@ -66,7 +67,8 @@ public class LectureFacadeTest {
 		FakeLogEventRepository fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
-		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService));
+		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
+		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), logEventService);
 
 		Speaker speaker = Speaker.builder()
 			.name(NAME)
@@ -93,22 +95,31 @@ public class LectureFacadeTest {
 			.title("Lecture Two")
 			.contents("Contents Two")
 			.maxCapacity(100L)
-			.startTime(LocalDateTime.of(2025, 3, 1, 14, 0))
-			.endTime(LocalDateTime.of(2025, 3, 1, 16, 0))
+			.startTime(LocalDateTime.of(2025, 3, 1, 10, 0))
+			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
 			.location("room B")
-			.category(BACKEND)
+			.category(FRONTEND)
 			.build();
 
-		lectureRepository.save(lecture1);
-		lectureRepository.save(lecture2);
-
-		fakeUserRepository.save(User.builder()
+		User user1 = fakeUserRepository.save(User.builder()
 			.email("email@email.com")
 			.password("password1234!")
 			.name("박민준")
 			.role(ADMIN)
 			.build()
 		);
+
+		lecture1 = lectureRepository.save(lecture1);
+		lecture2 = lectureRepository.save(lecture2);
+
+		String record = "record";
+		LogEventDto logEventDto1 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		LogEventDto logEventDto2 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		LogEventDto logEventDto3 = LogEventDto.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory());
+
+		logEventService.save(record + 1, logEventDto1);
+		logEventService.save(record + 2, logEventDto2);
+		logEventService.save(record + 3, logEventDto3);
 
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -158,6 +169,21 @@ public class LectureFacadeTest {
 
 		// then
 		assertNotNull(response);
+		assertEquals(2, response.lectures().size());
+		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
+		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
+	}
+
+	@Test
+	@DisplayName("getRecommendationLectures는 우선순위 대로 조회된 List가 반환된다.")
+	void getRecommendationLectures_Success() {
+		// given
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+
+		// when
+		LectureListResponseByAll response = lectureFacade.getRecommendationLectures(startTime);
+
+		// then
 		assertEquals(2, response.lectures().size());
 		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
 		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
