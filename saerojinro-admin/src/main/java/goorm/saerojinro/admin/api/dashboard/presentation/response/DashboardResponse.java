@@ -2,6 +2,7 @@ package goorm.saerojinro.admin.api.dashboard.presentation.response;
 
 import goorm.saerojinro.domain.dashboard.domain.Dashboard;
 import goorm.saerojinro.domain.dashboard.dto.DashboardAggregation;
+import goorm.saerojinro.domain.dashboard.dto.TimeRankDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -38,7 +39,8 @@ public record DashboardResponse(
 		example = "[{"
 			+ "\"rank\": 1, "
 			+ "\"day\": \"클린코드란\", "
-			+ "\"startTime\": \"2025-03-01T10:00:00\"}]",
+			+ "\"startTime\": \"2025-03-01T10:00:00\", "
+			+ "\"expectation\": \"200\"}]",
 		requiredMode = REQUIRED)
 	List<TimeRankResponse> timeRank
 ) {
@@ -56,9 +58,9 @@ public record DashboardResponse(
 			.toList();
 	}
 
-	private static List<TimeRankResponse> buildTimeRankResponse(List<LocalDateTime> times) {
+	private static List<TimeRankResponse> buildTimeRankResponse(List<TimeRankDto> times) {
 		return times.stream()
-			.map(t -> TimeRankResponse.from(t, times.indexOf(t) + 1))
+			.map(t -> TimeRankResponse.from(t.startTime(), t.rank(), t.expectation()))
 			.toList();
 	}
 }
