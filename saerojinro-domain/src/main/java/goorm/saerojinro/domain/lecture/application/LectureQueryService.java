@@ -19,6 +19,10 @@ import java.util.Map;
 public class LectureQueryService {
 	private final LectureRepository lectureRepository;
 
+	public List<Lecture> getAll() {
+		return lectureRepository.findAll();
+	}
+
 	public Lecture getById(Long lectureId) {
 		return lectureRepository.findById(lectureId)
 			.orElseThrow(LectureNotFoundException::new);

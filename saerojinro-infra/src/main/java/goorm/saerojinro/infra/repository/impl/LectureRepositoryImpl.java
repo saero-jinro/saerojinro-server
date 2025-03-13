@@ -50,4 +50,9 @@ public class LectureRepositoryImpl implements LectureRepository {
 	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
 		return lectureJpaRepository.findByCategoryInAndStartTime(categories, lectureTime);
 	}
+
+	@Override
+	public List<Lecture> findAll() {
+		return lectureJpaRepository.findAll();
+	}
 }

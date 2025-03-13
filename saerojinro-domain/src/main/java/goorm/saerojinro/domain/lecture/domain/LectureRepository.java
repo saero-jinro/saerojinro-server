@@ -20,4 +20,6 @@ public interface LectureRepository {
 	List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime);
 
 	List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime);
+
+	List<Lecture> findAll();
 }

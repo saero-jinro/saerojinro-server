@@ -81,4 +81,9 @@ public class FakeLectureRepository implements LectureRepository {
 			.filter(lecture -> lecture.getStartTime().isEqual(lectureTime))
 			.toList();
 	}
+
+	@Override
+	public List<Lecture> findAll() {
+		return data;
+	}
 }
