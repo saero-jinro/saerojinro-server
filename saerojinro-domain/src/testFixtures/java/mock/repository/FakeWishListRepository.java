@@ -6,6 +6,7 @@ import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
 import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,14 @@ public class FakeWishListRepository implements WishListRepository {
                 .filter( w -> w.getUser().getId().equals(user.getId()) &&
                         w.getLecture().getId().equals(lectureId))
                 .findFirst();
+    }
+
+    @Override
+    public List<WishList> findByUserAndStartTime(User user, LocalDateTime startTime){
+        return data.stream()
+                .filter( w -> w.getUser().getId().equals(user.getId()) &&
+                        w.getLecture().getStartTime().equals(startTime))
+                .toList();
     }
 
     @Override
