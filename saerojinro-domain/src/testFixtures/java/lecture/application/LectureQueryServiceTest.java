@@ -66,6 +66,18 @@ public class LectureQueryServiceTest {
 	}
 
 	@Test
+	@DisplayName("getAll은 모든 강의 정보를 조회한다.")
+	void getAll_Success() {
+		// when
+		List<Lecture> lectures = lectureQueryService.getAll();
+
+		// then
+		assertEquals(2, lectures.size());
+		assertEquals(TITLE, lectures.get(0).getTitle());
+		assertEquals(TITLE + 2, lectures.get(1).getTitle());
+	}
+
+	@Test
 	@DisplayName("강의 ID로 특정한 강의 상세정보를 조회할 수 있다.")
 	void getByLectureId_success() {
 		// when
