@@ -50,7 +50,7 @@ public class DashboardServiceTest {
 		assertEquals(2L, all.top10Dashboards().get(1).getId());
 		assertEquals(2L, all.bottom10Dashboards().get(0).getId());
 		assertEquals(1L, all.bottom10Dashboards().get(1).getId());
-		assertEquals(START_TIME, all.top10Times().get(0));
+		assertEquals(START_TIME, all.top10Times().get(0).startTime());
 	}
 
 	@Test
