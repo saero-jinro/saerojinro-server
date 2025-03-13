@@ -48,6 +48,7 @@ public record LectureDetailResponse(
 		return LectureDetailResponse.builder()
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
+			.materialsUri(lecture.getMaterialsUri())
 			.category(lecture.getCategory())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
