@@ -30,7 +30,7 @@ public record SpeakerDetailResponse(
 ) {
 	public static SpeakerDetailResponse from(Speaker speaker) {
 		return SpeakerDetailResponse.builder()
-			.photoUri(speaker.getImageUri())
+			.photoUri(speaker.getImageFile().getPhysicalPath())
 			.name(speaker.getName())
 			.email(speaker.getEmail())
 			.introduction(speaker.getIntroduction())

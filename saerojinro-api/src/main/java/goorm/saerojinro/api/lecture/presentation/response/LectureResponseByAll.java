@@ -38,7 +38,7 @@ public record LectureResponseByAll(
 	public static LectureResponseByAll from(Lecture lecture) {
 		return LectureResponseByAll.builder()
 			.category(lecture.getCategory())
-			.thumbnailUri(lecture.getThumbnailUri())
+			.thumbnailUri(lecture.getThumbnailFile().getPhysicalPath())
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
 			.speakerName(lecture.getSpeaker().getName())

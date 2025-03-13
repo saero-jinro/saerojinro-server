@@ -23,25 +23,26 @@ public class Speaker extends BaseTimeEntity {
 	private String email;
 
 	@Column(nullable = false)
-	private String position; // 기업 / 직급
+	private String position;
 
 	@Column(nullable = false)
-	private String introduction; // 강의 리스트에 보여줄 한 줄 소개
+	private String introduction;
 
 	@Column(nullable = false)
-	private String filmography; // 상세 정보 약력
+	private String filmography;
 
-	@Column(nullable = false)
-	private String imageUri;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_file_id", nullable = false)
+	private File imageFile;
 
-	public static Speaker create(String name,String email, String position, String introduction, String filmography, String imageUri) {
+	public static Speaker create(String name,String email, String position, String introduction, String filmography, File imageId) {
 		return Speaker.builder()
 			.name(name)
 			.email(email)
 			.position(position)
 			.introduction(introduction)
 			.filmography(filmography)
-			.imageUri(imageUri)
+			.imageFile(imageId)
 			.build();
 	}
 }
