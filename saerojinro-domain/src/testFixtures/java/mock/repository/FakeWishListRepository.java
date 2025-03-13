@@ -1,7 +1,6 @@
 package mock.repository;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
