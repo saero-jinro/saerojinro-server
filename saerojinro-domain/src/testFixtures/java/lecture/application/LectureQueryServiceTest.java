@@ -1,5 +1,7 @@
 package lecture.application;
 
+import static goorm.saerojinro.common.domain.Category.BACKEND;
+import static goorm.saerojinro.common.domain.Category.FRONTEND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -17,11 +19,13 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class LectureQueryServiceTest {
-
 	private LectureQueryService lectureQueryService;
-	private FakeLectureRepository fakeLectureRepository;
+
+	private Lecture lecture1;
+	private Lecture lecture2;
 
 	private static final String NAME = "Cole palmer";
 	private static final String EMAIL = "google@mail.com";
@@ -55,33 +59,27 @@ public class LectureQueryServiceTest {
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
-	private static final Category CATEGORY = Category.BACKEND;
+	private static final Category CATEGORY = BACKEND;
 
 	@BeforeEach
 	void setUp() {
-		fakeLectureRepository = new FakeLectureRepository();
+		FakeLectureRepository fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		Speaker speaker = Speaker.create(
-			NAME,
-			EMAIL,
-			POSITION,
-			INTRODUCTION,
-			FILMOGRAPHY,
-			SPEAKER_IMAGE_FILE
+		Speaker SPEAKER = Speaker.create(
+			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE
 		);
 
-		Lecture lecture1 = Lecture.create(
-			speaker,
-			TITLE,
-			CONTENTS,
-			THUMBNAIL_FILE,
-			MATERIAL_FILE,
-			MAX_CAPACITY,
-			START_TIME,
-			END_TIME,
-			LOCATION,
-			CATEGORY
+		lecture1 = fakeLectureRepository.save(Lecture.create(
+				SPEAKER, TITLE, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
+				START_TIME, END_TIME, LOCATION, CATEGORY
+			)
+		);
+
+		lecture2 = fakeLectureRepository.save(Lecture.create(
+				SPEAKER, TITLE + 2, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
+				START_TIME, END_TIME, LOCATION, CATEGORY
+			)
 		);
 
 		fakeLectureRepository.save(lecture1);
@@ -91,11 +89,12 @@ public class LectureQueryServiceTest {
 	@DisplayName("저장된 모든 강의를 조회할 수 있다.")
 	void getAllLecture_success() {
 		// when
-		List<Lecture> lectures = lectureQueryService.getAllLecture();
+		List<Lecture> lectures = lectureQueryService.getAll();
 
 		// then
-		assertNotNull(lectures);
-		assertEquals(1, lectures.size());
+		assertEquals(3, lectures.size());
+		assertEquals(TITLE, lectures.get(0).getTitle());
+		assertEquals(TITLE + 2, lectures.get(1).getTitle());
 	}
 
 	@Test
@@ -126,6 +125,7 @@ public class LectureQueryServiceTest {
 		// then
 		assertNotNull(lectures);
 		assertEquals(TITLE, lectures.get(0).getTitle());
+		assertEquals(TITLE + 2, lectures.get(1).getTitle());
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(1, lectureList.size());
+		assertEquals(3, lectureList.size());
 		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 
@@ -144,11 +144,28 @@ public class LectureQueryServiceTest {
 	@DisplayName("getAllLectureBetween은 주어진 시간 사이에 있는 강의를 조회한다")
 	void getAllLectureBetween_Success() {
 		// when
-		List<Lecture> lectureList = lectureQueryService.getAllLectureBetween(START_TIME, END_TIME);
+		List<Lecture> lectureList = lectureQueryService.getAllLectureBetween(
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			LocalDateTime.of(2025, 3, 1, 12, 0));
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(1, lectureList.size());
+		assertEquals(3, lectureList.size());
 		assertEquals(START_TIME, lectureList.get(0).getStartTime());
+	}
+
+	@Test
+	@DisplayName("getRecommendedLectureByDate는 해당 시간에 맞는 강의 중 유저 활동 기반 강의 리스트를 조회한다.")
+	void getRecommendedLectureByDate_Success() {
+		// given
+		Map<Category, Integer> categoryPriorityMap = Map.of(BACKEND, 1, FRONTEND, 2);
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+
+		// when
+		List<Lecture> response = lectureQueryService.getRecommendedLectureByDate(categoryPriorityMap, startTime);
+
+		// then
+		assertEquals(lecture1.getTitle(), response.get(0).getTitle());
+		assertEquals(lecture2.getTitle(), response.get(1).getTitle());
 	}
 }

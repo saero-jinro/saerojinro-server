@@ -1,5 +1,6 @@
 package goorm.saerojinro.infra.repository.jpa;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,6 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 	List<Lecture> findByStartTime(LocalDateTime time);
 
 	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime startTime, LocalDateTime endTime);
+
+	List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime);
 }

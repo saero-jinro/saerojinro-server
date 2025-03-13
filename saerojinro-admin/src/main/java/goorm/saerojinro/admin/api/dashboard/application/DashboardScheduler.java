@@ -29,7 +29,7 @@ public class DashboardScheduler {
 	@Scheduled(cron = "0 0 * * * *")
 	public void refreshDashboard() {
 		// 전체 lecture 조회
-		List<Lecture> lectureList = lectureQueryService.getAllLecture();
+		List<Lecture> lectureList = lectureQueryService.getAll();
 
 		// reservation, wishlist 조회
 		Map<Long, Integer> reservationCounts = new HashMap<>();

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
 @Builder
-public record LectureResponseByAll(
+public record LectureSummaryResponse(
 	@Schema(description = "카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	Category category,
 
@@ -35,8 +35,8 @@ public record LectureResponseByAll(
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location
 ) {
-	public static LectureResponseByAll from(Lecture lecture) {
-		return LectureResponseByAll.builder()
+	public static LectureSummaryResponse from(Lecture lecture) {
+		return LectureSummaryResponse.builder()
 			.category(lecture.getCategory())
 			.thumbnailUri(lecture.getThumbnailFile().getPhysicalPath())
 			.title(lecture.getTitle())

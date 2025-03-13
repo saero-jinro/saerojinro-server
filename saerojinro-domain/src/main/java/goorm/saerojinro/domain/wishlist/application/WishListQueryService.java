@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.wishlist.exception.WishListNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +24,10 @@ public class WishListQueryService {
     public WishList getByUserAndLectureId(User user, Long lectureId){
         return wishListRepository.findByUserAndLectureId(user, lectureId)
                 .orElseThrow(WishListNotFoundException::new);
+    }
+
+    public List<WishList> getByUserAndStartTime(User user, LocalDateTime startTime){
+        return wishListRepository.findByUserAndStartTime(user, startTime);
     }
 
     public boolean existCheck(User user, Lecture lecture){

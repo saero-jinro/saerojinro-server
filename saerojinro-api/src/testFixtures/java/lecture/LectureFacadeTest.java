@@ -2,21 +2,26 @@ package lecture;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.Category.*;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
 import goorm.saerojinro.domain.file.domain.File;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
+import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
+import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeUserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,25 +31,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LectureFacadeTest {
-
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
-	private FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
-	private UserQueryService userQueryService;
-
+	private final FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 
 	private Lecture lecture1;
 	private Lecture lecture2;
 
-	private Speaker speaker;
-	private Speaker speaker2;
 
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
-	private static final String EMAIL_2 = "google2@mail.com";
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
@@ -71,24 +71,17 @@ public class LectureFacadeTest {
 	void setUp() {
 		FakeLectureRepository lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
+		FakeLogEventRepository fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
-		userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
-		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService);
+		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
+		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
+		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), logEventService);
 
 		File speakerImageFile = File.create("Speaker_Image", SPEAKER_IMAGE_URI, 3000L, "jpg");
 
-		speaker = Speaker.builder()
+		Speaker speaker = Speaker.builder()
 			.name(NAME)
 			.email(EMAIL)
-			.position(POSITION)
-			.introduction(INTRODUCTION)
-			.filmography(FILMOGRAPHY)
-			.imageFile(speakerImageFile)
-			.build();
-
-		speaker2 = Speaker.builder()
-			.name(NAME)
-			.email(EMAIL_2)
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
@@ -130,7 +123,7 @@ public class LectureFacadeTest {
 		lecture1 = lectureRepository.save(lecture1);
 		lecture2 = lectureRepository.save(lecture2);
 
-		fakeUserRepository.save(User.builder()
+		User user1 = fakeUserRepository.save(User.builder()
 			.email("email@email.com")
 			.password("password1234!")
 			.name("박민준")
@@ -139,25 +132,23 @@ public class LectureFacadeTest {
 		);
 
 		var userDetails = userQueryService.getByEmail("email@email.com");
+		lecture1 = lectureRepository.save(lecture1);
+		lecture2 = lectureRepository.save(lecture2);
+
+		String record = "record";
+		LogEventDto logEventDto1 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		LogEventDto logEventDto2 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		LogEventDto logEventDto3 = LogEventDto.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory());
+
+		logEventService.save(record + 1, logEventDto1);
+		logEventService.save(record + 2, logEventDto2);
+		logEventService.save(record + 3, logEventDto3);
+
+		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(
 			new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities())
 		);
-	}
-
-	@Test
-	@DisplayName("전체 강의 목록을 리스트로 조회할 수 있다")
-	void getAll_success() {
-		// when
-		LectureListResponseByAll response = lectureFacade.getAll();
-
-		// then
-		assertNotNull(response);
-		assertEquals(2, response.totalCount());
-		assertEquals(2, response.lectures().size());
-
-		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertEquals("Cole Palmer", response.lectures().get(0).speakerName());
 	}
 
 	@Test
@@ -166,8 +157,8 @@ public class LectureFacadeTest {
 		LectureDetailResponse detail = lectureFacade.getById(lecture1.getId());
 
 		assertNotNull(detail);
-		assertEquals("Lecture One", detail.title());
-		assertEquals("Contents One", detail.contents());
+		assertEquals(lecture1.getTitle(), detail.title());
+		assertEquals(lecture1.getContents(), detail.contents());
 	}
 
 	@Test
@@ -179,16 +170,29 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("주어진 날짜에 해당하는 강의를 조회할 수 있다")
 	void getByDate_success() {
-		// given: lecture1, lecture2 모두 2025-03-01에 시작
 		LocalDate date = LocalDate.of(2025, 3, 1);
 
 		// when
-		LectureListResponseByDate response = lectureFacade.getByDate(date);
+		LectureListResponse response = lectureFacade.getByDate(date);
 
 		// then
 		assertNotNull(response);
-		assertEquals(2, response.lectures().size());
-		assertEquals("Lecture One", response.lectures().get(0).title());
-		assertEquals("Lecture Two", response.lectures().get(1).title());
+		assertEquals(4, response.lectures().size());
+		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
+		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
+	}
+
+	@Test
+	@DisplayName("getRecommendationLectures는 우선순위 대로 조회된 List가 반환된다.")
+	void getRecommendationLectures_Success() {
+		// given
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+
+		// when
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
+
+		// then
+		assertEquals(2, response.responses().size());
+		assertEquals(lecture1.getTitle(), response.responses().get(0).title());
 	}
 }

@@ -1,6 +1,6 @@
 package wishList;
 
-import goorm.saerojinro.api.wishlist.application.WishListFacade;
+import goorm.saerojinro.api.wishlist.application.*;
 import goorm.saerojinro.api.wishlist.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -10,6 +10,7 @@ import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
+import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
 import mock.repository.FakeWishListRepository;
@@ -44,12 +45,14 @@ public class WishListFacadeTest {
         FakeUserRepository userRepository = new FakeUserRepository();
         FakeLectureRepository lectureRepository = new FakeLectureRepository();
         WishListQueryService wishListQueryService = new WishListQueryService(wishListRepository);
+        FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 
         wishListFacade = new WishListFacade(
-                wishListQueryService,
-                new WishListCommandService(wishListRepository, wishListQueryService),
-                new UserQueryService(userRepository, new BCryptPasswordEncoder()),
-                new LectureQueryService(lectureRepository)
+            wishListQueryService,
+            new WishListCommandService(wishListRepository, wishListQueryService),
+            new UserQueryService(userRepository, new BCryptPasswordEncoder()),
+            new LectureQueryService(lectureRepository),
+            fakeEventLogProducer
         );
 
         user = userRepository.save(User.builder()
@@ -91,6 +94,21 @@ public class WishListFacadeTest {
 
         // when
         WishListResponse response = wishListFacade.getAllWishList();
+
+        // then
+        assertNotNull(response);
+        assertEquals(1, response.response().size());
+        assertEquals("박민준", response.response().get(0).speaker());
+    }
+
+    @Test
+    @DisplayName("getByUseAndStartTime 은 유저 ID 와 시작 시간이 동일한 즐겨찾기 정보를 조회한다.")
+    public void getByUserAndStartTime(){
+        // given
+        wishListFacade.create(LECTURE_ID);
+
+        // when
+        WishListResponse response = wishListFacade.getByUserAndStartTime(START_TIME);
 
         // then
         assertNotNull(response);
