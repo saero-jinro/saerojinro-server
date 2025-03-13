@@ -9,8 +9,6 @@ import goorm.saerojinro.common.domain.Category;
 public interface LectureRepository {
 	Lecture save(Lecture lecture);
 
-	List<Lecture> findAll();
-
 	Optional<Lecture> findById(Long id);
 
 	List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);

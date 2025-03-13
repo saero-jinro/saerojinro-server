@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +31,6 @@ public class LectureFacade {
 	private final UserQueryService userQueryService;
 	private final LectureRecommendationService lectureRecommendationService;
 	private final LogEventService logEventService;
-
-	@Transactional(readOnly = true)
-	public LectureListResponseByAll getAll() {
-		List<Lecture> responses = lectureQueryService.getAllLecture();
-		return LectureListResponseByAll.from(responses);
-	}
 
 	@Transactional(readOnly = true)
 	public LectureDetailResponse getById(Long id) {
@@ -53,11 +46,11 @@ public class LectureFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public LectureListResponseByDate getByDate(LocalDate localDate) {
-		List<LectureResponseByDate> responses = lectureQueryService.getByDate(localDate).stream()
-			.map(LectureResponseByDate::from)
+	public LectureListResponse getByDate(LocalDate localDate) {
+		List<LectureResponse> responses = lectureQueryService.getByDate(localDate).stream()
+			.map(LectureResponse::from)
 			.toList();
-		return LectureListResponseByDate.from(responses);
+		return LectureListResponse.from(responses);
 	}
 
 	@Transactional(readOnly = true)

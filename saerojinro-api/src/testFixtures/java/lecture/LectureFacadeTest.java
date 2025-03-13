@@ -7,8 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByAll;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponseByDate;
+import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -130,21 +129,6 @@ public class LectureFacadeTest {
 	}
 
 	@Test
-	@DisplayName("전체 강의 목록을 리스트로 조회할 수 있다")
-	void getAll_success() {
-		// when
-		LectureListResponseByAll response = lectureFacade.getAll();
-
-		// then
-		assertNotNull(response);
-		assertEquals(2, response.totalCount());
-		assertEquals(2, response.lectures().size());
-
-		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
-		assertEquals(lecture1.getSpeaker().getName(), response.lectures().get(0).speakerName());
-	}
-
-	@Test
 	@DisplayName("강의 아이디로 강의 상세 정보를 조회할 수 있다")
 	void getById_success() {
 		LectureDetailResponse detail = lectureFacade.getById(1L);
@@ -166,7 +150,7 @@ public class LectureFacadeTest {
 		LocalDate date = LocalDate.of(2025, 3, 1);
 
 		// when
-		LectureListResponseByDate response = lectureFacade.getByDate(date);
+		LectureListResponse response = lectureFacade.getByDate(date);
 
 		// then
 		assertNotNull(response);

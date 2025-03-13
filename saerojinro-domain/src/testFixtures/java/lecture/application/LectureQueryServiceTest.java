@@ -23,7 +23,6 @@ import java.util.Map;
 
 public class LectureQueryServiceTest {
 	private LectureQueryService lectureQueryService;
-	private FakeLectureRepository fakeLectureRepository;
 
 	private Lecture lecture1;
 	private Lecture lecture2;
@@ -42,7 +41,7 @@ public class LectureQueryServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		fakeLectureRepository = new FakeLectureRepository();
+		FakeLectureRepository fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
 		final Speaker SPEAKER = Speaker.builder()
@@ -77,17 +76,6 @@ public class LectureQueryServiceTest {
 			"Location Two",
 			FRONTEND)
 		);
-	}
-
-	@Test
-	@DisplayName("저장된 모든 강의를 조회할 수 있다.")
-	void getAllLecture_success() {
-		// when
-		List<Lecture> lectures = lectureQueryService.getAllLecture();
-
-		// then
-		assertNotNull(lectures, "강의 목록은 null이면 안 됩니다.");
-		assertEquals(2, lectures.size(), "저장된 강의 수는 2여야 합니다.");
 	}
 
 	@Test

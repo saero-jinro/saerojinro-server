@@ -33,11 +33,6 @@ public class FakeLectureRepository implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findAll() {
-		return new ArrayList<>(data);
-	}
-
-	@Override
 	public Optional<Lecture> findById(Long id) {
 		return data.stream()
 			.filter(lecture -> lecture.getId().equals(id))
