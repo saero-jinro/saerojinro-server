@@ -23,22 +23,22 @@ import static goorm.saerojinro.common.domain.BaseRole.*;
 @Component
 @RequiredArgsConstructor
 public class QuestionFacade {
-    private final QuestionQueryService questionsQueryService;
+    private final QuestionQueryService questionQueryService;
     private final QuestionCommandService questionCommandService;
     private final UserQueryService userQueryService;
     private final LectureQueryService lectureQueryService;
 
     @Transactional(readOnly = true)
     public QuestionListResponse getAll(){
-        List<Question> questionsList = questionsQueryService.getAll();
+        List<Question> questionList = questionQueryService.getAll();
 
-        return QuestionListResponse.from(questionsList);
+        return QuestionListResponse.from(questionList);
     }
 
     @Transactional(readOnly = true)
     public QuestionListResponse getByLecture(Long lectureId){
         Lecture lecture = lectureQueryService.getById(lectureId);
-        List<Question> questionsList = questionsQueryService.getByLecture(lecture);
+        List<Question> questionsList = questionQueryService.getByLecture(lecture);
 
         return QuestionListResponse.from(questionsList);
     }
@@ -49,31 +49,24 @@ public class QuestionFacade {
         Lecture lecture = lectureQueryService.getById(lectureId);
 
         Question questions = questionCommandService.create(user, lecture, request.content());
-
         return QuestionCreateResponse.from(questions.getId());
     }
 
     @Transactional
     public void update(Long questionsId, QuestionUpdateRequest request){
-        Question questions = questionsQueryService.getById(questionsId);
+        Question question = questionQueryService.getById(questionsId);
         User user = userQueryService.me();
 
-        if (!questions.getUser().getId().equals(user.getId())){
-            throw new QuestionNotAuthorizedException();
-        }
-
-        questions.update(request.content());
+        questionQueryService.validateByUserId(question , user.getId());
+        question.update(request.content());
     }
 
     @Transactional
     public void delete(Long questionsId){
-        Question questions = questionsQueryService.getById(questionsId);
+        Question question = questionQueryService.getById(questionsId);
         User user = userQueryService.me();
 
-        if(!(user.getRole().equals(ADMIN) || questions.getUser().getId().equals(user.getId()))){
-            throw new QuestionNotAuthorizedException();
-        }
-
-        questionCommandService.delete(questions);
+        questionQueryService.validateByUserRoleAndUserId(user, question);
+        questionCommandService.delete(question);
     }
 }
