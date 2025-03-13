@@ -21,14 +21,14 @@ public class QuestionControllerImpl implements QuestionController {
     @GetMapping
     public ResponseEntity<QuestionListResponse> getAllQuestions() {
         QuestionListResponse response = questionsFacade.getAll();
-        return ResponseEntity.status(OK).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @Override
     @GetMapping("/{lectureId}")
     public ResponseEntity<QuestionListResponse> getByLecture(@PathVariable("lectureId") Long lectureId) {
         QuestionListResponse response = questionsFacade.getByLecture(lectureId);
-        return ResponseEntity.status(OK).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @Override
