@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.wishlist.application;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
-import goorm.saerojinro.api.wishlist.presentation.response.WishListDetailResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -28,6 +28,13 @@ public class WishListFacade {
 	public WishListResponse getAllWishList() {
 		User user = userQueryService.me();
 		List<WishList> wishLists = wishListQueryService.getAllByUser(user);
+		return WishListResponse.from(wishLists);
+	}
+
+	@Transactional(readOnly = true)
+	public WishListResponse getByUserAndStartTime(LocalDateTime startTime){
+		User user = userQueryService.me();
+		List<WishList> wishLists = wishListQueryService.getByUserAndStartTime(user, startTime);
 		return WishListResponse.from(wishLists);
 	}
 
