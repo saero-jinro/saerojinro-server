@@ -32,17 +32,8 @@ public record LectureDetailResponse(
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location,
 
-	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
-	String speakerName,
-
-	@Schema(description = "강연자 회사, 직급", example = "블라블라 스타트업 CEO", requiredMode = REQUIRED)
-	String speakerPosition,
-
-	@Schema(description = "한 줄 소개", example = "안녕하세요 OO 기업에서 OO를 담당하는 OOO 입니다.", requiredMode = REQUIRED)
-	String speakerIntroduction,
-
-	@Schema(description = "강연자 사진 Uri", example = "uploads/speaker/123456789.jpg", requiredMode = REQUIRED)
-	String speakerImageUri
+	@Schema(description = "강연자 ID", example = "1L", requiredMode = REQUIRED)
+	Long speakerId
 ) {
 	public static LectureDetailResponse from(Lecture lecture) {
 		return LectureDetailResponse.builder()
@@ -53,10 +44,7 @@ public record LectureDetailResponse(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
-			.speakerName(lecture.getSpeaker().getName())
-			.speakerPosition(lecture.getSpeaker().getPosition())
-			.speakerIntroduction(lecture.getSpeaker().getIntroduction())
-			.speakerImageUri(lecture.getSpeaker().getImageUri())
+			.speakerId(lecture.getSpeaker().getId())
 			.build();
 	}
 }
