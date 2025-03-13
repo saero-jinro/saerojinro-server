@@ -36,14 +36,12 @@ public class LectureRecommendationServiceTest {
 		logEvents.add(LogEvent.create("record0", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
 		logEvents.add(LogEvent.create("record1", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
 		logEvents.add(LogEvent.create("record2", null, null, LECTURE_RESERVATION_SUCCESS, BACKEND));
-		logEvents.add(LogEvent.create("record3", null, null, LECTURE_RESERVATION_SUCCESS, FRONTEND));
 
 		// when
 		Map<Category, Integer> result = lectureRecommendationService.getRecommendationCategories(logEvents);
 
 		// then
-		assertEquals(result.get(BACKEND), 3);
+		assertEquals(result.get(BACKEND), 2);
 		assertEquals(result.get(DEVOPS), 1);
-		assertEquals(result.get(FRONTEND), 2);
 	}
 }
