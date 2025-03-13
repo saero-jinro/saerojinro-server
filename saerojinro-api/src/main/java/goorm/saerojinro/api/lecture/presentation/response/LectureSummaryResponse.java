@@ -28,7 +28,7 @@ public record LectureSummaryResponse(
 
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location
-	) {
+) {
 	public static LectureSummaryResponse from(Lecture lecture) {
 		return LectureSummaryResponse.builder()
 			.title(lecture.getTitle())
