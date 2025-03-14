@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 
-public interface EventLogJpaRepository extends JpaRepository<LogEvent, Long> {
+public interface LogEventJpaRepository extends JpaRepository<LogEvent, Long> {
 	List<LogEvent> findTop50ByUserIdOrderByTimestampDesc(Long userId);
 }
