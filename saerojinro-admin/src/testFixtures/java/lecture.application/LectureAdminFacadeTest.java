@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class LectureUserAdminFacadeTest {
+public class LectureAdminFacadeTest {
 
 	private LectureAdminFacade lectureAdminFacade;
 	private LectureCommandService lectureCommandService;

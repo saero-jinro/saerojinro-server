@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import goorm.saerojinro.domain.logevent.application.LogEventService;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.infra.config.redis.RedisProperties;
 import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +26,10 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 	public void onMessage(ObjectRecord<String, String> message) {
 		try {
 			String record = String.valueOf(message.getId());
-			LogEventDto logEventDto = objectMapper.readValue(message.getValue(), LogEventDto.class);
+			RedisLogEvent redisLogEvent = objectMapper.readValue(message.getValue(), RedisLogEvent.class);
 
-			logEventService.save(record, logEventDto);
-
+			logEventService.save(record, redisLogEvent);
+			logEventService.cache(redisLogEvent);
 			redisTemplate.opsForStream().trim(redisProperties.getLogEventStreamKey(), 1000);
 		} catch (JsonProcessingException e) {
 			throw new InvalidMessageFormatException();

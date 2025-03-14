@@ -1,6 +1,5 @@
 package goorm.saerojinro.api.wishlist.application;
 
-import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_VIEW;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_WISHLIST;
 
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
@@ -8,7 +7,7 @@ import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
@@ -50,8 +49,14 @@ public class WishListFacade {
 		Lecture lecture = lectureQueryService.getById(lectureId);
 		WishList wishList = wishListCommandService.create(user, lecture);
 
-		LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_WISHLIST, lecture.getCategory());
-		logEventProducer.sendMessage(logEventDto);
+		RedisLogEvent redisLogEvent = RedisLogEvent.of(
+			user.getId(),
+			lecture.getId(),
+			LECTURE_WISHLIST,
+			lecture.getCategory(),
+			LocalDateTime.now()
+		);
+		logEventProducer.sendMessage(redisLogEvent);
 
 		return WishListCreateResponse.from(wishList);
 	}

@@ -35,7 +35,7 @@ public class LectureQueryService {
 
 	public List<Lecture> getByDate(LocalDate localDate) {
 		LocalDateTime start = localDate.atStartOfDay();
-		LocalDateTime end   = localDate.plusDays(1).atStartOfDay();
+		LocalDateTime end = localDate.plusDays(1).atStartOfDay();
 		return lectureRepository.findByStartTimeBetween(start, end);
 	}
 

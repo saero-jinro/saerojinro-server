@@ -3,12 +3,14 @@ package goorm.saerojinro.api.reservation.application;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 
+import java.time.LocalDateTime;
+
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
@@ -37,17 +39,30 @@ public class ReservationFacade {
         try {
             reservationQueryService.validateReservationFull(lecture);
             reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
+          
             Reservation reservation = reservationCommandService.create(user, lecture);
 
             logEventType = LECTURE_RESERVATION_SUCCESS;
-            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
-            logEventProducer.sendMessage(logEventDto);
+            RedisLogEvent redisLogEvent = RedisLogEvent.of(
+                user.getId(),
+                lecture.getId(),
+                logEventType,
+                lecture.getCategory(),
+                LocalDateTime.now()
+            );
+            logEventProducer.sendMessage(redisLogEvent);
 
             return ReservationCreateResponse.from(reservation);
         } catch (CustomException e) {
             logEventType = LECTURE_RESERVATION_FAIL;
-            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
-            logEventProducer.sendMessage(logEventDto);
+            RedisLogEvent redisLogEvent = RedisLogEvent.of(
+                user.getId(),
+                lecture.getId(),
+                logEventType,
+                lecture.getCategory(),
+                LocalDateTime.now()
+            );
+            logEventProducer.sendMessage(redisLogEvent);
 
             throw e;
         }
@@ -57,7 +72,10 @@ public class ReservationFacade {
     public void cancel(Long lectureId){
         User user = userQueryService.me();
 
-        Reservation reservation = reservationQueryService.getByUserAndLecture(user.getId(), lectureId);
+        Reservation reservation = reservationQueryService.getByUserAndLecture(
+            user.getId(),
+            lectureId
+        );
         reservationCommandService.cancel(reservation);
     }
 

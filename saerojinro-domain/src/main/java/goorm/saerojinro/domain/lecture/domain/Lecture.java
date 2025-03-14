@@ -11,7 +11,12 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@Table(name = "lecture")
+@Table(
+	indexes = {
+		@Index(name = "idx_category_time", columnList = "category, startTime"),
+		@Index(name = "idx_start_time", columnList = "startTime")
+	}
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Lecture extends BaseTimeEntity {
