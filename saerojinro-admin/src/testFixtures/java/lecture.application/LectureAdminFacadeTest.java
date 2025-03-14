@@ -7,7 +7,9 @@ import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequ
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
+import goorm.saerojinro.domain.file.application.FileStorageService;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
@@ -26,7 +28,10 @@ public class LectureAdminFacadeTest {
 	private LectureAdminFacade lectureAdminFacade;
 	private LectureCommandService lectureCommandService;
 	private SpeakerCommandService speakerCommandService;
+
 	private FileQueryService fileQueryService;
+	private FileCommandService fileCommandService;
+	private FileStorageService fileStorageService;
 
 	private FakeLectureRepository lectureRepository;
 	private FakeSpeakerRepository speakerRepository;
@@ -59,11 +64,25 @@ public class LectureAdminFacadeTest {
 		speakerRepository = new FakeSpeakerRepository();
 		fileRepository = new FakeFileRepository();
 
+		fileStorageService = new FileStorageService() {
+			@Override
+			public String moveFileDir(String originalPath, Long lectureId, String type) {
+				return originalPath;
+			}
+		};
+
+		fileCommandService = new FileCommandService(fileRepository);
 		fileQueryService = new FileQueryService(fileRepository);
 		lectureCommandService = new LectureCommandService(lectureRepository);
 		speakerCommandService = new SpeakerCommandService(speakerRepository);
 
-		lectureAdminFacade = new LectureAdminFacade(lectureCommandService, speakerCommandService, fileQueryService);
+		lectureAdminFacade = new LectureAdminFacade(
+			lectureCommandService,
+			speakerCommandService,
+			fileQueryService,
+			fileCommandService,
+			fileStorageService
+		);
 
 		request = LectureCreateRequest.builder()
 			.title(TITLE)
@@ -84,6 +103,7 @@ public class LectureAdminFacadeTest {
 			.build();
 	}
 
+
 	@Test
 	@DisplayName("정상적으로 강의를 생성한다")
 	void createLecture_success() {
@@ -98,9 +118,13 @@ public class LectureAdminFacadeTest {
 		assertNotNull(createdLecture.getThumbnailFile());
 		assertNotNull(createdLecture.getMaterialFile());
 
-		// FakeFileRepository가 URI를 그대로 File의 physicalPath로 설정하도록 구현했다고 가정합니다.
-		assertEquals(THUMBNAIL_URI, createdLecture.getThumbnailFile().getPhysicalPath());
-		assertEquals(MATERIAL_URI, createdLecture.getMaterialFile().getPhysicalPath());
+		String expectedThumbnailPath = fileStorageService.moveFileDir(THUMBNAIL_URI, createdLecture.getId(), "thumbnail");
+		String expectedMaterialPath = fileStorageService.moveFileDir(MATERIAL_URI, createdLecture.getId(), "materials");
+		String expectedSpeakerPath = fileStorageService.moveFileDir(SPEAKER_PHOTO_URI, createdLecture.getId(), "speaker");
+
+		assertEquals(expectedThumbnailPath, createdLecture.getThumbnailFile().getPhysicalPath());
+		assertEquals(expectedMaterialPath, createdLecture.getMaterialFile().getPhysicalPath());
+
 	}
 
 	@Test

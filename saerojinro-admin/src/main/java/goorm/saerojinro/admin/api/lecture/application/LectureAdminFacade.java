@@ -3,7 +3,9 @@ package goorm.saerojinro.admin.api.lecture.application;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
+import goorm.saerojinro.domain.file.application.FileStorageService;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -19,10 +21,14 @@ public class LectureAdminFacade {
 	private final LectureCommandService lectureCommandService;
 	private final SpeakerCommandService speakerCommandService;
 	private final FileQueryService fileQueryService;
+	private final FileCommandService fileCommandService;
+	private final FileStorageService fileStorageService;
 
 	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
-		File speakerImageFile = fileQueryService.getFileByUri(request.speakerPhotoUri());
+		File tempSpeakerFile = fileQueryService.getFileByUri(request.speakerPhotoUri());
+		File tempThumbnailFile = fileQueryService.getFileByUri(request.thumbnailUri());
+		File tempMaterialFile = fileQueryService.getFileByUri(request.materialsUri());
 
 		Speaker speaker = speakerCommandService.create(
 			request.speakerName(),
@@ -30,25 +36,37 @@ public class LectureAdminFacade {
 			request.speakerPosition(),
 			request.speakerIntroduction(),
 			request.speakerFilmography(),
-			speakerImageFile
+			tempSpeakerFile
 		);
-
-		File thumbnailFile = fileQueryService.getFileByUri(request.thumbnailUri());
-		File materialFile = fileQueryService.getFileByUri(request.materialsUri());
 
 		fileQueryService.getFileByUri(request.speakerPhotoUri());
 		Lecture lecture = lectureCommandService.create(
 			speaker,
 			request.title(),
 			request.contents(),
-			thumbnailFile,
-			materialFile,
+			tempThumbnailFile,
+			tempMaterialFile,
 			request.maxCapacity(),
 			request.startTime(),
 			request.endTime(),
 			request.location(),
 			request.category()
 		);
+
+		String thumbnailPath = fileStorageService.moveFileDir(
+			tempThumbnailFile.getPhysicalPath(), lecture.getId(), "thumbnail"
+		);
+		fileCommandService.updateFilePhysicalPath(tempThumbnailFile.getId(), thumbnailPath);
+
+		String materialPath = fileStorageService.moveFileDir(
+			tempMaterialFile.getPhysicalPath(), lecture.getId(), "materials"
+		);
+		fileCommandService.updateFilePhysicalPath(tempMaterialFile.getId(), materialPath);
+
+		String speakerProfilePath = fileStorageService.moveFileDir(
+			tempSpeakerFile.getPhysicalPath(), lecture.getId(), "speaker"
+		);
+		fileCommandService.updateFilePhysicalPath(tempSpeakerFile.getId(), speakerProfilePath);
 
 		return LectureCreateResponse.from(speaker, lecture);
 	}
