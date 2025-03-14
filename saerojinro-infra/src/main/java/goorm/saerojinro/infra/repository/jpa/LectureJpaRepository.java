@@ -2,7 +2,9 @@ package goorm.saerojinro.infra.repository.jpa;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,6 +20,10 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 	List<Lecture> findAll();
 
 	Optional<Lecture> findById(@Param("id") Long id);
+
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	@Query("SELECT l FROM Lecture l WHERE l.id = :id")
+	Optional<Lecture> findByIdWithLock(@Param("id") Long id);
 
 	List<Lecture> findByStartTime(LocalDateTime time);
 

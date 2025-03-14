@@ -27,6 +27,11 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
+	public Optional<Lecture> findByIdWithLock(Long id){
+		return lectureJpaRepository.findByIdWithLock(id);
+	}
+
+	@Override
 	public List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end){
 		return lectureJpaRepository.findByStartTimeBetween(start,end);
 	}
