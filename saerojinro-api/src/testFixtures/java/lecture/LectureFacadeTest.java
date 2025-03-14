@@ -38,9 +38,13 @@ public class LectureFacadeTest {
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
 	private final FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
-
+	private FakeLogEventRepository fakeLogEventRepository;
 	private Lecture lecture1;
 	private Lecture lecture2;
+
+	private RedisLogEvent redisLogEvent1;
+	private RedisLogEvent redisLogEvent2;
+	private RedisLogEvent redisLogEvent3;
 
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
@@ -53,7 +57,7 @@ public class LectureFacadeTest {
 	void setUp() {
 		FakeLectureRepository lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
-		FakeLogEventRepository fakeLogEventRepository = new FakeLogEventRepository();
+		fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
 		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
@@ -102,7 +106,7 @@ public class LectureFacadeTest {
 		lecture2 = lectureRepository.save(lecture2);
 
 		String record = "record";
-		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
+		redisLogEvent1 = RedisLogEvent.of(
 			user1.getId(),
 			lecture1.getId(),
 			LECTURE_RESERVATION_SUCCESS,
@@ -110,7 +114,7 @@ public class LectureFacadeTest {
 			LocalDateTime.now()
 		);
 
-		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
+		redisLogEvent2 = RedisLogEvent.of(
 			user1.getId(),
 			lecture1.getId(),
 			LECTURE_RESERVATION_SUCCESS,
@@ -118,7 +122,7 @@ public class LectureFacadeTest {
 			LocalDateTime.now()
 		);
 
-		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
+		redisLogEvent3 = RedisLogEvent.of(
 			user1.getId(),
 			lecture2.getId(),
 			LECTURE_RESERVATION_SUCCESS,
@@ -173,6 +177,24 @@ public class LectureFacadeTest {
 	void getRecommendationLectures_Success() {
 		// given
 		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+
+		// when
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
+
+		// then
+		assertEquals(2, response.responses().size());
+		assertEquals(lecture1.getTitle(), response.responses().get(0).title());
+		assertEquals(lecture2.getTitle(), response.responses().get(1).title());
+	}
+
+	@Test
+	@DisplayName("getRecommendationLectures는 Redis에 데이터가 있는 경우, Redis에 있는 데이터를 참고하여 우선순위 대로 조회된 List가 반환된다.")
+	void getRecommendationLecturesFromRedis_Success() {
+		// given
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+		fakeLogEventRepository.cache(redisLogEvent1);
+		fakeLogEventRepository.cache(redisLogEvent2);
+		fakeLogEventRepository.cache(redisLogEvent3);
 
 		// when
 		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
