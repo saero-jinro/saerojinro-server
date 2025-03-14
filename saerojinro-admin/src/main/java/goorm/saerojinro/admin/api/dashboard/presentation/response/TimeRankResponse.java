@@ -18,15 +18,19 @@ public record TimeRankResponse(
 	String day,
 
 	@Schema(description = "시작시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
-	LocalDateTime startTime
+	LocalDateTime startTime,
+
+	@Schema(description = "예상 인원", example = "200", requiredMode = REQUIRED)
+	int expectation
 ) {
-	public static TimeRankResponse from(LocalDateTime startTime, int rank) {
+	public static TimeRankResponse from(LocalDateTime startTime, int rank, int expectation) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M월 d일 E요일", Locale.KOREAN);
 
 		return TimeRankResponse.builder()
 			.rank(rank)
 			.day(startTime.format(formatter))
 			.startTime(startTime)
+			.expectation(expectation)
 			.build();
 	}
 }

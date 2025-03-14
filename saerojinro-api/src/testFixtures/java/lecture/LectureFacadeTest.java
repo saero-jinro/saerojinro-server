@@ -7,22 +7,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.producer.FakeLogEventProducer;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeUserRepository;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,46 +39,42 @@ public class LectureFacadeTest {
 	private LectureFacade lectureFacade;
 	private LectureQueryService lectureQueryService;
 	private final FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
-
+	private FakeLogEventRepository fakeLogEventRepository;
 	private Lecture lecture1;
 	private Lecture lecture2;
 
+	private RedisLogEvent redisLogEvent1;
+	private RedisLogEvent redisLogEvent2;
+	private RedisLogEvent redisLogEvent3;
 
 	private static final String NAME = "Cole Palmer";
 	private static final String EMAIL = "google@mail.com";
-	private static final String POSITION = "00 기업 / CEO";
-	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
-	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+	private static final String POSITION = "00 기업 CEO";
+	private static final String INTRODUCTION = "AA 기업  - 백엔드 개발";
+	private static final String FILMOGRAPHY = "Location";
 
-	private static final String SPEAKER_IMAGE_URI = "uploads/speaker/123456.jpg";
+	private static final String LOGICAL_NAME = "2025 상반기 신입 채용";
+	private static final String PHYSICAL_PATH = "uploads/speaker";
+	private static final Long FILE_SIZE = 10000L;
+	private static final String EXTENSION = "pdf";
 
-	private static final String LECTURE_TITLE_ONE = "Lecture One";
-	private static final String LECTURE_CONTENTS_ONE = "Contents One";
-	private static final String LECTURE_TITLE_TWO = "Lecture Two";
-	private static final String LECTURE_CONTENTS_TWO = "Contents Two";
-
-	private static final String THUMBNAIL_URI_ONE = "uploads/lecture/thumbnail/123456.jpg";
-	private static final String MATERIAL_URI_ONE = "uploads/lecture/materials/발표자료.pdf";
-
-	private static final Long MAX_CAPACITY = 100L;
-	private static final LocalDateTime START_TIME_ONE = LocalDateTime.of(2025, 3, 1, 10, 0);
-	private static final LocalDateTime END_TIME_ONE = LocalDateTime.of(2025, 3, 1, 12, 0);
-	private static final LocalDateTime START_TIME_TWO = LocalDateTime.of(2025, 3, 1, 14, 0);
-	private static final LocalDateTime END_TIME_TWO = LocalDateTime.of(2025, 3, 1, 16, 0);
-	private static final String LOCATION_ONE = "room A";
-	private static final String LOCATION_TWO = "room B";
+	File file = File.create(
+		LOGICAL_NAME,
+		PHYSICAL_PATH,
+		FILE_SIZE,
+		EXTENSION
+	);
 
 	@BeforeEach
 	void setUp() {
 		FakeLectureRepository lectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(lectureRepository);
-		FakeLogEventRepository fakeLogEventRepository = new FakeLogEventRepository();
+		fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
 		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
 		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), logEventService);
 
-		File speakerImageFile = File.create("Speaker_Image", SPEAKER_IMAGE_URI, 3000L, "jpg");
 
 		Speaker speaker = Speaker.builder()
 			.name(NAME)
@@ -85,43 +82,34 @@ public class LectureFacadeTest {
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
-			.imageFile(speakerImageFile)
+			.imageFile(file)
 			.build();
-
-		File thumbnailFile1 = File.create("Thumbnail1", THUMBNAIL_URI_ONE, 5000L, "jpg");
-		File materialFile1 = File.create("Material1", MATERIAL_URI_ONE, 10000L, "pdf");
 
 		lecture1 = Lecture.builder()
 			.speaker(speaker)
-			.title(LECTURE_TITLE_ONE)
-			.contents(LECTURE_CONTENTS_ONE)
-			.thumbnailFile(thumbnailFile1)
-			.materialFile(materialFile1)
-			.maxCapacity(MAX_CAPACITY)
-			.startTime(START_TIME_ONE)
-			.endTime(END_TIME_ONE)
-			.location(LOCATION_ONE)
+			.thumbnailFile(file)
+			.materialFile(file)
+			.title("Lecture One")
+			.contents("Contents One")
+			.maxCapacity(100L)
+			.startTime(LocalDateTime.of(2025, 3, 1, 10, 0))
+			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
+			.location("room A")
 			.category(BACKEND)
 			.build();
-
-		File thumbnailFile2 = File.create("Thumbnail2", THUMBNAIL_URI_ONE, 5000L, "jpg"); // 재사용 가능
-		File materialFile2 = File.create("Material2", MATERIAL_URI_ONE, 10000L, "pdf");
 
 		lecture2 = Lecture.builder()
 			.speaker(speaker)
-			.title(LECTURE_TITLE_TWO)
-			.contents(LECTURE_CONTENTS_TWO)
-			.thumbnailFile(thumbnailFile2)
-			.materialFile(materialFile2)
-			.maxCapacity(MAX_CAPACITY)
-			.startTime(START_TIME_TWO)
-			.endTime(END_TIME_TWO)
-			.location(LOCATION_TWO)
-			.category(BACKEND)
+			.thumbnailFile(file)
+			.materialFile(file)
+			.title("Lecture Two")
+			.contents("Contents Two")
+			.maxCapacity(100L)
+			.startTime(LocalDateTime.of(2025, 3, 1, 10, 0))
+			.endTime(LocalDateTime.of(2025, 3, 1, 12, 0))
+			.location("room B")
+			.category(FRONTEND)
 			.build();
-
-		lecture1 = lectureRepository.save(lecture1);
-		lecture2 = lectureRepository.save(lecture2);
 
 		User user1 = fakeUserRepository.save(User.builder()
 			.email("email@email.com")
@@ -135,13 +123,33 @@ public class LectureFacadeTest {
 		lecture2 = lectureRepository.save(lecture2);
 
 		String record = "record";
-		LogEventDto logEventDto1 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
-		LogEventDto logEventDto2 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
-		LogEventDto logEventDto3 = LogEventDto.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory());
+		redisLogEvent1 = RedisLogEvent.of(
+			user1.getId(),
+			lecture1.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture1.getCategory(),
+			LocalDateTime.now()
+		);
 
-		logEventService.save(record + 1, logEventDto1);
-		logEventService.save(record + 2, logEventDto2);
-		logEventService.save(record + 3, logEventDto3);
+		redisLogEvent2 = RedisLogEvent.of(
+			user1.getId(),
+			lecture1.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture1.getCategory(),
+			LocalDateTime.now()
+		);
+
+		redisLogEvent3 = RedisLogEvent.of(
+			user1.getId(),
+			lecture2.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture2.getCategory(),
+			LocalDateTime.now()
+		);
+
+		logEventService.save(record + 1, redisLogEvent1);
+		logEventService.save(record + 2, redisLogEvent2);
+		logEventService.save(record + 3, redisLogEvent3);
 
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -153,7 +161,7 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("강의 아이디로 강의 상세 정보를 조회할 수 있다")
 	void getById_success() {
-		LectureDetailResponse detail = lectureFacade.getById(lecture1.getId());
+		LectureDetailResponse detail = lectureFacade.getById(1L);
 
 		assertNotNull(detail);
 		assertEquals(lecture1.getTitle(), detail.title());
@@ -163,7 +171,7 @@ public class LectureFacadeTest {
 	@Test
 	@DisplayName("존재하지 않는 강의 ID면 예외를 반환한다")
 	void getByLectureId_notFound() {
-		assertThrows(LectureNotFoundException.class, () -> lectureFacade.getById(999L));
+		assertThrows(LectureNotFoundException.class, () -> lectureQueryService.getById(999L));
 	}
 
 	@Test
@@ -176,7 +184,7 @@ public class LectureFacadeTest {
 
 		// then
 		assertNotNull(response);
-		assertEquals(4, response.lectures().size());
+		assertEquals(2, response.lectures().size());
 		assertEquals(lecture1.getTitle(), response.lectures().get(0).title());
 		assertEquals(lecture2.getTitle(), response.lectures().get(1).title());
 	}
@@ -193,5 +201,24 @@ public class LectureFacadeTest {
 		// then
 		assertEquals(2, response.responses().size());
 		assertEquals(lecture1.getTitle(), response.responses().get(0).title());
+		assertEquals(lecture2.getTitle(), response.responses().get(1).title());
+	}
+
+	@Test
+	@DisplayName("getRecommendationLectures는 Redis에 데이터가 있는 경우, Redis에 있는 데이터를 참고하여 우선순위 대로 조회된 List가 반환된다.")
+	void getRecommendationLecturesFromRedis_Success() {
+		// given
+		LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+		fakeLogEventRepository.cache(redisLogEvent1);
+		fakeLogEventRepository.cache(redisLogEvent2);
+		fakeLogEventRepository.cache(redisLogEvent3);
+
+		// when
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
+
+		// then
+		assertEquals(2, response.responses().size());
+		assertEquals(lecture1.getTitle(), response.responses().get(0).title());
+		assertEquals(lecture2.getTitle(), response.responses().get(1).title());
 	}
 }
