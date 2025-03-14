@@ -40,11 +40,6 @@ public class FakeLogEventRepository implements LogEventRepository {
 			}
 
 			logList.add(redisLogEvent);
-
-			if (logList.size() > 50) {
-				logList.remove(0);
-			}
-
 			return logList;
 		});
 	}
