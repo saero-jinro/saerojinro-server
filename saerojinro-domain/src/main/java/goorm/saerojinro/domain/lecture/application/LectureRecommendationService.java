@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class LectureRecommendationService {
-	public Map<Category, Integer> getRecommendationCategoriesByDto(List<RedisLogEvent> logEvents) {
-		return getRecommendationCategories(logEvents.stream()
+	public Map<Category, Integer> getRecommendationCategoriesByCache(List<RedisLogEvent> redisLogEvents) {
+		return getRecommendationCategories(redisLogEvents.stream()
 			.collect(Collectors.groupingBy(RedisLogEvent::category,
-				Collectors.summingInt(dto -> dto.logEventType().getWeight()))));
+				Collectors.summingInt(redisLogEvent -> redisLogEvent.logEventType().getWeight()))));
 	}
 
 	public Map<Category, Integer> getRecommendationCategoriesByEntity(List<LogEvent> logEvents) {

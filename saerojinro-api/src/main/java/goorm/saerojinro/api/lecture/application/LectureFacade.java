@@ -63,7 +63,7 @@ public class LectureFacade {
 			List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
 			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
 		} else {
-			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByDto(userRedisLogEvents);
+			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByCache(userRedisLogEvents);
 		}
 
 		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);

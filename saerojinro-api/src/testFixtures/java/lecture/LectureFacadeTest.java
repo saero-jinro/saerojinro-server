@@ -102,9 +102,29 @@ public class LectureFacadeTest {
 		lecture2 = lectureRepository.save(lecture2);
 
 		String record = "record";
-		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory(), LocalDateTime.now());
-		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory(), LocalDateTime.now());
-		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory(), LocalDateTime.now());
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
+			user1.getId(),
+			lecture1.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture1.getCategory(),
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
+			user1.getId(),
+			lecture1.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture1.getCategory(),
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
+			user1.getId(),
+			lecture2.getId(),
+			LECTURE_RESERVATION_SUCCESS,
+			lecture2.getCategory(),
+			LocalDateTime.now()
+		);
 
 		logEventService.save(record + 1, redisLogEvent1);
 		logEventService.save(record + 2, redisLogEvent2);
