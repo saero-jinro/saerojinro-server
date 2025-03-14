@@ -3,6 +3,7 @@ package goorm.saerojinro.domain.dashboard.application;
 import goorm.saerojinro.domain.dashboard.domain.Dashboard;
 import goorm.saerojinro.domain.dashboard.domain.DashboardRepository;
 import goorm.saerojinro.domain.dashboard.dto.DashboardAggregation;
+import goorm.saerojinro.domain.dashboard.dto.TimeRankDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,17 +34,19 @@ public class DashboardService {
 			.toList();
 
 		// 시간 상위 10개
-		List<LocalDateTime> times = dashboardList.stream()
+		AtomicInteger rankCounter = new AtomicInteger(1);
+		List<TimeRankDto> timeRankDtos = dashboardList.stream()
 			.collect(
 				Collectors.groupingBy(Dashboard::getStartTime, Collectors.summingInt(Dashboard::getSum))
 			).entrySet().stream()
 			.sorted(Map.Entry.<LocalDateTime, Integer>comparingByValue().reversed())
 			.limit(10)
-			.map(Map.Entry::getKey)
-			.toList();
+			.map(entry ->
+				TimeRankDto.of(rankCounter.getAndIncrement(), entry.getKey(), entry.getValue())
+			).toList();
 
 		// 데이터 집계
-		return new DashboardAggregation(high, low, times);
+		return DashboardAggregation.of(high, low, timeRankDtos);
 	}
 
 	public Dashboard save(Dashboard dashboard) {
