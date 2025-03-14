@@ -41,9 +41,8 @@ public class LogEventService {
 		return logEventRepository.findRecentLogByUserId(userId);
 	}
 
-	@Transactional(readOnly = true)
-	public List<RedisLogEvent> getLogEventsByUserFromCache(Long userId) {
-		return logEventRepository.findRecentFromCache(userId);
+	public List<RedisLogEvent> getLogEventsByUserFromRedis(Long userId) {
+		return logEventRepository.findRecentFromRedis(userId);
 	}
 
 	public void cache(RedisLogEvent logEvent) {

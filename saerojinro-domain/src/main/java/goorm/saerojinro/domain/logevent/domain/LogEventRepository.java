@@ -9,7 +9,7 @@ public interface LogEventRepository {
 
 	List<LogEvent> findRecentLogByUserId(Long userId);
 
-	List<RedisLogEvent> findRecentFromCache(Long userId);
+	List<RedisLogEvent> findRecentFromRedis(Long userId);
 
 	void cache(RedisLogEvent redisLogEvent);
 }

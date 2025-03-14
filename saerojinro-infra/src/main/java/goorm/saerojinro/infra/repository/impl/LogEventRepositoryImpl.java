@@ -28,7 +28,7 @@ public class LogEventRepositoryImpl implements LogEventRepository {
 	}
 
 	@Override
-	public List<RedisLogEvent> findRecentFromCache(Long userId) {
+	public List<RedisLogEvent> findRecentFromRedis(Long userId) {
 		return redisLogEventRepository.findRecentFromCache(userId);
 	}
 

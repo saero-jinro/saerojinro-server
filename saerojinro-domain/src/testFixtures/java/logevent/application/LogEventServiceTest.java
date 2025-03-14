@@ -100,9 +100,29 @@ public class LogEventServiceTest {
 	public void getLogEventsByUser_Success() {
 		// given
 		String record = "record";
-		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
-		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
-		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
 
 		logEventService.save(record + 1, redisLogEvent1);
 		logEventService.save(record + 2, redisLogEvent2);
@@ -113,5 +133,64 @@ public class LogEventServiceTest {
 
 		// then
 		assertEquals(3, response.size());
+	}
+
+	@Test
+	@DisplayName("getLogEventsByUserFromRedis는 redis에 저장되어 있던 유저 로그를 조회한다.")
+	public void getLogEventsByUserFromRedis_Success() {
+		// given
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		logEventService.cache(redisLogEvent1);
+		logEventService.cache(redisLogEvent2);
+		logEventService.cache(redisLogEvent3);
+
+		// when
+		List<RedisLogEvent> response = logEventService.getLogEventsByUserFromRedis(1L);
+
+		// then
+		assertEquals(3, response.size());
+	}
+
+	@Test
+	@DisplayName("cache는 RedisEventLog를 저장한다.")
+	public void cache_Success() {
+		// given
+		RedisLogEvent redisLogEvent = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		// when
+		logEventService.cache(redisLogEvent);
+		RedisLogEvent result = logEventService.getLogEventsByUserFromRedis(1L).get(0);
+
+		// then
+		assertEquals(redisLogEvent, result);
 	}
 }

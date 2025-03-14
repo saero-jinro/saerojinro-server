@@ -57,7 +57,7 @@ public class LectureFacade {
 	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
 		Long userId = userQueryService.me().getId();
 		Map<Category, Integer> categoryPriortyMap;
-		List<RedisLogEvent> userRedisLogEvents = logEventService.getLogEventsByUserFromCache(userId);
+		List<RedisLogEvent> userRedisLogEvents = logEventService.getLogEventsByUserFromRedis(userId);
 
 		if (userRedisLogEvents.isEmpty()) {
 			List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
