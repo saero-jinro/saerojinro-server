@@ -6,21 +6,34 @@ import org.springframework.stereotype.Repository;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventRepository;
-import goorm.saerojinro.infra.repository.jpa.EventLogJpaRepository;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.infra.repository.jpa.LogEventJpaRepository;
+import goorm.saerojinro.infra.repository.redis.RedisLogEventRepository;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class LogEventRepositoryImpl implements LogEventRepository {
-	private final EventLogJpaRepository eventLogJpaRepository;
+	private final LogEventJpaRepository logEventJpaRepository;
+	private final RedisLogEventRepository redisLogEventRepository;
 
 	@Override
 	public LogEvent save(LogEvent logEvent) {
-		return eventLogJpaRepository.save(logEvent);
+		return logEventJpaRepository.save(logEvent);
 	}
 
 	@Override
 	public List<LogEvent> findRecentLogByUserId(Long userId) {
-		return eventLogJpaRepository.findTop50ByUserIdOrderByTimestampDesc(userId);
+		return logEventJpaRepository.findTop50ByUserIdOrderByTimestampDesc(userId);
+	}
+
+	@Override
+	public List<LogEventDto> findRecentFromCache(Long userId) {
+		return redisLogEventRepository.findRecentFromCache(userId);
+	}
+
+	@Override
+	public void cache(LogEventDto logEventDto) {
+		redisLogEventRepository.addLogEvent(logEventDto);
 	}
 }
