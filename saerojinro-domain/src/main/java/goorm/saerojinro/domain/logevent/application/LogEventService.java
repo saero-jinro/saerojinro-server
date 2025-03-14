@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventRepository;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -22,15 +22,16 @@ public class LogEventService {
 	private final LectureQueryService lectureQueryService;
 
 	@Transactional
-	public LogEvent save(String record, LogEventDto logEventDto) {
-		User user = userQueryService.getById(logEventDto.userId());
-		Lecture lecture = lectureQueryService.getById(logEventDto.lectureId());
+	public LogEvent save(String record, RedisLogEvent redisLogEvent) {
+		User user = userQueryService.getById(redisLogEvent.userId());
+		Lecture lecture = lectureQueryService.getById(redisLogEvent.lectureId());
 		LogEvent logEvent = LogEvent.create(
 			record,
 			user,
 			lecture,
-			logEventDto.logEventType(),
-			logEventDto.category()
+			redisLogEvent.logEventType(),
+			redisLogEvent.category(),
+			redisLogEvent.timestamp()
 		);
 		return logEventRepository.save(logEvent);
 	}
@@ -41,11 +42,11 @@ public class LogEventService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<LogEventDto> getLogEventsByUserFromCache(Long userId) {
+	public List<RedisLogEvent> getLogEventsByUserFromCache(Long userId) {
 		return logEventRepository.findRecentFromCache(userId);
 	}
 
-	public void cache(LogEventDto logEvent) {
+	public void cache(RedisLogEvent logEvent) {
 		logEventRepository.cache(logEvent);
 	}
 }

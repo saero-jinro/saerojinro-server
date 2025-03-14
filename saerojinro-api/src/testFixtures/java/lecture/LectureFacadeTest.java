@@ -9,13 +9,12 @@ import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
-import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.producer.FakeLogEventProducer;
@@ -103,13 +102,13 @@ public class LectureFacadeTest {
 		lecture2 = lectureRepository.save(lecture2);
 
 		String record = "record";
-		LogEventDto logEventDto1 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
-		LogEventDto logEventDto2 = LogEventDto.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
-		LogEventDto logEventDto3 = LogEventDto.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory());
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(user1.getId(), lecture1.getId(), LECTURE_RESERVATION_SUCCESS, lecture1.getCategory());
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(user1.getId(), lecture2.getId(), LECTURE_RESERVATION_SUCCESS, lecture2.getCategory());
 
-		logEventService.save(record + 1, logEventDto1);
-		logEventService.save(record + 2, logEventDto2);
-		logEventService.save(record + 3, logEventDto3);
+		logEventService.save(record + 1, redisLogEvent1);
+		logEventService.save(record + 2, redisLogEvent2);
+		logEventService.save(record + 3, redisLogEvent3);
 
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();

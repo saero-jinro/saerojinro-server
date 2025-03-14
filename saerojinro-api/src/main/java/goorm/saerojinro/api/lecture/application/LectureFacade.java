@@ -8,7 +8,7 @@ import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -38,8 +38,8 @@ public class LectureFacade {
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
-			LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory(), LocalDateTime.now());
-			logEventProducer.sendMessage(logEventDto);
+			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory(), LocalDateTime.now());
+			logEventProducer.sendMessage(redisLogEvent);
 		}
 
 		return LectureDetailResponse.from(lecture);
@@ -57,13 +57,13 @@ public class LectureFacade {
 	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
 		Long userId = userQueryService.me().getId();
 		Map<Category, Integer> categoryPriortyMap;
-		List<LogEventDto> userLogEventDtos = logEventService.getLogEventsByUserFromCache(userId);
+		List<RedisLogEvent> userRedisLogEvents = logEventService.getLogEventsByUserFromCache(userId);
 
-		if (userLogEventDtos.isEmpty()) {
+		if (userRedisLogEvents.isEmpty()) {
 			List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
 			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
 		} else {
-			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByDto(userLogEventDtos);
+			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByDto(userRedisLogEvents);
 		}
 
 		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);

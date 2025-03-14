@@ -56,14 +56,21 @@ public class LogEvent {
 	@Column(nullable = false)
 	private LocalDateTime timestamp;
 
-	public static LogEvent create(String record, User user, Lecture lecture, LogEventType logEventType, Category category) {
+	public static LogEvent create(
+		String record,
+		User user,
+		Lecture lecture,
+		LogEventType logEventType,
+		Category category,
+		LocalDateTime timestamp
+	) {
 		return LogEvent.builder()
 			.record(record)
 			.user(user)
 			.lecture(lecture)
 			.logEventType(logEventType)
 			.category(category)
-			.timestamp(LocalDateTime.now())
+			.timestamp(timestamp)
 			.build();
 	}
 }

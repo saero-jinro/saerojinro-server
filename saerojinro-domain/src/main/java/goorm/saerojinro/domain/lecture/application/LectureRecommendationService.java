@@ -9,17 +9,16 @@ import java.util.stream.IntStream;
 import org.springframework.stereotype.Service;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class LectureRecommendationService {
-	public Map<Category, Integer> getRecommendationCategoriesByDto(List<LogEventDto> logEvents) {
+	public Map<Category, Integer> getRecommendationCategoriesByDto(List<RedisLogEvent> logEvents) {
 		return getRecommendationCategories(logEvents.stream()
-			.collect(Collectors.groupingBy(LogEventDto::category,
+			.collect(Collectors.groupingBy(RedisLogEvent::category,
 				Collectors.summingInt(dto -> dto.logEventType().getWeight()))));
 	}
 

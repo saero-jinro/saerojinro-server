@@ -20,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
@@ -82,15 +82,15 @@ public class LogEventServiceTest {
 	public void save_Success() {
 		// given
 		String record = "record";
-		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
 
 		// when
-		LogEvent response = logEventService.save(record, logEventDto);
+		LogEvent response = logEventService.save(record, redisLogEvent);
 
 		// then
 		assertEquals(record, response.getRecord());
-		assertEquals(logEventDto.logEventType(), response.getLogEventType());
-		assertEquals(logEventDto.category(), response.getCategory());
+		assertEquals(redisLogEvent.logEventType(), response.getLogEventType());
+		assertEquals(redisLogEvent.category(), response.getCategory());
 		assertEquals(user, response.getUser());
 		assertEquals(lecture, response.getLecture());
 	}
@@ -100,13 +100,13 @@ public class LogEventServiceTest {
 	public void getLogEventsByUser_Success() {
 		// given
 		String record = "record";
-		LogEventDto logEventDto1 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
-		LogEventDto logEventDto2 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
-		LogEventDto logEventDto3 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
 
-		logEventService.save(record + 1, logEventDto1);
-		logEventService.save(record + 2, logEventDto2);
-		logEventService.save(record + 3, logEventDto3);
+		logEventService.save(record + 1, redisLogEvent1);
+		logEventService.save(record + 2, redisLogEvent2);
+		logEventService.save(record + 3, redisLogEvent3);
 
 		// when
 		List<LogEvent> response = logEventService.getLogEventsByUser(1L);

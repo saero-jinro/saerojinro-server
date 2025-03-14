@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventRepository;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.infra.repository.jpa.LogEventJpaRepository;
 import goorm.saerojinro.infra.repository.redis.RedisLogEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,12 @@ public class LogEventRepositoryImpl implements LogEventRepository {
 	}
 
 	@Override
-	public List<LogEventDto> findRecentFromCache(Long userId) {
+	public List<RedisLogEvent> findRecentFromCache(Long userId) {
 		return redisLogEventRepository.findRecentFromCache(userId);
 	}
 
 	@Override
-	public void cache(LogEventDto logEventDto) {
-		redisLogEventRepository.addLogEvent(logEventDto);
+	public void cache(RedisLogEvent redisLogEvent) {
+		redisLogEventRepository.addLogEvent(redisLogEvent);
 	}
 }

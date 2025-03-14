@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.infra.messaging.exception.StreamProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +27,16 @@ public class RedisLogEventRepository {
 
 	private static final String USER_LOG_KEY_PREFIX = "user:logs:";
 
-	public List<LogEventDto> findRecentFromCache(Long userId) {
+	public List<RedisLogEvent> findRecentFromCache(Long userId) {
 		String redisKey = USER_LOG_KEY_PREFIX + userId;
 
 		Set<String> cachedLogs = redisTemplate.opsForZSet().range(redisKey, 0, -1);
-		List<LogEventDto> logEvents = new ArrayList<>();
+		List<RedisLogEvent> logEvents = new ArrayList<>();
 
 		if (cachedLogs != null) {
 			for (String json : cachedLogs) {
 				try {
-					logEvents.add(objectMapper.readValue(json, LogEventDto.class));
+					logEvents.add(objectMapper.readValue(json, RedisLogEvent.class));
 				} catch (JsonProcessingException e) {
 					throw new StreamProcessingException();
 				}
@@ -46,12 +46,12 @@ public class RedisLogEventRepository {
 		return logEvents;
 	}
 
-	public void addLogEvent(LogEventDto logEventDto) {
-		String redisKey = USER_LOG_KEY_PREFIX + logEventDto.userId();
+	public void addLogEvent(RedisLogEvent redisLogEvent) {
+		String redisKey = USER_LOG_KEY_PREFIX + redisLogEvent.userId();
 
 		try {
-			String json = objectMapper.writeValueAsString(logEventDto);
-			long score = logEventDto.timestamp().toInstant(ZoneOffset.UTC).toEpochMilli();
+			String json = objectMapper.writeValueAsString(redisLogEvent);
+			long score = redisLogEvent.timestamp().toInstant(ZoneOffset.UTC).toEpochMilli();
 
 			redisTemplate.opsForZSet().add(redisKey, json, score);
 			redisTemplate.opsForZSet().removeRange(redisKey, 0, -51);

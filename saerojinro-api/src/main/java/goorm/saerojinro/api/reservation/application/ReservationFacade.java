@@ -10,7 +10,7 @@ import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
@@ -44,26 +44,26 @@ public class ReservationFacade {
             Reservation reservation = reservationCommandService.create(user, lecture);
 
             logEventType = LECTURE_RESERVATION_SUCCESS;
-            LogEventDto logEventDto = LogEventDto.of(
+            RedisLogEvent redisLogEvent = RedisLogEvent.of(
                 user.getId(),
                 lecture.getId(),
                 logEventType,
                 lecture.getCategory(),
                 LocalDateTime.now()
             );
-            logEventProducer.sendMessage(logEventDto);
+            logEventProducer.sendMessage(redisLogEvent);
 
             return ReservationCreateResponse.from(reservation);
         } catch (CustomException e) {
             logEventType = LECTURE_RESERVATION_FAIL;
-            LogEventDto logEventDto = LogEventDto.of(
+            RedisLogEvent redisLogEvent = RedisLogEvent.of(
                 user.getId(),
                 lecture.getId(),
                 logEventType,
                 lecture.getCategory(),
                 LocalDateTime.now()
             );
-            logEventProducer.sendMessage(logEventDto);
+            logEventProducer.sendMessage(redisLogEvent);
 
             throw e;
         }

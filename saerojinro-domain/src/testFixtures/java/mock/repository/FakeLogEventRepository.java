@@ -8,11 +8,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventRepository;
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 
 public class FakeLogEventRepository implements LogEventRepository {
 	private final List<LogEvent> data = Collections.synchronizedList(new ArrayList<>());
-	private final Map<Long, List<LogEventDto>> map = new ConcurrentHashMap<>();
+	private final Map<Long, List<RedisLogEvent>> map = new ConcurrentHashMap<>();
 
 	@Override
 	public LogEvent save(LogEvent logEvent) {
@@ -28,25 +28,24 @@ public class FakeLogEventRepository implements LogEventRepository {
 	}
 
 	@Override
-	public List<LogEventDto> findRecentFromCache(Long userId) {
+	public List<RedisLogEvent> findRecentFromCache(Long userId) {
 		return map.getOrDefault(userId, Collections.emptyList());
 	}
 
-	public void cache(Long userId, LogEventDto logEventDto) {
-		map.compute(userId, (key, logs) -> {
-			if (logs == null) {
-				logs = new ArrayList<>();
-			} else {
-				logs = new ArrayList<>(logs);
+	@Override
+	public void cache(RedisLogEvent redisLogEvent) {
+		map.compute(redisLogEvent.userId(), (userId, logList) -> {
+			if (logList == null) {
+				logList = new ArrayList<>();
 			}
 
-			logs.add(logEventDto);
+			logList.add(redisLogEvent);
 
-			if (logs.size() > 50) {
-				logs.removeFirst();
+			if (logList.size() > 50) {
+				logList.remove(0);
 			}
 
-			return logs;
+			return logList;
 		});
 	}
 }
