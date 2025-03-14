@@ -7,6 +7,7 @@ import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
+import goorm.saerojinro.domain.reservation.exception.ReservationFullException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
@@ -49,6 +50,7 @@ public class ReservationQueryServiceTest {
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
                 .endTime(END_TIME)
+                .maxCapacity(1L)
                 .location(LOCATION)
                 .category(CATEGORY)
                 .build();
@@ -63,6 +65,7 @@ public class ReservationQueryServiceTest {
                 .title(LECTURE_TITLE)
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
+                .maxCapacity(1L)
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
@@ -164,6 +167,39 @@ public class ReservationQueryServiceTest {
         // then
         assertDoesNotThrow(() ->
                 reservationQueryService.validateReservationByUserAndStartTime(USER_ID, nonDuplicateStartTime)
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationFull 은 예약이 꽉 차 있을 경우 예외를 발생 시킨다.")
+    public void valid_ReservationFullException(){
+        // given
+        Lecture lecture = createLecture();
+
+        // then
+        assertThrows(ReservationFullException.class, () ->
+                reservationQueryService.validateReservationFull(lecture)
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationFull 는 예약 자리가 남은 경우 예외를 발생시키지 않는다.")
+    public void valid_NoReservationFull(){
+        // given
+        Lecture lecture = Lecture.builder()
+                .id(LECTURE_ID)
+                .title(LECTURE_TITLE)
+                .contents(LECTURE_CONTENTS)
+                .startTime(START_TIME)
+                .maxCapacity(100L)
+                .endTime(END_TIME)
+                .location(LOCATION)
+                .category(CATEGORY)
+                .build();
+
+        // then
+        assertDoesNotThrow(() ->
+                reservationQueryService.validateReservationFull(lecture)
         );
     }
 

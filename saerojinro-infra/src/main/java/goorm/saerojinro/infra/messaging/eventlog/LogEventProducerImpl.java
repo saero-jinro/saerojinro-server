@@ -4,7 +4,7 @@ import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.infra.config.redis.RedisProperties;
 import goorm.saerojinro.infra.messaging.exception.InvalidMessageFormatException;
@@ -27,9 +27,9 @@ public class LogEventProducerImpl implements LogEventProducer {
 	private final RedisProperties redisProperties;
 
 	@Override
-	public void sendMessage(LogEventDto logEventDto) {
+	public void sendMessage(RedisLogEvent redisLogEvent) {
 		try {
-			String eventLogJson = objectMapper.writeValueAsString(logEventDto);
+			String eventLogJson = objectMapper.writeValueAsString(redisLogEvent);
 
 			ObjectRecord<String, String> record = StreamRecords.newRecord()
 				.in(redisProperties.getLogEventStreamKey())

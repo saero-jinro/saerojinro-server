@@ -8,6 +8,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
+import goorm.saerojinro.domain.reservation.exception.ReservationFullException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.producer.FakeLogEventProducer;
@@ -82,6 +83,7 @@ public class ReservationFacadeTest {
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
                 .endTime(END_TIME)
+                .maxCapacity(1L)
                 .location(LOCATION)
                 .category(CATEGORY)
                 .build();
@@ -92,6 +94,7 @@ public class ReservationFacadeTest {
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
                 .endTime(END_TIME)
+                .maxCapacity(1L)
                 .location(LOCATION)
                 .category(CATEGORY)
                 .build();
@@ -122,6 +125,18 @@ public class ReservationFacadeTest {
         Assertions.assertThrows(ReservationExistException.class,
                 () -> reservationFacade.create(2L));
     }
+
+    @Test
+    @DisplayName("create 는 예약하려는 강의의 남은 자리가 없을 시 ReservationFullException을 반환 합니다.")
+    public void create_ReservationFullException(){
+        // given
+        reservationFacade.create(LECTURE_ID);
+
+        // when
+        Assertions.assertThrows(ReservationFullException.class,
+                () -> reservationFacade.create(LECTURE_ID));
+    }
+
 
     @Test
     @DisplayName("cancel 은 기존에 저장된 예약 정보를 삭제한다.")

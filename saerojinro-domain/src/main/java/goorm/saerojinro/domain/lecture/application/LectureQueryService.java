@@ -28,9 +28,14 @@ public class LectureQueryService {
 			.orElseThrow(LectureNotFoundException::new);
 	}
 
+	public Lecture getByIdWithLock(Long lectureId){
+		return lectureRepository.findByIdWithLock(lectureId)
+				.orElseThrow(LectureNotFoundException::new);
+	}
+
 	public List<Lecture> getByDate(LocalDate localDate) {
 		LocalDateTime start = localDate.atStartOfDay();
-		LocalDateTime end   = localDate.plusDays(1).atStartOfDay();
+		LocalDateTime end = localDate.plusDays(1).atStartOfDay();
 		return lectureRepository.findByStartTimeBetween(start, end);
 	}
 

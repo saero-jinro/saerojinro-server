@@ -1,9 +1,11 @@
 package goorm.saerojinro.domain.reservation.application;
 
+import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
+import goorm.saerojinro.domain.reservation.exception.ReservationFullException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,12 @@ public class ReservationQueryService {
 
     public List<Reservation> getAllByLectureId(Long lectureId) {
         return reservationRepository.findAllByLectureId(lectureId);
+    }
+
+    public void validateReservationFull(Lecture lecture){
+        if(lecture.getMaxCapacity() <= countByLectureId(lecture.getId())){
+            throw new ReservationFullException();
+        }
     }
 
     public void validateReservationByUserAndStartTime(Long userId, LocalDateTime startTime) {

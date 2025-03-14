@@ -41,6 +41,12 @@ public class FakeLectureRepository implements LectureRepository {
 			.findFirst();
 	}
 
+	@Override
+	public Optional<Lecture> findByIdWithLock(Long id) {
+		return data.stream()
+				.filter(lecture -> lecture.getId().equals(id))
+				.findFirst();
+	}
 
 	@Override
 	public void delete(Lecture lecture) {

@@ -4,6 +4,8 @@ import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +27,7 @@ public class LogEventDomainTest {
 		Category category = BACKEND;
 
 		// when
-		LogEvent result = LogEvent.create(record, user, lecture, logEventType, category);
+		LogEvent result = LogEvent.create(record, user, lecture, logEventType, category, LocalDateTime.now());
 
 		// then
 		assertNotNull(record);
