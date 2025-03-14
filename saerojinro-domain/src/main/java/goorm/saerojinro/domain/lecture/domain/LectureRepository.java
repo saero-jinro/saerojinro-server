@@ -11,6 +11,8 @@ public interface LectureRepository {
 
 	Optional<Lecture> findById(Long id);
 
+	Optional<Lecture> findByIdWithLock(Long id);
+
 	List<Lecture> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 
 	void delete(Lecture lecture);

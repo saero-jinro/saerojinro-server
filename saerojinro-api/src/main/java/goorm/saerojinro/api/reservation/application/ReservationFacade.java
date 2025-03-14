@@ -33,14 +33,13 @@ public class ReservationFacade {
     @Transactional
     public ReservationCreateResponse create(Long lectureId) {
         User user = userQueryService.me();
-        Lecture lecture = lectureQueryService.getById(lectureId);
+        Lecture lecture = lectureQueryService.getByIdWithLock(lectureId);
         LogEventType logEventType;
 
         try {
-            reservationQueryService.validateReservationByUserAndStartTime(
-                user.getId(),
-                lecture.getStartTime()
-            );
+            reservationQueryService.validateReservationFull(lecture);
+            reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
+          
             Reservation reservation = reservationCommandService.create(user, lecture);
 
             logEventType = LECTURE_RESERVATION_SUCCESS;
