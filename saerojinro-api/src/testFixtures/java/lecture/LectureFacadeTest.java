@@ -131,7 +131,6 @@ public class LectureFacadeTest {
 			.build()
 		);
 
-		var userDetails = userQueryService.getByEmail("email@email.com");
 		lecture1 = lectureRepository.save(lecture1);
 		lecture2 = lectureRepository.save(lecture2);
 
@@ -147,7 +146,7 @@ public class LectureFacadeTest {
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(
-			new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities())
+			new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities())
 		);
 	}
 
