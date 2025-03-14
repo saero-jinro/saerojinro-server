@@ -50,7 +50,13 @@ public class WishListFacade {
 		Lecture lecture = lectureQueryService.getById(lectureId);
 		WishList wishList = wishListCommandService.create(user, lecture);
 
-		LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_WISHLIST, lecture.getCategory());
+		LogEventDto logEventDto = LogEventDto.of(
+			user.getId(),
+			lecture.getId(),
+			LECTURE_WISHLIST,
+			lecture.getCategory(),
+			LocalDateTime.now()
+		);
 		logEventProducer.sendMessage(logEventDto);
 
 		return WishListCreateResponse.from(wishList);

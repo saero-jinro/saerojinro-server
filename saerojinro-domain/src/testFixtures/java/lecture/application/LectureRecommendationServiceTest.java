@@ -38,7 +38,7 @@ public class LectureRecommendationServiceTest {
 		logEvents.add(LogEvent.create("record2", null, null, LECTURE_RESERVATION_SUCCESS, BACKEND));
 
 		// when
-		Map<Category, Integer> result = lectureRecommendationService.getRecommendationCategories(logEvents);
+		Map<Category, Integer> result = lectureRecommendationService.getRecommendationCategoriesByEntity(logEvents);
 
 		// then
 		assertEquals(result.get(BACKEND), 2);

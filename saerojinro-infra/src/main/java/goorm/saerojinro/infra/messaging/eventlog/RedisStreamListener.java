@@ -29,7 +29,7 @@ public class RedisStreamListener implements StreamListener<String, ObjectRecord<
 			LogEventDto logEventDto = objectMapper.readValue(message.getValue(), LogEventDto.class);
 
 			logEventService.save(record, logEventDto);
-
+			logEventService.cache(logEventDto);
 			redisTemplate.opsForStream().trim(redisProperties.getLogEventStreamKey(), 1000);
 		} catch (JsonProcessingException e) {
 			throw new InvalidMessageFormatException();

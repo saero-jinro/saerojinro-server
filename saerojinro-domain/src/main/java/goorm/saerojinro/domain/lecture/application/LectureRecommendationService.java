@@ -11,16 +11,26 @@ import org.springframework.stereotype.Service;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
+import goorm.saerojinro.domain.logevent.domain.dto.LogEventDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class LectureRecommendationService {
-	public Map<Category, Integer> getRecommendationCategories(List<LogEvent> logEvents) {
-		List<Category> sortedCategories = logEvents.stream()
+	public Map<Category, Integer> getRecommendationCategoriesByDto(List<LogEventDto> logEvents) {
+		return getRecommendationCategories(logEvents.stream()
+			.collect(Collectors.groupingBy(LogEventDto::category,
+				Collectors.summingInt(dto -> dto.logEventType().getWeight()))));
+	}
+
+	public Map<Category, Integer> getRecommendationCategoriesByEntity(List<LogEvent> logEvents) {
+		return getRecommendationCategories(logEvents.stream()
 			.collect(Collectors.groupingBy(LogEvent::getCategory,
-				Collectors.summingInt(logEvent -> logEvent.getLogEventType().getWeight())))
-			.entrySet().stream()
+				Collectors.summingInt(logEvent -> logEvent.getLogEventType().getWeight()))));
+	}
+
+	private Map<Category, Integer> getRecommendationCategories(Map<Category, Integer> categoryWeights) {
+		List<Category> sortedCategories = categoryWeights.entrySet().stream()
 			.sorted(Map.Entry.<Category, Integer>comparingByValue().reversed())
 			.map(Map.Entry::getKey)
 			.toList();

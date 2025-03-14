@@ -38,7 +38,7 @@ public class LectureFacade {
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
-			LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory());
+			LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory(), LocalDateTime.now());
 			logEventProducer.sendMessage(logEventDto);
 		}
 
@@ -55,8 +55,17 @@ public class LectureFacade {
 
 	@Transactional(readOnly = true)
 	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
-		List<LogEvent> userLogEvents = logEventService.getLogEventsByUser();
-		Map<Category, Integer> categoryPriortyMap = lectureRecommendationService.getRecommendationCategories(userLogEvents);
+		Long userId = userQueryService.me().getId();
+		Map<Category, Integer> categoryPriortyMap;
+		List<LogEventDto> userLogEventDtos = logEventService.getLogEventsByUserFromCache(userId);
+
+		if (userLogEventDtos.isEmpty()) {
+			List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
+			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
+		} else {
+			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByDto(userLogEventDtos);
+		}
+
 		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
 		return LectureSummaryListResponse.from(getRecommendationLectures);
 	}

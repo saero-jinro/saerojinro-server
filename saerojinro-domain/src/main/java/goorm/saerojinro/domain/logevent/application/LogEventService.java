@@ -25,15 +25,27 @@ public class LogEventService {
 	public LogEvent save(String record, LogEventDto logEventDto) {
 		User user = userQueryService.getById(logEventDto.userId());
 		Lecture lecture = lectureQueryService.getById(logEventDto.lectureId());
-		LogEvent logEvent = LogEvent.create(record, user, lecture, logEventDto.logEventType(), logEventDto.category());
-
+		LogEvent logEvent = LogEvent.create(
+			record,
+			user,
+			lecture,
+			logEventDto.logEventType(),
+			logEventDto.category()
+		);
 		return logEventRepository.save(logEvent);
 	}
 
 	@Transactional(readOnly = true)
-	public List<LogEvent> getLogEventsByUser() {
-		User user = userQueryService.me();
-		return logEventRepository.findRecentLogByUserId(user.getId());
+	public List<LogEvent> getLogEventsByUser(Long userId) {
+		return logEventRepository.findRecentLogByUserId(userId);
 	}
 
+	@Transactional(readOnly = true)
+	public List<LogEventDto> getLogEventsByUserFromCache(Long userId) {
+		return logEventRepository.findRecentFromCache(userId);
+	}
+
+	public void cache(LogEventDto logEvent) {
+		logEventRepository.cache(logEvent);
+	}
 }

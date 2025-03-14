@@ -3,6 +3,8 @@ package goorm.saerojinro.api.reservation.application;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 
+import java.time.LocalDateTime;
+
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
@@ -35,17 +37,32 @@ public class ReservationFacade {
         LogEventType logEventType;
 
         try {
-            reservationQueryService.validateReservationByUserAndStartTime(user.getId(), lecture.getStartTime());
+            reservationQueryService.validateReservationByUserAndStartTime(
+                user.getId(),
+                lecture.getStartTime()
+            );
             Reservation reservation = reservationCommandService.create(user, lecture);
 
             logEventType = LECTURE_RESERVATION_SUCCESS;
-            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
+            LogEventDto logEventDto = LogEventDto.of(
+                user.getId(),
+                lecture.getId(),
+                logEventType,
+                lecture.getCategory(),
+                LocalDateTime.now()
+            );
             logEventProducer.sendMessage(logEventDto);
 
             return ReservationCreateResponse.from(reservation);
         } catch (CustomException e) {
             logEventType = LECTURE_RESERVATION_FAIL;
-            LogEventDto logEventDto = LogEventDto.of(user.getId(), lecture.getId(), logEventType, lecture.getCategory());
+            LogEventDto logEventDto = LogEventDto.of(
+                user.getId(),
+                lecture.getId(),
+                logEventType,
+                lecture.getCategory(),
+                LocalDateTime.now()
+            );
             logEventProducer.sendMessage(logEventDto);
 
             throw e;
@@ -56,7 +73,10 @@ public class ReservationFacade {
     public void cancel(Long lectureId){
         User user = userQueryService.me();
 
-        Reservation reservation = reservationQueryService.getByUserAndLecture(user.getId(), lectureId);
+        Reservation reservation = reservationQueryService.getByUserAndLecture(
+            user.getId(),
+            lectureId
+        );
         reservationCommandService.cancel(reservation);
     }
 

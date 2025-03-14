@@ -82,7 +82,7 @@ public class LogEventServiceTest {
 	public void save_Success() {
 		// given
 		String record = "record";
-		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND);
+		LogEventDto logEventDto = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
 
 		// when
 		LogEvent response = logEventService.save(record, logEventDto);
@@ -100,16 +100,17 @@ public class LogEventServiceTest {
 	public void getLogEventsByUser_Success() {
 		// given
 		String record = "record";
-		LogEventDto logEventDto1 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND);
-		LogEventDto logEventDto2 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND);
-		LogEventDto logEventDto3 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND);
+		LogEventDto logEventDto1 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		LogEventDto logEventDto2 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		LogEventDto logEventDto3 = LogEventDto.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
 
 		logEventService.save(record + 1, logEventDto1);
 		logEventService.save(record + 2, logEventDto2);
 		logEventService.save(record + 3, logEventDto3);
 
 		// when
-		List<LogEvent> response = logEventService.getLogEventsByUser();
+		List<LogEvent> response = logEventService.getLogEventsByUser(1L);
+
 		// then
 		assertEquals(3, response.size());
 	}
