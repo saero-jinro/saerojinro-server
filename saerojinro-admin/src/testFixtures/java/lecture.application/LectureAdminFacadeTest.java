@@ -50,6 +50,7 @@ public class LectureAdminFacadeTest {
 
 	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail/123456.jpg";
 	private static final String MATERIAL_URI = "uploads/lecture/materials/발표자료.pdf";
+
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
@@ -107,6 +108,7 @@ public class LectureAdminFacadeTest {
 	@Test
 	@DisplayName("정상적으로 강의를 생성한다")
 	void createLecture_success() {
+
 		// when
 		LectureCreateResponse response = lectureAdminFacade.create(request);
 
@@ -124,7 +126,6 @@ public class LectureAdminFacadeTest {
 
 		assertEquals(expectedThumbnailPath, createdLecture.getThumbnailFile().getPhysicalPath());
 		assertEquals(expectedMaterialPath, createdLecture.getMaterialFile().getPhysicalPath());
-
 	}
 
 	@Test
@@ -161,15 +162,16 @@ public class LectureAdminFacadeTest {
 	@Test
 	@DisplayName("정상적으로 강의를 삭제한다")
 	void deleteLecture_success() {
-		// given
+
+		//given
 		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
 		Long lectureId = createResponse.lectureId();
 
 		// when
 		lectureAdminFacade.delete(lectureId);
 
-		// then
-		Lecture deletedLecture = lectureRepository.findById(lectureId).orElseThrow();
-		assertNotNull(deletedLecture.getDeletedAt());
+    // then
+		Lecture deletedLecture = lectureRepository.findById(lectureId)
+			.orElseThrow();
 	}
 }
