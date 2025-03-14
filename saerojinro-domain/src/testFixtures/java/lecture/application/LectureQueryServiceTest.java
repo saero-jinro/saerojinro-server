@@ -89,11 +89,30 @@ public class LectureQueryServiceTest {
 	}
 
 	@Test
+	@DisplayName("강의 ID로 특정한 강의 상세정보를 조회할 수 있다.")
+	void getByLectureIdWithLock_success() {
+		// when
+		Lecture lecture = lectureQueryService.getByIdWithLock(1L);
+
+		// then
+		assertNotNull(lecture, "강의 객체는 null이면 안 됩니다.");
+		assertEquals(TITLE, lecture.getTitle(), "강의 제목이 일치해야 합니다.");
+	}
+
+	@Test
 	@DisplayName("강의가 존재하지 않으면 상세정보 조회시 예외를 반환한다.")
 	void testGetByLectureId_notFound() {
 		// when & then
 		assertThatThrownBy(() -> lectureQueryService.getById(999L))
 			.isInstanceOf(LectureNotFoundException.class);
+	}
+
+	@Test
+	@DisplayName("강의가 존재하지 않으면 상세정보 조회시 예외를 반환한다.")
+	void testGetByLectureIdWithLock_notFound() {
+		// when & then
+		assertThatThrownBy(() -> lectureQueryService.getById(999L))
+				.isInstanceOf(LectureNotFoundException.class);
 	}
 
 	@Test
