@@ -21,6 +21,6 @@ public class LogEventRepositoryImpl implements LogEventRepository {
 
 	@Override
 	public List<LogEvent> findRecentLogByUserId(Long userId) {
-		return eventLogJpaRepository.findRecentLogByUserId(userId);
+		return eventLogJpaRepository.findTop50ByUserIdOrderByTimestampDesc(userId);
 	}
 }
