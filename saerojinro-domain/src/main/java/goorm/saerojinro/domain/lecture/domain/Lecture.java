@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 @Table(
 	indexes = {
-		@Index(name = "idx_category_time", columnList = "category, startTime")
+		@Index(name = "idx_category_time", columnList = "category, startTime"),
+		@Index(name = "idx_start_time", columnList = "startTime")
 	}
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
