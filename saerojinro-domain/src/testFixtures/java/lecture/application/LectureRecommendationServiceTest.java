@@ -7,6 +7,7 @@ import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,9 @@ public class LectureRecommendationServiceTest {
 		// given
 		List<LogEvent> logEvents = new ArrayList<>();
 
-		logEvents.add(LogEvent.create("record0", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
-		logEvents.add(LogEvent.create("record1", null, null, LECTURE_RESERVATION_FAIL, DEVOPS));
-		logEvents.add(LogEvent.create("record2", null, null, LECTURE_RESERVATION_SUCCESS, BACKEND));
+		logEvents.add(LogEvent.create("record0", null, null, LECTURE_RESERVATION_FAIL, DEVOPS, LocalDateTime.now()));
+		logEvents.add(LogEvent.create("record1", null, null, LECTURE_RESERVATION_FAIL, DEVOPS, LocalDateTime.now()));
+		logEvents.add(LogEvent.create("record2", null, null, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now()));
 
 		// when
 		Map<Category, Integer> result = lectureRecommendationService.getRecommendationCategoriesByEntity(logEvents);
