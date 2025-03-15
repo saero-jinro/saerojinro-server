@@ -14,7 +14,7 @@ public class SpeakerControllerImpl implements SpeakerController {
 	private final SpeakerQueryService speakerQueryService;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<SpeakerDetailResponse> findById(@PathVariable Long speakerId) {
+	public ResponseEntity<SpeakerDetailResponse> findById(@PathVariable(value = "id") Long speakerId) {
 		Speaker speaker = speakerQueryService.findById(speakerId);
 
 		return ResponseEntity.ok(SpeakerDetailResponse.from(speaker));

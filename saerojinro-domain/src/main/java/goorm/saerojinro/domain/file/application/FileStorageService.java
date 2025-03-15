@@ -16,26 +16,22 @@ import java.nio.file.Paths;
 @Service
 public class FileStorageService {
 
-	private static final String DEFAULT_UPLOAD_DIR = "uploads/";
-
 	private final RestTemplate restTemplate;
 
 	public FileStorageService() {
 		this.restTemplate = new RestTemplate();
 	}
 
-	public String storeFileFromUri(String fileUri, String baseDir) {
+	public String storeFileFromUri(String fileUri, String tempDir) {
 		String encodedUrl = encodeUrl(fileUri);
-
 		byte[] fileBytes = restTemplate.getForObject(encodedUrl, byte[].class);
 		if (fileBytes == null) {
 			throw new FileDownloadFailedException();
 		}
-
 		String extension = extractExtension(fileUri);
 		String fileName = System.currentTimeMillis() + extension;
 
-		Path path = Paths.get(DEFAULT_UPLOAD_DIR, baseDir, fileName);
+		Path path = Paths.get(tempDir, fileName);
 		try {
 			Files.createDirectories(path.getParent());
 			Files.write(path, fileBytes);
@@ -45,9 +41,9 @@ public class FileStorageService {
 		return path.toString();
 	}
 
-	public String storeFile(MultipartFile multipartFile, String baseDir) {
+	public String storeFile(MultipartFile multipartFile, String tempDir) {
 		String fileName = multipartFile.getOriginalFilename();
-		Path path = Paths.get(DEFAULT_UPLOAD_DIR, baseDir, fileName);
+		Path path = Paths.get(tempDir, fileName);
 		try {
 			Files.createDirectories(path.getParent());
 			multipartFile.transferTo(path);
@@ -57,12 +53,25 @@ public class FileStorageService {
 		return path.toString();
 	}
 
+	public String moveFileDir(String tempPath, Long lectureId, String folderName) {
+		Path source = Paths.get(tempPath);
+		String fileName = source.getFileName().toString();
+
+		Path target = Paths.get("uploads/" + lectureId, folderName, fileName);
+		try {
+			Files.createDirectories(target.getParent());
+			Files.move(source, target);
+		} catch (IOException e) {
+			throw new FileSaveFailedException();
+		}
+		return target.toString();
+	}
+
 	private String encodeUrl(String fileUri) {
 		try {
 			String encodedUrl = UriComponentsBuilder.fromUriString(fileUri)
 				.encode()
 				.toUriString();
-
 			return encodedUrl.replace("(", "%28").replace(")", "%29");
 		} catch (Exception e) {
 			return fileUri;
@@ -74,7 +83,6 @@ public class FileStorageService {
 		String uriWithoutQuery = (queryIdx != -1)
 			? fileUri.substring(0, queryIdx)
 			: fileUri;
-
 		int idx = uriWithoutQuery.lastIndexOf('.');
 		return (idx != -1) ? uriWithoutQuery.substring(idx) : "";
 	}

@@ -1,7 +1,7 @@
 package speaker.application;
 
 import goorm.saerojinro.domain.file.domain.File;
-import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
+import goorm.saerojinro.domain.speaker.application.SpeakerQueryService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.speaker.domain.SpeakerRepository;
 import mock.repository.FakeSpeakerRepository;
@@ -9,12 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class SpeakerCommandServiceTest {
-	private SpeakerCommandService speakerCommandService;
+public class SpeakerQueryServiceTest {
+	private SpeakerQueryService speakerQueryService;
 	private SpeakerRepository speakerRepository;
 
+	private static final Long ID = 1L;
 	private static final String NAME = "Cole palmer";
 	private static final String EMAIL = "google@mail.com";
 	private static final String POSITION = "00 기업 / CEO";
@@ -36,16 +38,18 @@ public class SpeakerCommandServiceTest {
 	@BeforeEach
 	void setUp() {
 		speakerRepository = new FakeSpeakerRepository();
-		speakerCommandService = new SpeakerCommandService(speakerRepository);
+		speakerQueryService = new SpeakerQueryService(speakerRepository);
 	}
 
 	@Test
-	@DisplayName("정상적으로 강연자를 생성한다")
-	void createSpeaker_success() {
+	@DisplayName("정상적으로 강연자를 조회한다")
+	void findSpeaker_success() {
+		// given
+		Speaker speaker = Speaker.create(NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE);
+		speakerRepository.save(speaker);
+
 		// when
-		Speaker createdSpeaker = speakerCommandService.create(
-			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE
-		);
+		Speaker createdSpeaker = speakerQueryService.findById(0L);
 
 		// then
 		assertNotNull(createdSpeaker);

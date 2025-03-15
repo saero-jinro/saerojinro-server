@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
@@ -31,17 +32,34 @@ public class LectureQueryServiceTest {
 	private static final String POSITION = "00 기업 / CEO";
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
-	private static final String IMAGE_URI = "uploads/speaker";
+
+	private static final File SPEAKER_IMAGE_FILE = File.create(
+		"Speaker_Image",
+		"uploads/speaker/123456.jpg",
+		3000L,
+		"jpg"
+	);
+
+	private static final File THUMBNAIL_FILE = File.create(
+		"Thumbnail_LogicalName",
+		"uploads/lecture/thumbnail/123456.jpg",
+		5000L,
+		"jpg"
+	);
+	private static final File MATERIAL_FILE = File.create(
+		"Material_LogicalName",
+		"uploads/lecture/materials/발표자료.pdf",
+		10000L,
+		"pdf"
+	);
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
-	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail";
-	private static final String MATERIAL_URI = "uploads/lecture/material";
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
-	private static final Category CATEGORY = Category.BACKEND;
+	private static final Category CATEGORY = BACKEND;
 
 	@BeforeEach
 	void setUp() {
@@ -49,30 +67,32 @@ public class LectureQueryServiceTest {
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
 		Speaker SPEAKER = Speaker.create(
-			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, IMAGE_URI
+			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE
 		);
 
 		lecture1 = fakeLectureRepository.save(Lecture.create(
-				SPEAKER, TITLE, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
+				SPEAKER, TITLE, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
 				START_TIME, END_TIME, LOCATION, CATEGORY
 			)
 		);
 
 		lecture2 = fakeLectureRepository.save(Lecture.create(
-				SPEAKER, TITLE + 2, CONTENTS, THUMBNAIL_URI, MATERIAL_URI, MAX_CAPACITY,
+				SPEAKER, TITLE + 2, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
 				START_TIME, END_TIME, LOCATION, CATEGORY
 			)
 		);
+
+		fakeLectureRepository.save(lecture1);
 	}
 
 	@Test
-	@DisplayName("getAll은 모든 강의 정보를 조회한다.")
-	void getAll_Success() {
+	@DisplayName("저장된 모든 강의를 조회할 수 있다.")
+	void getAllLecture_success() {
 		// when
 		List<Lecture> lectures = lectureQueryService.getAll();
 
 		// then
-		assertEquals(2, lectures.size());
+		assertEquals(3, lectures.size());
 		assertEquals(TITLE, lectures.get(0).getTitle());
 		assertEquals(TITLE + 2, lectures.get(1).getTitle());
 	}
@@ -84,8 +104,8 @@ public class LectureQueryServiceTest {
 		Lecture lecture = lectureQueryService.getById(1L);
 
 		// then
-		assertNotNull(lecture, "강의 객체는 null이면 안 됩니다.");
-		assertEquals(TITLE, lecture.getTitle(), "강의 제목이 일치해야 합니다.");
+		assertNotNull(lecture);
+		assertEquals(TITLE, lecture.getTitle());
 	}
 
 	@Test
@@ -128,18 +148,15 @@ public class LectureQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("getAllLectureByStartTime은 시작 시간으로 강의를 조회한다")
+	@DisplayName("시작 시간으로 강의를 조회한다")
 	void getAllLectureByStartTime_Success() {
 		// when
-		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(
-			LocalDateTime.of(2025, 3, 1, 10, 0));
+		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(START_TIME);
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(2, lectureList.size());
-		assertEquals(
-			LocalDateTime.of(2025, 3, 1, 10, 0),
-			lectureList.get(0).getStartTime());
+		assertEquals(3, lectureList.size());
+		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 
 	@Test
@@ -152,9 +169,8 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(2, lectureList.size());
-		assertEquals(LocalDateTime.of(2025, 3, 1, 10, 0),
-			lectureList.get(0).getStartTime());
+		assertEquals(3, lectureList.size());
+		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 
 	@Test

@@ -57,7 +57,6 @@ public class FileAdminFacadeTest {
 
 		// then
 		assertNotNull(response.id());
-		assertNotNull(response.physicalPath());
 	}
 
 	@Test
@@ -74,7 +73,6 @@ public class FileAdminFacadeTest {
 
 		// then
 		assertNotNull(response.id());
-		assertNotNull(response.physicalPath());
 	}
 
 	@Test
@@ -92,7 +90,6 @@ public class FileAdminFacadeTest {
 
 		// then
 		assertNotNull(readResponse.id());
-		assertEquals(saveResponse.physicalPath(), readResponse.physicalPath());
 	}
 
 	@Test

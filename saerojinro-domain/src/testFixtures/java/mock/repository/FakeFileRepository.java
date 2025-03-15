@@ -13,6 +13,35 @@ public class FakeFileRepository implements FileRepository {
 	private final List<File> data = Collections.synchronizedList(new ArrayList<>());
 	private final AtomicLong sequence = new AtomicLong(0);
 
+	public FakeFileRepository() {
+		File speakerFile = File.builder()
+			.id(sequence.incrementAndGet())
+			.logicalName("Speaker_Image")
+			.physicalPath("uploads/speaker/123456.jpg")
+			.fileSize(3000L)
+			.extension("jpg")
+			.build();
+		data.add(speakerFile);
+
+		File thumbnailFile = File.builder()
+			.id(sequence.incrementAndGet())
+			.logicalName("Thumbnail_LogicalName")
+			.physicalPath("uploads/lecture/thumbnail/123456.jpg")
+			.fileSize(5000L)
+			.extension("jpg")
+			.build();
+		data.add(thumbnailFile);
+
+		File materialFile = File.builder()
+			.id(sequence.incrementAndGet())
+			.logicalName("Material_LogicalName")
+			.physicalPath("uploads/lecture/materials/발표자료.pdf")
+			.fileSize(10000L)
+			.extension("pdf")
+			.build();
+		data.add(materialFile);
+	}
+
 	@Override
 	public File save(File file) {
 		File saved = File.builder()

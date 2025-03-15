@@ -40,7 +40,7 @@ public record LectureResponse(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.speakerName(lecture.getSpeaker().getName())
-			.speakerImageUri(lecture.getSpeaker().getImageUri())
+			.speakerImageUri(lecture.getSpeaker().getImageFile().getPhysicalPath())
 			.build();
 	}
 }
