@@ -20,8 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -40,7 +44,8 @@ public class LectureFacade {
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
-			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lecture.getId(), LECTURE_VIEW, lecture.getCategory(), LocalDateTime.now());
+			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lecture.getId(), LECTURE_VIEW,
+				lecture.getCategory(), LocalDateTime.now());
 			logEventProducer.sendMessage(redisLogEvent);
 		}
 
@@ -58,25 +63,61 @@ public class LectureFacade {
 	@Transactional(readOnly = true)
 	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
 		Long userId = userQueryService.me().getId();
-		Map<Category, Integer> categoryPriortyMap;
+		Map<Category, Integer> categoryPriortyMap = getCategoryPriorityMap(userId);
+
+		List<Lecture> recommendedLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap,
+			lectureStartTime);
+
+		if (recommendedLectures.size() < RECOMMENDATION_LIMIT) {
+			recommendedLectures = fillWithPopularLectures(recommendedLectures, lectureStartTime);
+		}
+
+		return LectureSummaryListResponse.from(recommendedLectures);
+	}
+
+	private Map<Category, Integer> getCategoryPriorityMap(Long userId) {
 		List<RedisLogEvent> userRedisLogEvents = logEventService.getLogEventsByUserFromRedis(userId);
 
-		if (userRedisLogEvents.isEmpty()) {
-			List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
-			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
-		} else {
-			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByCache(userRedisLogEvents);
+		if (!userRedisLogEvents.isEmpty()) {
+			return lectureRecommendationService.getRecommendationCategoriesByCache(userRedisLogEvents);
 		}
 
-		List<Lecture> recommendedLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
+		List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
+		return lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
+	}
 
-		int size = recommendedLectures.size();
 
-		if (RECOMMENDATION_LIMIT > size) {
-			int remainingSlots = RECOMMENDATION_LIMIT - size;
-			List<Lecture> popularLectures = lectureQueryService.getTopPopularLecturesByTime(lectureStartTime, remainingSlots);
-			recommendedLectures.addAll(popularLectures);
-		}
-		return LectureSummaryListResponse.from(recommendedLectures);
+	private List<Lecture> fillWithPopularLectures(List<Lecture> recommendedLectures, LocalDateTime lectureStartTime) {
+		int remainingSlots = RECOMMENDATION_LIMIT - recommendedLectures.size();
+
+		List<Lecture> lecturesByStartTime =
+			lectureQueryService.getByStartTime(lectureStartTime);
+		List<Long> lectureIds = lecturesByStartTime.stream()
+			.map(Lecture::getId)
+			.toList();
+		Set<Long> recommendedLectureIds = recommendedLectures.stream()
+			.map(Lecture::getId)
+			.collect(Collectors.toSet());
+
+		List<LogEvent> recentLogsByLecturesId =
+			logEventService.getTop20ByLectureIdInOrderByTimestampDesc(lectureIds);
+
+		Map<Long, Integer> lectureWeightMap =
+			lectureRecommendationService.getRecommendationLectureIds(recentLogsByLecturesId);
+
+		List<Lecture> filteredLectures = lecturesByStartTime.stream()
+			.filter(lecture -> !recommendedLectureIds.contains(lecture.getId()))
+			.sorted(
+				Comparator.comparingInt(
+					lecture -> -lectureWeightMap.getOrDefault(lecture.getId(), 0)
+				)
+			)
+			.limit(remainingSlots)
+			.toList();
+
+		List<Lecture> mutableLectures = new ArrayList<>(recommendedLectures);
+		mutableLectures.addAll(filteredLectures);
+
+		return mutableLectures;
 	}
 }

@@ -28,6 +28,14 @@ public class LectureRecommendationService {
 				Collectors.summingInt(logEvent -> logEvent.getLogEventType().getWeight()))));
 	}
 
+	public Map<Long, Integer> getRecommendationLectureIds(List<LogEvent> logEvents) {
+		return logEvents.stream()
+			.collect(Collectors.groupingBy(
+				logEvent -> logEvent.getLecture().getId(),
+				Collectors.summingInt(logEvent -> logEvent.getLogEventType().getWeight())
+			));
+	}
+
 	private Map<Category, Integer> getRecommendationCategories(Map<Category, Integer> categoryWeights) {
 		List<Category> sortedCategories = categoryWeights.entrySet().stream()
 			.sorted(Map.Entry.<Category, Integer>comparingByValue().reversed())
