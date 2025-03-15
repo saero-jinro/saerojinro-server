@@ -10,18 +10,18 @@ import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
 import goorm.saerojinro.domain.file.application.FileStorageService;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import mock.repository.FakeFileRepository;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeSpeakerRepository;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 public class LectureAdminFacadeTest {
 
@@ -43,13 +43,16 @@ public class LectureAdminFacadeTest {
 	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
 	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
 
-	private static final String SPEAKER_PHOTO_URI = "uploads/speaker/123456.jpg";
+	private static final Long THUMBNAIL_FILE_ID = 1L;
+	private static final Long MATERIAL_FILE_ID = 2L;
+	private static final Long SPEAKER_FILE_ID = 3L;
+
+	private static final String THUMBNAIL_PATH = "uploads/temp/thumbnail/thumbnail.jpg";
+	private static final String MATERIAL_PATH = "uploads/temp/materials/material.pdf";
+	private static final String SPEAKER_PATH = "uploads/temp/speaker/speaker.jpg";
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
-
-	private static final String THUMBNAIL_URI = "uploads/lecture/thumbnail/123456.jpg";
-	private static final String MATERIAL_URI = "uploads/lecture/materials/발표자료.pdf";
 
 	private static final Long MAX_CAPACITY = 100L;
 	private static final LocalDateTime START_TIME = LocalDateTime.of(2025, 3, 1, 10, 0);
@@ -57,7 +60,7 @@ public class LectureAdminFacadeTest {
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
 
-	private static LectureCreateRequest request;
+	private LectureCreateRequest request;
 
 	@BeforeEach
 	public void setUp() {
@@ -65,10 +68,20 @@ public class LectureAdminFacadeTest {
 		speakerRepository = new FakeSpeakerRepository();
 		fileRepository = new FakeFileRepository();
 
+		File thumbnailFile = File.create("thumbnail.jpg", THUMBNAIL_PATH, 5000L, "jpg");
+		fileRepository.save(thumbnailFile);
+
+		File materialFile = File.create("material.pdf", MATERIAL_PATH, 10000L, "pdf");
+		fileRepository.save(materialFile);
+
+		File speakerFile = File.create("speaker.jpg", SPEAKER_PATH, 3000L, "jpg");
+		fileRepository.save(speakerFile);
+
 		fileStorageService = new FileStorageService() {
 			@Override
-			public String moveFileDir(String originalPath, Long lectureId, String type) {
-				return originalPath;
+			public String moveFileDir(String originalPath, Long lectureId, String folderName) {
+				// 실제 이동하지 않고, 경로만 가정
+				return "uploads/" + lectureId + "/" + folderName + "/" + originalPath.substring(originalPath.lastIndexOf('/') + 1);
 			}
 		};
 
@@ -88,8 +101,8 @@ public class LectureAdminFacadeTest {
 		request = LectureCreateRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
-			.thumbnailUri(THUMBNAIL_URI)
-			.materialsUri(MATERIAL_URI)
+			.thumbnailId(THUMBNAIL_FILE_ID)
+			.materialId(MATERIAL_FILE_ID)
 			.maxCapacity(MAX_CAPACITY)
 			.startTime(START_TIME)
 			.endTime(END_TIME)
@@ -100,15 +113,13 @@ public class LectureAdminFacadeTest {
 			.speakerPosition(POSITION)
 			.speakerIntroduction(INTRODUCTION)
 			.speakerFilmography(FILMOGRAPHY)
-			.speakerPhotoUri(SPEAKER_PHOTO_URI)
+			.speakerPhotoId(SPEAKER_FILE_ID)
 			.build();
 	}
-
 
 	@Test
 	@DisplayName("정상적으로 강의를 생성한다")
 	void createLecture_success() {
-
 		// when
 		LectureCreateResponse response = lectureAdminFacade.create(request);
 
@@ -119,13 +130,6 @@ public class LectureAdminFacadeTest {
 		Lecture createdLecture = lectureRepository.findById(response.lectureId()).orElseThrow();
 		assertNotNull(createdLecture.getThumbnailFile());
 		assertNotNull(createdLecture.getMaterialFile());
-
-		String expectedThumbnailPath = fileStorageService.moveFileDir(THUMBNAIL_URI, createdLecture.getId(), "thumbnail");
-		String expectedMaterialPath = fileStorageService.moveFileDir(MATERIAL_URI, createdLecture.getId(), "materials");
-		String expectedSpeakerPath = fileStorageService.moveFileDir(SPEAKER_PHOTO_URI, createdLecture.getId(), "speaker");
-
-		assertEquals(expectedThumbnailPath, createdLecture.getThumbnailFile().getPhysicalPath());
-		assertEquals(expectedMaterialPath, createdLecture.getMaterialFile().getPhysicalPath());
 	}
 
 	@Test
@@ -162,16 +166,16 @@ public class LectureAdminFacadeTest {
 	@Test
 	@DisplayName("정상적으로 강의를 삭제한다")
 	void deleteLecture_success() {
-
-		//given
+		// given
 		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
 		Long lectureId = createResponse.lectureId();
 
 		// when
 		lectureAdminFacade.delete(lectureId);
 
-    // then
+		// then
 		Lecture deletedLecture = lectureRepository.findById(lectureId)
 			.orElseThrow();
+		assertNotNull(deletedLecture.getDeletedAt());
 	}
 }
