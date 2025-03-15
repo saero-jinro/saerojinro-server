@@ -129,9 +129,9 @@ public class LectureQueryServiceTest {
 
 	@Test
 	@DisplayName("getAllLectureByStartTime은 시작 시간으로 강의를 조회한다")
-	void getAllLectureByStartTime_Success() {
+	void getByStartTime_Success() {
 		// when
-		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(
+		List<Lecture> lectureList = lectureQueryService.getByStartTime(
 			LocalDateTime.of(2025, 3, 1, 10, 0));
 
 		// then
