@@ -2,6 +2,7 @@ package mock.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,5 +43,14 @@ public class FakeLogEventRepository implements LogEventRepository {
 			logList.add(redisLogEvent);
 			return logList;
 		});
+	}
+
+	@Override
+	public List<LogEvent> findTop20ByLectureIdInOrderByTimestampDesc(List<Long> lectureIds) {
+		return data.stream()
+			.filter(logEvent -> lectureIds.contains(logEvent.getLecture().getId()))
+			.sorted(Comparator.comparing(LogEvent::getTimestamp).reversed())
+			.limit(20)
+			.toList();
 	}
 }
