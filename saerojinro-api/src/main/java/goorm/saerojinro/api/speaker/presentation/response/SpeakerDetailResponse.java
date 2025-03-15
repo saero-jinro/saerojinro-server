@@ -9,8 +9,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record SpeakerDetailResponse(
-	@Schema(description = "강연자 사진", example = "uploads/speaker/123456.jpg", requiredMode = REQUIRED)
-	@NotNull String photoUri,
+	@Schema(description = "강연자 사진", example = "1", requiredMode = REQUIRED)
+	@NotNull Long speakerPhotoId,
 
 	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
 	@NotNull String name,
@@ -30,7 +30,7 @@ public record SpeakerDetailResponse(
 ) {
 	public static SpeakerDetailResponse from(Speaker speaker) {
 		return SpeakerDetailResponse.builder()
-			.photoUri(speaker.getImageFile().getPhysicalPath())
+			.speakerPhotoId(speaker.getImageFile().getId())
 			.name(speaker.getName())
 			.email(speaker.getEmail())
 			.introduction(speaker.getIntroduction())

@@ -20,7 +20,6 @@ public class FileAdminFacade {
 	private final FileStorageService fileStorageService;
 
 	private static final String DEFAULT_TEMP_DIR = "uploads/temp/";
-
 	private static final String TEMP_MATERIALS = "materials/";
 	private static final String TEMP_THUMBNAIL = "thumbnail/";
 	private static final String TEMP_SPEAKER = "speaker/";

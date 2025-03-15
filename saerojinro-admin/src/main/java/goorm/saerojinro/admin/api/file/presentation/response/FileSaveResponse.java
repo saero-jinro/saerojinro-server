@@ -5,13 +5,11 @@ import lombok.Builder;
 
 @Builder
 public record FileSaveResponse(
-	Long id,
-	String physicalPath
+	Long id
 ) {
 	public static FileSaveResponse from(File file) {
 		return FileSaveResponse.builder()
 			.id(file.getId())
-			.physicalPath(file.getPhysicalPath())
 			.build();
 	}
 }
