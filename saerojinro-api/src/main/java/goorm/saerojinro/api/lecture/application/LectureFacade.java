@@ -32,6 +32,8 @@ public class LectureFacade {
 	private final LectureRecommendationService lectureRecommendationService;
 	private final LogEventService logEventService;
 
+	private static final int RECOMMENDATION_LIMIT = 3;
+
 	@Transactional(readOnly = true)
 	public LectureDetailResponse getById(Long id) {
 		Lecture lecture = lectureQueryService.getById(id);
@@ -66,7 +68,15 @@ public class LectureFacade {
 			categoryPriortyMap = lectureRecommendationService.getRecommendationCategoriesByCache(userRedisLogEvents);
 		}
 
-		List<Lecture> getRecommendationLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
-		return LectureSummaryListResponse.from(getRecommendationLectures);
+		List<Lecture> recommendedLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap, lectureStartTime);
+
+		int size = recommendedLectures.size();
+
+		if (RECOMMENDATION_LIMIT > size) {
+			int remainingSlots = RECOMMENDATION_LIMIT - size;
+			List<Lecture> popularLectures = lectureQueryService.getTopPopularLecturesByTime(lectureStartTime, remainingSlots);
+			recommendedLectures.addAll(popularLectures);
+		}
+		return LectureSummaryListResponse.from(recommendedLectures);
 	}
 }

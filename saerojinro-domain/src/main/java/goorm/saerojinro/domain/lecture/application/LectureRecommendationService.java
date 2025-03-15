@@ -32,6 +32,7 @@ public class LectureRecommendationService {
 		List<Category> sortedCategories = categoryWeights.entrySet().stream()
 			.sorted(Map.Entry.<Category, Integer>comparingByValue().reversed())
 			.map(Map.Entry::getKey)
+			.limit(3)
 			.toList();
 
 		return IntStream.range(0, sortedCategories.size())
