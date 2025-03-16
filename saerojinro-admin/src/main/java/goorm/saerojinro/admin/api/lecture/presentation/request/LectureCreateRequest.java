@@ -1,7 +1,6 @@
 package goorm.saerojinro.admin.api.lecture.presentation.request;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.file.domain.File;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,18 +11,18 @@ import java.time.LocalDateTime;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
 @Builder
-public record 	LectureCreateRequest(
+public record LectureCreateRequest(
 	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = REQUIRED)
 	@NotNull String title,
 
 	@Schema(description = "강의 내용", example = "Part 1: 온오프라인 경험을 연결하는 네이버 지도가 공간지능과 만나 제공하게 될 미래 모습을 소개합니다.", requiredMode = REQUIRED)
 	@NotNull String contents,
 
-	@Schema(description = "강의 썸네일", example = "uploads/lecture/thumbnail/123456.jpg", requiredMode = REQUIRED)
-	@NotNull String thumbnailUri,
+	@Schema(description = "강의 썸네일 파일 ID", example = "1", requiredMode = REQUIRED)
+	@NotNull Long thumbnailId,
 
-	@Schema(description = "강의 자료", example = "uploads/lecture/materials/발표자료.pdf", requiredMode = REQUIRED)
-	@NotNull String materialsUri,
+	@Schema(description = "강의 자료 파일 ID", example = "2", requiredMode = REQUIRED)
+	@NotNull Long materialId,
 
 	@Schema(description = "강의 수용 인원", example = "100", requiredMode = REQUIRED)
 	@NotNull @Positive Long maxCapacity,
@@ -55,6 +54,7 @@ public record 	LectureCreateRequest(
 	@Schema(description = "상세 약력", example = "OO 회사 / 프로젝트 OO 담당", requiredMode = REQUIRED)
 	@NotNull String speakerFilmography,
 
-	@Schema(description = "강연자 사진", example = "uploads/speaker/123456.jpg", requiredMode = REQUIRED)
-	@NotNull String speakerPhotoUri
-) {}
+	@Schema(description = "강연자 사진 파일 ID", example = "3", requiredMode = REQUIRED)
+	@NotNull Long speakerPhotoId
+) {
+}

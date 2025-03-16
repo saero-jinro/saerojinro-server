@@ -8,6 +8,6 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record FileSaveRequest(
-	@Schema(description = "이미지 URI", example = "https://dyns.co.kr/wp-content/uploads/2024/04/placeholder-304.png", requiredMode = REQUIRED)
+	@Schema(description = "이미지 URI", example = "https://news.sap.com/korea/files/2023/10/06/AI-in-the-palm-of-your-hand-getty.jpg", requiredMode = REQUIRED)
 	@NotNull String uri
 ) {}

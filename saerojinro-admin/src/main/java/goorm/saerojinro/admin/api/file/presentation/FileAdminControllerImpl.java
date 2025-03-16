@@ -16,6 +16,15 @@ import static org.springframework.http.MediaType.*;
 public class FileAdminControllerImpl implements FileAdminController {
 	private final FileAdminFacade fileAdminFacade;
 
+	@PostMapping(
+		value = "/lecture/materials",
+		consumes = MULTIPART_FORM_DATA_VALUE
+	)
+	public ResponseEntity<FileSaveResponse> uploadLectureMaterials(@RequestPart(value = "file") MultipartFile file) {
+		FileSaveResponse response = fileAdminFacade.saveLectureMaterials(file);
+		return ResponseEntity.ok(response);
+	}
+
 	@PostMapping("/lecture/thumbnail")
 	public ResponseEntity<FileSaveResponse> saveLecturePhoto(FileSaveRequest request) {
 		FileSaveResponse response = fileAdminFacade.saveLecturePhoto(request);
@@ -25,15 +34,6 @@ public class FileAdminControllerImpl implements FileAdminController {
 	@PostMapping("/speaker")
 	public ResponseEntity<FileSaveResponse> saveSpeakerPhoto(FileSaveRequest request) {
 		FileSaveResponse response = fileAdminFacade.saveSpeakerPhoto(request);
-		return ResponseEntity.ok(response);
-	}
-
-	@PostMapping(
-		value = "/lecture/materials",
-		consumes = MULTIPART_FORM_DATA_VALUE
-	)
-	public ResponseEntity<FileSaveResponse> uploadLectureMaterials(@RequestPart(value = "file") MultipartFile file) {
-		FileSaveResponse response = fileAdminFacade.saveLectureMaterials(file);
 		return ResponseEntity.ok(response);
 	}
 }
