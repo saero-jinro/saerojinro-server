@@ -104,6 +104,62 @@ public class LogEventServiceTest {
 			"Location One",
 			BACKEND
 		));
+
+		fakeLectureRepository.save(Lecture.create(
+			Speaker.builder().build(),
+			"Lecture Two",
+			"Content Two",
+			thumbnailFile,
+			materialFile,
+			100L,
+			LocalDateTime.of(2025, 3, 1, 10, 0),
+			LocalDateTime.of(2025, 3, 1, 12, 0),
+			"Location One",
+			Category.BACKEND
+		));
+
+		// given
+		String record = "record";
+		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		RedisLogEvent redisLogEvent4 = RedisLogEvent.of(
+			1L,
+			2L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND,
+			LocalDateTime.now()
+		);
+
+		logEventService.save(record + 1, redisLogEvent1);
+		logEventService.save(record + 2, redisLogEvent2);
+		logEventService.save(record + 3, redisLogEvent3);
+		logEventService.save(record + 4, redisLogEvent4);
+
+		logEventService.cache(redisLogEvent1);
+		logEventService.cache(redisLogEvent2);
+		logEventService.cache(redisLogEvent3);
 	}
 
 	@Test
@@ -127,75 +183,16 @@ public class LogEventServiceTest {
 	@Test
 	@DisplayName("getLogEventByUser는 해당 유저의 EventLog를 조회한다.")
 	public void getLogEventsByUser_Success() {
-		// given
-		String record = "record";
-		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		logEventService.save(record + 1, redisLogEvent1);
-		logEventService.save(record + 2, redisLogEvent2);
-		logEventService.save(record + 3, redisLogEvent3);
-
 		// when
 		List<LogEvent> response = logEventService.getLogEventsByUser(1L);
 
 		// then
-		assertEquals(3, response.size());
+		assertEquals(4, response.size());
 	}
 
 	@Test
 	@DisplayName("getLogEventsByUserFromRedis는 redis에 저장되어 있던 유저 로그를 조회한다.")
 	public void getLogEventsByUserFromRedis_Success() {
-		// given
-		RedisLogEvent redisLogEvent1 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
-			1L,
-			1L,
-			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
-		);
-
-		logEventService.cache(redisLogEvent1);
-		logEventService.cache(redisLogEvent2);
-		logEventService.cache(redisLogEvent3);
-
 		// when
 		List<RedisLogEvent> response = logEventService.getLogEventsByUserFromRedis(1L);
 
@@ -217,9 +214,20 @@ public class LogEventServiceTest {
 
 		// when
 		logEventService.cache(redisLogEvent);
-		RedisLogEvent result = logEventService.getLogEventsByUserFromRedis(1L).get(0);
+		RedisLogEvent result = logEventService.getLogEventsByUserFromRedis(1L).get(3);
 
 		// then
 		assertEquals(redisLogEvent, result);
+	}
+
+	@Test
+	@DisplayName("getTop20ByLectureIdInOrderByTimestampDesc는 해당 강의에 대한 최근 로그이벤트 20개를 조회한다.")
+	public void getTop20ByLectureIdInOrderByTimestampDesc_Success() {
+		// given
+		List<Long> lectureIds = List.of(1L, 2L);
+
+		// when
+		List<LogEvent> result = logEventService.getTop20ByLectureIdInOrderByTimestampDesc(lectureIds);
+		assertEquals(4, result.size());
 	}
 }

@@ -12,4 +12,6 @@ public interface LogEventRepository {
 	List<RedisLogEvent> findRecentFromRedis(Long userId);
 
 	void cache(RedisLogEvent redisLogEvent);
+
+	List<LogEvent> findTop20ByLectureIdInOrderByTimestampDesc(List<Long> lectureIds);
 }
