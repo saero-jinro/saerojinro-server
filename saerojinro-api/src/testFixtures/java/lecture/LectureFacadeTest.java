@@ -9,6 +9,7 @@ import goorm.saerojinro.api.lecture.application.LectureFacade;
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
@@ -51,7 +52,18 @@ public class LectureFacadeTest {
 	private static final String POSITION = "00 기업 CEO";
 	private static final String INTRODUCTION = "AA 기업  - 백엔드 개발";
 	private static final String FILMOGRAPHY = "Location";
-	private static final String IMAGE_URI = "uploads/speaker";
+
+	private static final String LOGICAL_NAME = "2025 상반기 신입 채용";
+	private static final String PHYSICAL_PATH = "uploads/speaker";
+	private static final Long FILE_SIZE = 10000L;
+	private static final String EXTENSION = "pdf";
+
+	File file = File.create(
+		LOGICAL_NAME,
+		PHYSICAL_PATH,
+		FILE_SIZE,
+		EXTENSION
+	);
 
 	@BeforeEach
 	void setUp() {
@@ -63,17 +75,20 @@ public class LectureFacadeTest {
 		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
 		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), logEventService);
 
+
 		Speaker speaker = Speaker.builder()
 			.name(NAME)
 			.email(EMAIL)
 			.position(POSITION)
 			.introduction(INTRODUCTION)
 			.filmography(FILMOGRAPHY)
-			.imageUri(IMAGE_URI)
+			.imageFile(file)
 			.build();
 
 		lecture1 = Lecture.builder()
 			.speaker(speaker)
+			.thumbnailFile(file)
+			.materialFile(file)
 			.title("Lecture One")
 			.contents("Contents One")
 			.maxCapacity(100L)
@@ -85,6 +100,8 @@ public class LectureFacadeTest {
 
 		lecture2 = Lecture.builder()
 			.speaker(speaker)
+			.thumbnailFile(file)
+			.materialFile(file)
 			.title("Lecture Two")
 			.contents("Contents Two")
 			.maxCapacity(100L)

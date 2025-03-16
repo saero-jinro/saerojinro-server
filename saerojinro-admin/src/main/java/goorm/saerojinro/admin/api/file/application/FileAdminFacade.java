@@ -19,31 +19,31 @@ public class FileAdminFacade {
 	private final FileQueryService fileQueryService;
 	private final FileStorageService fileStorageService;
 
-	private static final String LECTURE_MATERIALS = "lecture/materials/";
-	private static final String LECTURE_THUMBNAIL = "lecture/thumbnail/";
-	private static final String SPEAKER = "speaker/";
+	private static final String DEFAULT_TEMP_DIR = "uploads/temp/";
+	private static final String TEMP_MATERIALS = "materials/";
+	private static final String TEMP_THUMBNAIL = "thumbnail/";
+	private static final String TEMP_SPEAKER = "speaker/";
 
 	@Transactional
 	public FileSaveResponse saveLectureMaterials(MultipartFile file) {
 		String logicalName = file.getOriginalFilename();
-		String storedPath = fileStorageService.storeFile(file, LECTURE_MATERIALS);
+		String storedPath = fileStorageService.storeFile(file, DEFAULT_TEMP_DIR + TEMP_MATERIALS);
 		return saveFile(logicalName, storedPath);
 	}
 
 	@Transactional
 	public FileSaveResponse saveLecturePhoto(FileSaveRequest request) {
 		String logicalName = extractFileName(request.uri());
-		String storedPath = fileStorageService.storeFileFromUri(request.uri(), LECTURE_THUMBNAIL);
+		String storedPath = fileStorageService.storeFileFromUri(request.uri(), DEFAULT_TEMP_DIR + TEMP_THUMBNAIL);
 		return saveFile(logicalName, storedPath);
 	}
 
 	@Transactional
 	public FileSaveResponse saveSpeakerPhoto(FileSaveRequest request) {
 		String logicalName = extractFileName(request.uri());
-		String storedPath = fileStorageService.storeFileFromUri(request.uri(), SPEAKER);
+		String storedPath = fileStorageService.storeFileFromUri(request.uri(), DEFAULT_TEMP_DIR + TEMP_SPEAKER);
 		return saveFile(logicalName, storedPath);
 	}
-
 
 	@Transactional(readOnly = true)
 	public FileReadResponse findById(Long id) {

@@ -31,17 +31,18 @@ public class Speaker extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String filmography;
 
-	@Column(nullable = false)
-	private String imageUri;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_file_id", nullable = false)
+	private File imageFile;
 
-	public static Speaker create(String name,String email, String position, String introduction, String filmography, String imageUri) {
+	public static Speaker create(String name,String email, String position, String introduction, String filmography, File image) {
 		return Speaker.builder()
 			.name(name)
 			.email(email)
 			.position(position)
 			.introduction(introduction)
 			.filmography(filmography)
-			.imageUri(imageUri)
+			.imageFile(image)
 			.build();
 	}
 }

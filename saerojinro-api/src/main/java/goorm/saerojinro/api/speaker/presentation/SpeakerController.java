@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "Speaker", description = "강연자 API")
 public interface SpeakerController {
@@ -21,5 +21,5 @@ public interface SpeakerController {
 			)
 		}
 	)
-	ResponseEntity<SpeakerDetailResponse> findById(@RequestParam Long speakerId);
+	ResponseEntity<SpeakerDetailResponse> findById(@PathVariable Long speakerId);
 }
