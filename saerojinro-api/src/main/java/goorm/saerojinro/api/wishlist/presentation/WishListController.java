@@ -4,6 +4,7 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResp
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +37,14 @@ public interface WishListController {
                             responseCode = "200",
                             content = @Content(schema = @Schema(implementation = LectureSummaryListResponse.class))
                     )
-            }
+            },
+        parameters = {
+            @Parameter(
+                name = "lectureStartTime",
+                description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
+                example = "2025-03-15T10:00:00"
+            )
+        }
     )
     ResponseEntity<LectureSummaryListResponse> getByUserAndStartTime(
         @RequestParam("lectureStartTime") LocalDateTime lectureStartTime);

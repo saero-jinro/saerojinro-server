@@ -32,7 +32,7 @@ public class WishListControllerImpl implements WishListController{
     }
 
     @Override
-    @GetMapping
+    @GetMapping("/start-time")
     public ResponseEntity<LectureSummaryListResponse> getByUserAndStartTime(
             @RequestParam("lectureStartTime") LocalDateTime lectureStartTime) {
 		LectureSummaryListResponse response = wishListFacade.getByUserAndStartTime(lectureStartTime);
