@@ -25,17 +25,17 @@ public class QuestionControllerImpl implements QuestionController {
     }
 
     @Override
-    @GetMapping("/{lectureId}")
-    public ResponseEntity<QuestionListResponse> getByLecture(@PathVariable("lectureId") Long lectureId) {
-        QuestionListResponse response = questionsFacade.getByLecture(lectureId);
+    @GetMapping("/lectures/{id}")
+    public ResponseEntity<QuestionListResponse> getByLecture(@PathVariable("id") Long id) {
+        QuestionListResponse response = questionsFacade.getByLecture(id);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    @PostMapping("/{lectureId}")
-    public ResponseEntity<QuestionCreateResponse> create(@PathVariable("lectureId") Long lectureId,
+    @PostMapping("/lectures/{id}")
+    public ResponseEntity<QuestionCreateResponse> create(@PathVariable("id") Long id,
                                                          QuestionCreateRequest request) {
-        QuestionCreateResponse response = questionsFacade.create(lectureId, request);
+        QuestionCreateResponse response = questionsFacade.create(id, request);
         return ResponseEntity.status(CREATED).body(response);
     }
 
