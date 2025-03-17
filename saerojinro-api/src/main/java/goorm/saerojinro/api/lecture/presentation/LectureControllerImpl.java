@@ -20,7 +20,7 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long id) {
+	public ResponseEntity<LectureDetailResponse> getById(@PathVariable Long id) {
 		LectureDetailResponse response = lectureFacade.getById(id);
 		return ResponseEntity.ok(response);
 	}

@@ -30,7 +30,7 @@ public interface LectureController {
 			)
 		}
 	)
-	ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long lectureId);
+	ResponseEntity<LectureDetailResponse> getById(@PathVariable Long lectureId);
 
 	@Operation(
 		summary = "날짜별 강의 조회",
