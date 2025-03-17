@@ -13,7 +13,7 @@ import java.util.List;
 public class EmitterQueryService {
 	private final EmitterRepository emitterRepository;
 
-	public SseEmitter findById(Long receiverId) throws EmitterNotFoundException {
+	public SseEmitter findById(Long receiverId) {
 		return emitterRepository.findById(receiverId)
 			.orElseThrow(EmitterNotFoundException::new);
 	}
