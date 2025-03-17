@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static goorm.saerojinro.common.event.EventType.LECTURE_NOTICE;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 		eventPublisher.publishEvent(
 			CommonEvent.createBroadcast(request.title(), request.contents())
 		);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.status(CREATED).build();
 	}
 
 	@Override
@@ -38,6 +39,6 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 		eventPublisher.publishEvent(
 			CommonEvent.createWithLectureId(LECTURE_NOTICE, id, request.title(), request.contents())
 		);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.status(CREATED).build();
 	}
 }
