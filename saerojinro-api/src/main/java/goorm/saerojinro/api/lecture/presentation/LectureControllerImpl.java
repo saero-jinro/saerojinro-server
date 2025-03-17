@@ -34,8 +34,8 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping("/recommendations")
-	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime lectureStartTime) {
-		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(lectureStartTime);
+	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime startTime) {
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
 		return ResponseEntity.ok(response);
 	}
 }

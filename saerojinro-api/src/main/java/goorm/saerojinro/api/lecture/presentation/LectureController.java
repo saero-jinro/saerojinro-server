@@ -63,13 +63,13 @@ public interface LectureController {
 		},
 		parameters = {
 			@Parameter(
-				name = "lectureStartTime",
+				name = "startTime",
 				description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
 				example = "2025-03-15T10:00:00"
 			)
 		}
 	)
 	ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(
-		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lectureStartTime
+		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime
 	);
 }
