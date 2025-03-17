@@ -38,6 +38,7 @@ public class NotificationUserAdminFacadeTest {
 	private NotificationAdminFacade notificationFacade;
 	private NotificationRepository repository;
 	private ReservationRepository reservationRepository;
+	private EmitterRepository emitterRepository;
 
 	private User user;
 
@@ -48,7 +49,7 @@ public class NotificationUserAdminFacadeTest {
 	public void init() {
 		repository = new FakeNotificationRepository();
 		NotificationCommandService commandService = new NotificationCommandService(repository);
-		EmitterRepository emitterRepository = new EmitterRepositoryImpl();
+		emitterRepository = new EmitterRepositoryImpl();
 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		UserRepository userRepository = new FakeUserRepository();
@@ -71,8 +72,6 @@ public class NotificationUserAdminFacadeTest {
 			.build()
 		);
 
-		emitterRepository.save(1L);
-
 		UserDetails user = userQueryService.getByEmail("email@email.com");
 		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(
@@ -84,6 +83,7 @@ public class NotificationUserAdminFacadeTest {
 	@DisplayName("sendNotificationByLectureId은 Lecture를 예약한 참가자에게 알림을 전송한다")
 	void sendNotificationByLectureId_Success() {
 		// given
+		emitterRepository.save(1L);
 		Lecture lecture = Lecture.builder().id(1L).build();
 
 		reservationRepository.save(Reservation.create(user, lecture));
@@ -108,6 +108,28 @@ public class NotificationUserAdminFacadeTest {
 	@DisplayName("sendNotificationByReceiverId는 특정 참가자에게 알림을 전송한다")
 	void sendNotificationByReceiverId_Success() {
 		// given
+		emitterRepository.save(1L);
+		Long receiverId = 1L;
+		NotificationSendRequest request = NotificationSendRequest.builder()
+			.title(TITLE)
+			.contents(CONTENTS)
+			.build();
+
+		// when
+		notificationFacade.sendNotificationByReceiverId(receiverId, request);
+
+		// then
+		List<Notification> notifications = repository.findByUserId(receiverId);
+		Notification result = notifications.get(0);
+		assertNotNull(notifications);
+		assertEquals(TITLE, result.getTitle());
+		assertEquals(CONTENTS, result.getContents());
+	}
+
+	@Test
+	@DisplayName("sendNotificationByReceiverId는 참가자가 Emitter가 없으면 새로 등록 후 알림을 전송한다")
+	void sendNotificationByReceiverId_Subscribe_Success() {
+		// given
 		Long receiverId = 1L;
 		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)
@@ -129,6 +151,7 @@ public class NotificationUserAdminFacadeTest {
 	@DisplayName("sendNotificationAll는 모든 참가자에게 알림을 전송한다")
 	void sendNotificationAll_Success() {
 		// given
+		emitterRepository.save(1L);
 		NotificationSendRequest request = NotificationSendRequest.builder()
 			.title(TITLE)
 			.contents(CONTENTS)
