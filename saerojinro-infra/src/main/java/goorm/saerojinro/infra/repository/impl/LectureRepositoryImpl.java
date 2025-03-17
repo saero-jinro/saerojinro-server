@@ -1,5 +1,6 @@
 package goorm.saerojinro.infra.repository.impl;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.infra.repository.jpa.LectureJpaRepository;
@@ -21,13 +22,13 @@ public class LectureRepositoryImpl implements LectureRepository {
 	}
 
 	@Override
-	public List<Lecture> findAll() {
-		return lectureJpaRepository.findAll();
+	public Optional<Lecture> findById(Long id) {
+		return lectureJpaRepository.findById(id);
 	}
 
 	@Override
-	public Optional<Lecture> findById(Long id) {
-		return lectureJpaRepository.findById(id);
+	public Optional<Lecture> findByIdWithLock(Long id){
+		return lectureJpaRepository.findByIdWithLock(id);
 	}
 
 	@Override
@@ -38,5 +39,25 @@ public class LectureRepositoryImpl implements LectureRepository {
 	@Override
 	public void delete(Lecture lecture) {
 		lectureJpaRepository.delete(lecture);
+	}
+
+	@Override
+	public List<Lecture> findByStartTime(LocalDateTime time) {
+		return lectureJpaRepository.findByStartTime(time);
+	}
+
+	@Override
+	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
+		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(startTime, endTime);
+	}
+
+	@Override
+	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
+		return lectureJpaRepository.findByCategoryInAndStartTime(categories, lectureTime);
+	}
+
+	@Override
+	public List<Lecture> findAll() {
+		return lectureJpaRepository.findAll();
 	}
 }

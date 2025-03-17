@@ -128,23 +128,4 @@ public class UserCommandServiceTest {
 		// then
 		assertNotNull(user.getDeletedAt());
 	}
-
-	@Test
-	@DisplayName("updateRole은 유저의 권한을 수정한다.")
-	public void updateRole_Success() {
-		// given
-		String oauthIdentity = "kakao_12345";
-		String name = "박민준";
-		String email = "minjun@kakao.com";
-		String profileImage = "http://kakao.com/profile.png";
-
-		BaseRole updateRole = SPEAKER;
-		user = userCommandService.kakaoSocialLogin(oauthIdentity, name, email, profileImage);
-
-		// when
-		userCommandService.updateRole(user, updateRole);
-
-		// then
-		assertEquals(user.getRole(), updateRole);
-	}
 }

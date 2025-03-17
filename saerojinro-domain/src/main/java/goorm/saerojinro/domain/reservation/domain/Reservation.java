@@ -28,7 +28,7 @@ public class Reservation extends BaseTimeEntity {
     @JoinColumn(name = "lecture_id", nullable = false, updatable = false)
     private Lecture lecture;
 
-    public static Reservation createReservation(User user, Lecture lecture){
+    public static Reservation create(User user, Lecture lecture){
         return Reservation.builder()
                 .user(user)
                 .lecture(lecture)

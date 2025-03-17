@@ -1,29 +1,55 @@
 package lecture;
 
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.exception.LectureNotAuthorizedException;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.domain.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static goorm.saerojinro.common.domain.BaseRole.*;
-import static goorm.saerojinro.domain.lecture.enums.LectureStatus.*;
+import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LectureDomainTest {
 
-//	private static final User TEST_SPEAKER = User.builder()
-//		.id(1L)
-//		.name("Test Speaker")
-//		.role(BaseRole.SPEAKER)
-//		.build();
+	private static final String NAME = "Cole Palmer";
+	private static final String EMAIL = "google@mail.com";
+	private static final String POSITION = "00 기업 / CEO";
+	private static final String INTRODUCTION = "안녕하세요 OO 기업 CEO OOO 입니다";
+	private static final String FILMOGRAPHY = "AA 기업 - 백엔드 개발 담당";
+
+	private static final File SPEAKER_IMAGE_FILE = File.create(
+		"Speaker_Image",
+		"uploads/speaker/123456.jpg",
+		3000L,
+		"jpg"
+	);
+
+	private static final Speaker speaker = Speaker.builder()
+		.name(NAME)
+		.email(EMAIL)
+		.position(POSITION)
+		.introduction(INTRODUCTION)
+		.filmography(FILMOGRAPHY)
+		.imageFile(SPEAKER_IMAGE_FILE)
+		.build();
+
+	private static final File THUMBNAIL_FILE = File.create(
+		"Thumbnail_LogicalName",
+		"uploads/lecture/thumbnail/123456.jpg",
+		5000L,
+		"jpg"
+	);
+	private static final File MATERIAL_FILE = File.create(
+		"Material_LogicalName",
+		"uploads/lecture/materials/발표자료.pdf",
+		10000L,
+		"pdf"
+	);
 
 	private static final String TITLE = "Title";
 	private static final String CONTENTS = "Contents";
@@ -32,16 +58,17 @@ class LectureDomainTest {
 	private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
 	private static final String LOCATION = "Location";
 	private static final Category CATEGORY = Category.BACKEND;
-	private static final LectureStatus STATUS = APPROVED;
 
 	private Lecture lecture;
 
 	@BeforeEach
 	void setUp() {
 		lecture = Lecture.create(
-			null,
+			speaker,
 			TITLE,
 			CONTENTS,
+			THUMBNAIL_FILE,
+			MATERIAL_FILE,
 			MAX_CAPACITY,
 			START_TIME,
 			END_TIME,
@@ -53,7 +80,7 @@ class LectureDomainTest {
 	@Test
 	@DisplayName("Lecture를 성공적으로 생성한다")
 	void createLecture_success() {
-		assertNotNull(lecture, "Lecture 객체가 null이면 안 됩니다.");
+		assertNotNull(lecture);
 		assertEquals(TITLE, lecture.getTitle());
 		assertEquals(CONTENTS, lecture.getContents());
 		assertEquals(MAX_CAPACITY, lecture.getMaxCapacity());
@@ -61,7 +88,12 @@ class LectureDomainTest {
 		assertEquals(END_TIME, lecture.getEndTime());
 		assertEquals(LOCATION, lecture.getLocation());
 		assertEquals(CATEGORY, lecture.getCategory());
-		assertEquals(STATUS, lecture.getLectureStatus());
+		assertEquals(EMAIL, lecture.getSpeaker().getEmail());
+
+		assertNotNull(lecture.getThumbnailFile());
+		assertNotNull(lecture.getMaterialFile());
+		assertEquals("uploads/lecture/thumbnail/123456.jpg", lecture.getThumbnailFile().getPhysicalPath());
+		assertEquals("uploads/lecture/materials/발표자료.pdf", lecture.getMaterialFile().getPhysicalPath());
 	}
 
 	@Test
@@ -92,7 +124,7 @@ class LectureDomainTest {
 		// when
 		lecture.delete();
 
-		//then
-		assertEquals(DELETED, lecture.getLectureStatus());
+		// then
+		assertNotNull(lecture.getDeletedAt());
 	}
 }

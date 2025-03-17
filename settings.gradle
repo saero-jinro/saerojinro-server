@@ -1,6 +1,5 @@
 rootProject.name = 'saerojinro-server'
 include 'saerojinro-admin'
-include 'saerojinro-speaker'
 include 'saerojinro-api'
 include 'saerojinro-auth'
 include 'saerojinro-common'

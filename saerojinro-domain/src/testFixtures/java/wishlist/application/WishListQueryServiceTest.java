@@ -2,14 +2,13 @@ package wishlist.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import goorm.saerojinro.domain.wishlist.exception.WishListNotFoundException;
 import mock.repository.FakeWishListRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WishListQueryServiceTest {
     private WishListQueryService wishListQueryService;
@@ -31,7 +31,6 @@ public class WishListQueryServiceTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     @BeforeEach
     void init(){
@@ -50,7 +49,6 @@ public class WishListQueryServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
 
         WishList wishList = WishList.createWishList(user, lecture);
@@ -70,7 +68,6 @@ public class WishListQueryServiceTest {
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 
@@ -94,18 +91,36 @@ public class WishListQueryServiceTest {
     }
 
     @Test
-    @DisplayName("getByUserAndLecture 는 유저 아이디와 강의 아이디에 해당하는 즐겨찾기 정보를 조회할 수 있다.")
-    public void getByUserAndLecture_Success(){
+    @DisplayName("getByUserAndStartTime 은 유저 아이디와 강의 시작 시간에 해당하는 즐겨찾기 정보들을 조회할 수 있다.")
+    public void getByUserAndStartTime_Success(){
         // given
         User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
 
         // when
-        WishList findWishList = wishListQueryService.getByUserAndLecture(user, lecture);
+        List<WishList> result = wishListQueryService.getByUserAndStartTime(user, START_TIME);
+
+        // then
+        assertThat(result)
+                .isNotNull()
+                .hasSize(1);
+
+        WishList wishList = result.get(0);
+        assertThat(wishList.getUser().getId()).isEqualTo(USER_ID);
+        assertThat(wishList.getLecture().getId()).isEqualTo(LECTURE_ID);
+    }
+
+    @Test
+    @DisplayName("getByUserAndLecture 는 유저 아이디와 강의 아이디에 해당하는 즐겨찾기 정보를 조회할 수 있다.")
+    public void getByUserAndLectureId_Success(){
+        // given
+        User user = createUser(USER_ID);
+
+        // when
+        WishList findWishList = wishListQueryService.getByUserAndLectureId(user, LECTURE_ID);
 
         // then
         assertThat(findWishList.getUser().getId()).isEqualTo(user.getId());
-        assertThat(findWishList.getLecture().getId()).isEqualTo(lecture.getId());
+        assertThat(findWishList.getLecture().getId()).isEqualTo(LECTURE_ID);
     }
 
     @Test
@@ -113,11 +128,10 @@ public class WishListQueryServiceTest {
     public void getByUserAndLecture_WishListNotFoundException(){
         // given
         User user = createUser(2L);
-        Lecture lecture = createLecture(LECTURE_ID);
 
         // then
         assertThrows(WishListNotFoundException.class,
-                () -> wishListQueryService.getByUserAndLecture(user, lecture));
+                () -> wishListQueryService.getByUserAndLectureId(user, LECTURE_ID));
     }
 
     @Test
@@ -132,5 +146,28 @@ public class WishListQueryServiceTest {
 
         // then
         assertThat(isExist).isTrue();
+    }
+
+    @Test
+    @DisplayName("countByLectureId 는 강의 아이디로 즐겨찾기 수를 확인 한다.")
+    public void countByLectureId_Success(){
+        // given
+        // when
+        int count = wishListQueryService.countByLectureId(LECTURE_ID);
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("getWishlistAllLecture 는 lecture 별 Wishlist 의 개수를 센다.")
+    public void getWishlistAllLecture_Success(){
+        // when
+        List<LectureWishlistCountDto> allLecture = wishListQueryService.getWishlistAllLecture();
+
+        // then
+        assertEquals(1, allLecture.size());
+        assertEquals(1L, allLecture.get(0).lectureId());
+        assertEquals(1L, allLecture.get(0).wishlistCount());
     }
 }

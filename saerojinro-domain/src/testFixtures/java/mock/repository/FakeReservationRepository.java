@@ -1,16 +1,17 @@
 package mock.repository;
 
-
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class FakeReservationRepository implements ReservationRepository {
     private final List<Reservation> data = Collections.synchronizedList(new ArrayList<>());
@@ -34,22 +35,24 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existByUserAndLecture(User user, Lecture lecture) {
-        return findByUserAndLecture(user, lecture).isPresent();
+    public boolean existByUserIdAndStartTime(Long userId, LocalDateTime startTime) {
+        return data.stream()
+                .anyMatch(r -> r.getUser().getId().equals(userId) &&
+                        r.getLecture().getStartTime().equals(startTime));
     }
 
     @Override
-    public List<Reservation> findByUser(User user) {
+    public List<Reservation> findByUserId(Long userId) {
         return data.stream()
-                .filter( r -> r.getUser().getId().equals(user.getId()))
+                .filter( r -> r.getUser().getId().equals(userId))
                 .toList();
     }
 
     @Override
-    public Optional<Reservation> findByUserAndLecture(User user, Lecture lecture) {
+    public Optional<Reservation> findByUserIdAndLectureId(Long userId, Long lectureId) {
         return data.stream()
-                .filter( r -> r.getUser().getId().equals(user.getId()) &&
-                        r.getLecture().getId().equals(lecture.getId()))
+                .filter( r -> r.getUser().getId().equals(userId) &&
+                        r.getLecture().getId().equals(lectureId))
                 .findFirst();
     }
 
@@ -57,6 +60,24 @@ public class FakeReservationRepository implements ReservationRepository {
     public List<Reservation> findAllByLectureId(Long lectureId) {
         return data.stream()
             .filter(r -> r.getLecture().getId().equals(lectureId))
+            .toList();
+    }
+
+    @Override
+    public int countByLectureId(Long lectureId) {
+        return data.stream()
+            .filter(r -> r.getLecture().getId().equals(lectureId))
+            .toList()
+            .size();
+    }
+
+    @Override
+    public List<LectureReservationCountDto> countReservationAllLecture() {
+        Map<Long, Long> counts = data.stream()
+            .collect(Collectors.groupingBy(r -> r.getLecture().getId(), Collectors.counting()));
+
+        return counts.entrySet().stream()
+            .map(entry -> new LectureReservationCountDto(entry.getKey(), entry.getValue()))
             .toList();
     }
 }

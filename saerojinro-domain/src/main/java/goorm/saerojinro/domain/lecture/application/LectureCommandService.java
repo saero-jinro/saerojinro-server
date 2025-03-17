@@ -1,10 +1,11 @@
 package goorm.saerojinro.domain.lecture.application;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
-import goorm.saerojinro.domain.user.domain.User;
+import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,13 @@ import java.time.LocalDateTime;
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
-	public Lecture create(User speaker, String title, String contents, Long maxCapacity,
-						  LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
+	public Lecture create(Speaker speaker, String title, String contents, File thumbnailFile, File materialFile,
+						  Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
-		Lecture lecture = Lecture.create(null, title, contents, maxCapacity, startTime, endTime, location, category);
+		Lecture lecture = Lecture.create(
+			speaker, title, contents, thumbnailFile, materialFile,
+			maxCapacity, startTime, endTime, location, category
+		);
 		return lectureRepository.save(lecture);
 	}
 

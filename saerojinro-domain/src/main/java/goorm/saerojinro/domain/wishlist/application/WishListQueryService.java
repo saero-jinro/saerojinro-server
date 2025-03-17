@@ -4,10 +4,12 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.wishlist.domain.WishList;
 import goorm.saerojinro.domain.wishlist.domain.WishListRepository;
+import goorm.saerojinro.domain.wishlist.dto.LectureWishlistCountDto;
 import goorm.saerojinro.domain.wishlist.exception.WishListNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,12 +21,24 @@ public class WishListQueryService {
         return wishListRepository.findAllByUser(user);
     }
 
-    public WishList getByUserAndLecture(User user, Lecture lecture){
-        return wishListRepository.findByUserAndLecture(user, lecture)
+    public WishList getByUserAndLectureId(User user, Long lectureId){
+        return wishListRepository.findByUserAndLectureId(user, lectureId)
                 .orElseThrow(WishListNotFoundException::new);
+    }
+
+    public List<WishList> getByUserAndStartTime(User user, LocalDateTime startTime){
+        return wishListRepository.findByUserAndStartTime(user, startTime);
     }
 
     public boolean existCheck(User user, Lecture lecture){
         return wishListRepository.existsByUserAndLecture(user, lecture);
+    }
+
+    public int countByLectureId(Long lectureId) {
+        return wishListRepository.countByLectureId(lectureId);
+    }
+
+    public List<LectureWishlistCountDto> getWishlistAllLecture(){
+        return wishListRepository.countWishlistAllLecture();
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import goorm.saerojinro.domain.user.exception.InvalidPasswordException;
-import goorm.saerojinro.domain.user.exception.UserNotAuthenticatedException;
 import goorm.saerojinro.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +42,7 @@ public class UserQueryService {
 			String email = ((UserDetails)principal).getUsername();
 			return getByEmail(email);
 		} catch (Exception e) {
-			throw new UserNotAuthenticatedException();
+			return null;
 		}
 	}
 }

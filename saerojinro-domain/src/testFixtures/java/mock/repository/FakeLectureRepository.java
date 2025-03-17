@@ -1,9 +1,9 @@
 package mock.repository;
 
+import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,20 +22,16 @@ public class FakeLectureRepository implements LectureRepository {
 			.speaker(lecture.getSpeaker())
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
+			.thumbnailFile(lecture.getThumbnailFile())
+			.materialFile(lecture.getMaterialFile())
 			.maxCapacity(lecture.getMaxCapacity())
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
 			.category(lecture.getCategory())
-			.lectureStatus(lecture.getLectureStatus())
 			.build();
 		data.add(saved);
 		return saved;
-	}
-
-	@Override
-	public List<Lecture> findAll() {
-		return new ArrayList<>(data);
 	}
 
 	@Override
@@ -45,6 +41,12 @@ public class FakeLectureRepository implements LectureRepository {
 			.findFirst();
 	}
 
+	@Override
+	public Optional<Lecture> findByIdWithLock(Long id) {
+		return data.stream()
+				.filter(lecture -> lecture.getId().equals(id))
+				.findFirst();
+	}
 
 	@Override
 	public void delete(Lecture lecture) {
@@ -61,5 +63,35 @@ public class FakeLectureRepository implements LectureRepository {
 				return isAfterOrEqualStart && isBeforeEnd;
 			})
 			.toList();
+	}
+
+	@Override
+	public List<Lecture> findByStartTime(LocalDateTime time) {
+		return data.stream()
+			.filter(lecture -> lecture.getStartTime().equals(time))
+			.toList();
+	}
+
+	@Override
+	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
+		return data.stream()
+			.filter(lecture ->
+				!lecture.getStartTime().isBefore(startTime) &&
+					!lecture.getEndTime().isAfter(endTime)
+			)
+			.toList();
+	}
+
+	@Override
+	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
+		return data.stream()
+			.filter(lecture -> categories.contains(lecture.getCategory()))
+			.filter(lecture -> lecture.getStartTime().isEqual(lectureTime))
+			.toList();
+	}
+
+	@Override
+	public List<Lecture> findAll() {
+		return data;
 	}
 }

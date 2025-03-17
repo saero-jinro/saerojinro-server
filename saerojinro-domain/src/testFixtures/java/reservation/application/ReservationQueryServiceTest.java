@@ -2,10 +2,12 @@ package reservation.application;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.lecture.enums.LectureStatus;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
+import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
+import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
+import goorm.saerojinro.domain.reservation.exception.ReservationFullException;
 import goorm.saerojinro.domain.reservation.exception.ReservationNotFoundException;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
@@ -16,8 +18,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ReservationQueryServiceTest {
     private ReservationQueryService reservationQueryService;
@@ -30,7 +34,6 @@ public class ReservationQueryServiceTest {
     private static final LocalDateTime END_TIME = LocalDateTime.of(2025, 3, 1, 12, 0);
     private static final String LOCATION = "Location";
     private static final Category CATEGORY = Category.BACKEND;
-    private static final LectureStatus STATUS = LectureStatus.PENDING_APPROVAL;
 
     @BeforeEach
     void init(){
@@ -47,41 +50,34 @@ public class ReservationQueryServiceTest {
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
                 .endTime(END_TIME)
+                .maxCapacity(1L)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
 
-        Reservation reservation = Reservation.createReservation(user, lecture);
+        Reservation reservation = Reservation.create(user, lecture);
         reservationRepository.save(reservation);
     }
 
-    private User createUser(Long id) {
-        return User.builder().id(id).build();
-    }
-
-    private Lecture createLecture(Long id) {
+    private Lecture createLecture() {
         return Lecture.builder()
-                .id(id)
+                .id(LECTURE_ID)
                 .title(LECTURE_TITLE)
                 .contents(LECTURE_CONTENTS)
                 .startTime(START_TIME)
+                .maxCapacity(1L)
                 .endTime(END_TIME)
                 .location(LOCATION)
                 .category(CATEGORY)
-                .lectureStatus(STATUS)
                 .build();
     }
 
     @Test
     @DisplayName("getAllReservationByUser 는 유저에 해당하는 모든 예약 정보를 조회 할 수 있다.")
     public void getAllReservationByUser_Success(){
-        //given
-        User user = createUser(USER_ID);
-
         //when
         List<Reservation> findReservations = reservationQueryService.getAllReservationByUser(
-                user);
+                USER_ID);
 
         //then
         assertThat(findReservations)
@@ -97,52 +93,39 @@ public class ReservationQueryServiceTest {
     @Test
     @DisplayName("getByUserAndLecture 는 해당하는 유저와 강의에 대한 예약 정보를 조회 할 수 있다")
     public void getByUserAndLecture_Success(){
-        //given
-        User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
-
         //when
         Reservation findReservation = reservationQueryService.getByUserAndLecture(
-                user, lecture);
+                USER_ID, LECTURE_ID);
 
         //then
         assertThat(findReservation.getUser().getId()).isEqualTo(USER_ID);
         assertThat(findReservation.getLecture().getId()).isEqualTo(LECTURE_ID);
-
     }
 
     @Test
     @DisplayName("getByUserAndLecture 는 해당하는 예약 정보가 없을 시, ReservationNotFoundException 예외를 발생 시킨다.")
     public void getByUserAndLecture_ReservationNotFoundException(){
-        //given
-        User user = createUser(2L);
-        Lecture lecture = createLecture(LECTURE_ID);
-
         //then
         assertThrows(ReservationNotFoundException.class,
-                () -> reservationQueryService.getByUserAndLecture(user, lecture));
-
+                () -> reservationQueryService.getByUserAndLecture(2L, LECTURE_ID));
     }
 
     @Test
     @DisplayName("existsCheck 는 해당하는 유저와 강의에 대한 예약 정보가 존재하는지 확인 할 수 있다.")
     public void existsCheck_Success(){
-        //given
-        User user = createUser(USER_ID);
-        Lecture lecture = createLecture(LECTURE_ID);
+        // given
+        Lecture lecture = createLecture();
 
-        //when
-        boolean isExist = reservationQueryService.existsCheck(user, lecture);
+        // when
+        boolean isExist = reservationQueryService.existsCheckByUserAndStartTime(USER_ID, lecture.getStartTime());
 
-        //then
+        // then
         assertThat(isExist).isTrue();
     }
 
     @Test
     @DisplayName("getAllByLectureId 는 Lecture 에 예약한 예약 정보를 반환할 수 있다.")
     public void getAllByLectureId_Success(){
-        // given
-
         // when
         List<Reservation> reservationList = reservationQueryService.getAllByLectureId(LECTURE_ID);
 
@@ -151,5 +134,84 @@ public class ReservationQueryServiceTest {
         assertEquals(1L, reservationList.get(0).getLecture().getId());
         assertEquals(LECTURE_TITLE, reservationList.get(0).getLecture().getTitle());
         assertEquals(LECTURE_CONTENTS, reservationList.get(0).getLecture().getContents());
+    }
+
+    @Test
+    @DisplayName("countByLectureId 는 Lecture 별 예약의 수를 반환할 수 있다.")
+    public void countByLectureId_Success(){
+        // when
+        int count = reservationQueryService.countByLectureId(LECTURE_ID);
+
+        // then
+        assertEquals(1, count);
+    }
+
+    @Test
+    @DisplayName("validateReservationByUserAndStartTime 는 강의 시작 시간이 중복되는 예약이 있을 시, 예외를 던진다.")
+    public void valid_ReservationExistException(){
+        // given
+        Lecture lecture = createLecture();
+
+        // then
+        assertThrows(ReservationExistException.class, () ->
+                reservationQueryService.validateReservationByUserAndStartTime(USER_ID, lecture.getStartTime())
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationByUserAndStartTime 는 예약이 없을 경우 예외를 발생시키지 않는다.")
+    public void valid_NoReservationExist(){
+        // given
+        LocalDateTime nonDuplicateStartTime = LocalDateTime.of(2025, 3, 2, 10, 0);
+
+        // then
+        assertDoesNotThrow(() ->
+                reservationQueryService.validateReservationByUserAndStartTime(USER_ID, nonDuplicateStartTime)
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationFull 은 예약이 꽉 차 있을 경우 예외를 발생 시킨다.")
+    public void valid_ReservationFullException(){
+        // given
+        Lecture lecture = createLecture();
+
+        // then
+        assertThrows(ReservationFullException.class, () ->
+                reservationQueryService.validateReservationFull(lecture)
+        );
+    }
+
+    @Test
+    @DisplayName("validateReservationFull 는 예약 자리가 남은 경우 예외를 발생시키지 않는다.")
+    public void valid_NoReservationFull(){
+        // given
+        Lecture lecture = Lecture.builder()
+                .id(LECTURE_ID)
+                .title(LECTURE_TITLE)
+                .contents(LECTURE_CONTENTS)
+                .startTime(START_TIME)
+                .maxCapacity(100L)
+                .endTime(END_TIME)
+                .location(LOCATION)
+                .category(CATEGORY)
+                .build();
+
+        // then
+        assertDoesNotThrow(() ->
+                reservationQueryService.validateReservationFull(lecture)
+        );
+    }
+
+    @Test
+    @DisplayName("getReservationAllLecture 는 lecture 별 Reservation 의 개수를 센다.")
+    public void getReservationAllLecture_Success(){
+        // when
+        List<LectureReservationCountDto> allLecture = reservationQueryService.getReservationAllLecture();
+
+        // then
+        assertEquals(1, allLecture.size());
+        assertEquals(1L, allLecture.get(0).lectureId());
+        assertEquals(1L, allLecture.get(0).reservationCount());
     }
 }

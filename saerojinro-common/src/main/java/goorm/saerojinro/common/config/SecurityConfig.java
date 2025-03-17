@@ -48,6 +48,7 @@ public class SecurityConfig {
 				.requestMatchers(STATIC_RESOURCES_PATTERNS).permitAll()
 				.requestMatchers(PERMIT_ALL_PATTERNS).permitAll()
 				.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+				.requestMatchers(AUTH_ENDPOINTS).permitAll()
 				.anyRequest().permitAll()
 			)
 			.build();
@@ -74,6 +75,10 @@ public class SecurityConfig {
 	};
 
 	private static final String[] PUBLIC_ENDPOINTS = {
+		"/api/lectures/**",
+	};
+
+	private static final String[] AUTH_ENDPOINTS = {
 		"/api/auth/login",
 		"/api/auth/kakao/login",
 		"/api/auth/google/login",
@@ -102,8 +107,7 @@ public class SecurityConfig {
 	@Bean
 	public RoleHierarchy roleHierarchy() {
 		return RoleHierarchyImpl.withDefaultRolePrefix()
-			.role("ADMIN").implies("SPEAKER")
-			.role("SPEAKER").implies("ATTENDEE")
+			.role("ADMIN").implies("ATTENDEE")
 			.build();
 	}
 }

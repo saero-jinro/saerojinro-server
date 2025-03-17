@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 	SaeroJinroConfigGroup.JPA,
 	SaeroJinroConfigGroup.JPA_AUDITING,
 	SaeroJinroConfigGroup.PROPERTIES,
+	SaeroJinroConfigGroup.SCHEDULING,
 })
 class InfraConfig {
 

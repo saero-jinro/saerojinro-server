@@ -1,37 +1,123 @@
 package goorm.saerojinro.api.lecture.application;
 
-import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
-import goorm.saerojinro.api.lecture.presentation.response.LectureResponse;
+import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
+import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_VIEW;
+
+import goorm.saerojinro.api.lecture.presentation.response.*;
+import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
+import goorm.saerojinro.domain.logevent.domain.LogEvent;
+import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
+import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.user.application.UserQueryService;
+import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class LectureFacade {
-	private final LectureQueryService lectureService;
+	private final LectureQueryService lectureQueryService;
+	private final LogEventProducer logEventProducer;
+	private final UserQueryService userQueryService;
+	private final LectureRecommendationService lectureRecommendationService;
+	private final LogEventService logEventService;
 
-	public LectureListResponse getAllLecture() {
-		List<LectureResponse> responses = lectureService.getAllLecture().stream()
-			.map(LectureResponse::from)
-			.toList();
-		return LectureListResponse.from(responses);
-	}
+	private static final int RECOMMENDATION_LIMIT = 3;
 
-	public LectureDetailResponse getByLectureId(long lectureId) {
-		Lecture lecture = lectureService.getByLectureId(lectureId);
+	@Transactional(readOnly = true)
+	public LectureDetailResponse getById(Long id) {
+		Lecture lecture = lectureQueryService.getById(id);
+		User user = userQueryService.me();
+
+		if (user != null && user.getRole().equals(ATTENDEE)) {
+			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lecture.getId(), LECTURE_VIEW,
+				lecture.getCategory(), LocalDateTime.now());
+			logEventProducer.sendMessage(redisLogEvent);
+		}
+
 		return LectureDetailResponse.from(lecture);
 	}
 
+	@Transactional(readOnly = true)
 	public LectureListResponse getByDate(LocalDate localDate) {
-		List<LectureResponse> responses = lectureService.getByDate(localDate).stream()
+		List<LectureResponse> responses = lectureQueryService.getByDate(localDate).stream()
 			.map(LectureResponse::from)
 			.toList();
 		return LectureListResponse.from(responses);
+	}
+
+	@Transactional(readOnly = true)
+	public LectureSummaryListResponse getRecommendationLectures(LocalDateTime lectureStartTime) {
+		Long userId = userQueryService.me().getId();
+		Map<Category, Integer> categoryPriortyMap = getCategoryPriorityMap(userId);
+
+		List<Lecture> recommendedLectures = lectureQueryService.getRecommendedLectureByDate(categoryPriortyMap,
+			lectureStartTime);
+
+		if (recommendedLectures.size() < RECOMMENDATION_LIMIT) {
+			recommendedLectures = fillWithPopularLectures(recommendedLectures, lectureStartTime);
+		}
+
+		return LectureSummaryListResponse.from(recommendedLectures);
+	}
+
+	private Map<Category, Integer> getCategoryPriorityMap(Long userId) {
+		List<RedisLogEvent> userRedisLogEvents = logEventService.getLogEventsByUserFromRedis(userId);
+
+		if (!userRedisLogEvents.isEmpty()) {
+			return lectureRecommendationService.getRecommendationCategoriesByCache(userRedisLogEvents);
+		}
+
+		List<LogEvent> userLogEvents = logEventService.getLogEventsByUser(userId);
+		return lectureRecommendationService.getRecommendationCategoriesByEntity(userLogEvents);
+	}
+
+
+	private List<Lecture> fillWithPopularLectures(List<Lecture> recommendedLectures, LocalDateTime lectureStartTime) {
+		int remainingSlots = RECOMMENDATION_LIMIT - recommendedLectures.size();
+
+		List<Lecture> lecturesByStartTime =
+			lectureQueryService.getByStartTime(lectureStartTime);
+		List<Long> lectureIds = lecturesByStartTime.stream()
+			.map(Lecture::getId)
+			.toList();
+		Set<Long> recommendedLectureIds = recommendedLectures.stream()
+			.map(Lecture::getId)
+			.collect(Collectors.toSet());
+
+		List<LogEvent> recentLogsByLecturesId =
+			logEventService.getTop20ByLectureIdInOrderByTimestampDesc(lectureIds);
+
+		Map<Long, Integer> lectureWeightMap =
+			lectureRecommendationService.getRecommendationLectureIds(recentLogsByLecturesId);
+
+		List<Lecture> filteredLectures = lecturesByStartTime.stream()
+			.filter(lecture -> !recommendedLectureIds.contains(lecture.getId()))
+			.sorted(
+				Comparator.comparingInt(
+					lecture -> -lectureWeightMap.getOrDefault(lecture.getId(), 0)
+				)
+			)
+			.limit(remainingSlots)
+			.toList();
+
+		List<Lecture> mutableLectures = new ArrayList<>(recommendedLectures);
+		mutableLectures.addAll(filteredLectures);
+
+		return mutableLectures;
 	}
 }
