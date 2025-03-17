@@ -18,7 +18,7 @@ public class SpeakerFacade {
 	@Transactional(readOnly = true)
 	public SpeakerDetailResponse findById(Long speakerId) {
 		Speaker speaker = speakerQueryService.findById(speakerId);
-		Lecture lecture = lectureQueryService.getBySpeakerId(speaker.getId());
+		Lecture lecture = lectureQueryService.getBySpeakerId(speakerId);
 
 		return SpeakerDetailResponse.from(speaker, lecture);
 	}
