@@ -1,18 +1,19 @@
 package goorm.saerojinro.admin.api.lecture.presentation.response;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.speaker.domain.Speaker;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 @Builder
 public record LectureCreateResponse(
-	Long speakerId,
-	Long lectureId
+	@Schema(description = "강의 ID", example = "1", requiredMode = REQUIRED)
+	Long id
 ) {
-	public static LectureCreateResponse from(Speaker speaker, Lecture lecture) {
+	public static LectureCreateResponse from(Lecture lecture) {
 		return LectureCreateResponse.builder()
-			.speakerId(speaker.getId())
-			.lectureId(lecture.getId())
+			.id(lecture.getId())
 			.build();
 	}
 }

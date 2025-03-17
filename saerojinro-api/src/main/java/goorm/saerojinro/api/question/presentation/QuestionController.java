@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface QuestionController {
 
     @Operation(
-            summary = "모든 질문 조회 API",
+            summary = "질문 리스트 조회 API",
             description = "모든 질문 데이터를 조회 합니다."
     )
     @ApiResponse(
@@ -28,8 +28,8 @@ public interface QuestionController {
     ResponseEntity<QuestionListResponse> getAllQuestions();
 
     @Operation(
-            summary = "강의 별 질문 조회 API",
-            description = "강의 별로 저장된 모든 질문 데이터를 조회 합니다."
+            summary = "해당 강의 질문 조회 API",
+            description = "해당 강의의 질문 리스트를 조회 합니다."
     )
     @ApiResponse(
             responseCode = "200",
@@ -37,8 +37,8 @@ public interface QuestionController {
     ResponseEntity<QuestionListResponse> getByLecture(@PathVariable("lectureId") Long lectureId);
 
     @Operation(
-            summary = "강의 별 질문 생성 API",
-            description = "강의 별로 새로운 질문 데이터를 생성 합니다."
+            summary = "해당 강의 질문 생성 API",
+            description = "해당 강의의 질문을 생성 합니다."
     )
     @ApiResponse(
             responseCode = "201",
@@ -54,12 +54,9 @@ public interface QuestionController {
             summary = "강의 별 질문 수정 API",
             description = "강의 별로 특정 질문 데이터를 수정 합니다."
     )
-    @ApiResponse(
-            responseCode = "204",
-            description = "질문 수정 성공"
-    )
+    @ApiResponse(responseCode = "204")
     ResponseEntity<Void> update(
-            @PathVariable("questionsId") Long questionsId,
+            @PathVariable("id") Long id,
             @Parameter(
                     description = "질문 수정 request 객체 입니다.",
                     required = true
@@ -69,9 +66,6 @@ public interface QuestionController {
             summary = "강의 별 질문 삭제 API",
             description = "강의 별로 특정 질문 데이터를 삭제 합니다."
     )
-    @ApiResponse(
-            responseCode = "204",
-            description = "질문 삭제 성공"
-    )
-    ResponseEntity<Void> delete(@PathVariable("questionsId") Long questionsId);
+    @ApiResponse(responseCode = "204")
+    ResponseEntity<Void> delete(@PathVariable("id") Long id);
 }

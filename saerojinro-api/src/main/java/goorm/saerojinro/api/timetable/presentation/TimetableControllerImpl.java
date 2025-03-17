@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/attendees")
+@RequestMapping("/api/timetables")
 public class TimetableControllerImpl implements TimetableController {
 
 	private final TimetableFacade timetableFacade;
 
 	@Override
-	@GetMapping("/timetable")
+	@GetMapping("/me")
 	public ResponseEntity<TimetableResponse> getTimetable() {
 		return ResponseEntity.ok(timetableFacade.getTimetable());
 	}
