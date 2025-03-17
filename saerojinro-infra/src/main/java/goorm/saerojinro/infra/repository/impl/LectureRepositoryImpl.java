@@ -60,9 +60,4 @@ public class LectureRepositoryImpl implements LectureRepository {
 	public List<Lecture> findAll() {
 		return lectureJpaRepository.findAll();
 	}
-
-	@Override
-	public Optional<Lecture> findBySpeakerId(Long speakerId) {
-		return lectureJpaRepository.findBySpeakerId(speakerId);
-	}
 }

@@ -1,7 +1,6 @@
 package goorm.saerojinro.api.speaker.application;
 
 import goorm.saerojinro.api.speaker.presentation.response.SpeakerDetailResponse;
-import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerQueryService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
@@ -13,13 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SpeakerFacade {
 	private final SpeakerQueryService speakerQueryService;
-	private final LectureQueryService lectureQueryService;
 
 	@Transactional(readOnly = true)
 	public SpeakerDetailResponse findById(Long speakerId) {
 		Speaker speaker = speakerQueryService.findById(speakerId);
-		Lecture lecture = lectureQueryService.getBySpeakerId(speakerId);
-
+		Lecture lecture = speaker.getLecture();
 		return SpeakerDetailResponse.from(speaker, lecture);
 	}
 }

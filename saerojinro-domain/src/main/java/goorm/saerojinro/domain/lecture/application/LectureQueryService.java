@@ -56,8 +56,4 @@ public class LectureQueryService {
 			.sorted(Comparator.comparing(lecture -> categoryPriorityMap.getOrDefault(lecture.getCategory(), Integer.MAX_VALUE)))
 			.toList();
 	}
-
-	public Lecture getBySpeakerId(Long id) {
-		return lectureRepository.findBySpeakerId(id).orElseThrow(LectureNotFoundException::new);
-	}
 }
