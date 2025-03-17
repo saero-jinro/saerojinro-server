@@ -27,11 +27,8 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping("/date")
-	public ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-		LocalDate localDate = LocalDate.parse(day, formatter);
-
-		LectureListResponse response = lectureFacade.getByDate(localDate);
+	public ResponseEntity<LectureListResponse> getByDate(@RequestParam("date") LocalDate date) {
+		LectureListResponse response = lectureFacade.getByDate(date);
 		return ResponseEntity.ok(response);
 	}
 

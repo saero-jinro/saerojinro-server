@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.lecture.presentation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
@@ -41,7 +42,15 @@ public interface LectureController {
 			)
 		}
 	)
-	ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day);
+	ResponseEntity<LectureListResponse> getByDate(
+		@Parameter(
+			name = "date",
+			description = "행사 일자 (ISO 8601 형식: yyyy-MM-dd)",
+			example = "2025-03-15"
+		)
+		@RequestParam("date")
+		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+	);
 
 	@Operation(
 		summary = "유저 추천 강의 조회",
