@@ -10,8 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
@@ -22,10 +22,10 @@ public class FileControllerImpl implements FileController {
 	private final FileFacade fileFacade;
 
 	@Override
-	@GetMapping("/download")
-	public ResponseEntity<Resource> downloadLectureFile(@RequestParam(value = "materialUri") String uri) {
+	@GetMapping("/download/{id}")
+	public ResponseEntity<Resource> downloadLectureFile(@PathVariable Long id) {
 		try {
-			FileResource fileResource = fileFacade.getFileResource(uri);
+			FileResource fileResource = fileFacade.getFileResource(id);
 			File file = fileResource.file();
 			Resource resource = fileResource.resource();
 
