@@ -38,3 +38,13 @@ docs:
   auth-docs-url: ${AUTH_DOCS_URL:http://localhost:8081/swagger-ui/index.html}
   admin-docs-url: ${ADMIN_DOCS_URL:http://localhost:8082/swagger-ui/index.html}
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics,prometheus"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
