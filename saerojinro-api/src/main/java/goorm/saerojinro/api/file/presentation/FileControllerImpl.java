@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/files/lecture")
+@RequestMapping("/api/files")
 public class FileControllerImpl implements FileController {
 	private final FileFacade fileFacade;
 
