@@ -45,7 +45,7 @@ public interface LectureController {
 
 	@Operation(
 		summary = "유저 추천 강의 조회",
-		description = "저장된 모든 강의를 조회합니다.",
+		description = "해당 시간대의 추천 강의를 조회합니다.",
 		responses = {
 			@ApiResponse(
 				responseCode = "200",

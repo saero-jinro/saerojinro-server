@@ -1,8 +1,10 @@
 package wishList;
 
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.api.wishlist.application.*;
 import goorm.saerojinro.api.wishlist.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
@@ -72,6 +74,10 @@ public class WishListFacadeTest {
             .name("박민준")
             .build();
 
+        File file = File.builder()
+            .physicalPath("path")
+            .build();
+
         Lecture lecture = Lecture.builder()
             .id(LECTURE_ID)
             .title(LECTURE_TITLE)
@@ -81,6 +87,7 @@ public class WishListFacadeTest {
             .location(LOCATION)
             .category(CATEGORY)
             .speaker(speaker)
+            .thumbnailFile(file)
             .build();
 
         lectureRepository.save(lecture);
@@ -108,12 +115,12 @@ public class WishListFacadeTest {
         wishListFacade.create(LECTURE_ID);
 
         // when
-        WishListResponse response = wishListFacade.getByUserAndStartTime(START_TIME);
+        LectureSummaryListResponse response = wishListFacade.getByUserAndStartTime(START_TIME);
 
         // then
         assertNotNull(response);
-        assertEquals(1, response.response().size());
-        assertEquals("박민준", response.response().get(0).speaker());
+        assertEquals(1, response.total());
+        assertEquals(LECTURE_TITLE, response.responses().get(0).title());
     }
 
     @Test
