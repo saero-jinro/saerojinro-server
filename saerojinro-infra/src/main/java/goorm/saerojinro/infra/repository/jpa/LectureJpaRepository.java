@@ -30,4 +30,7 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 	List<Lecture> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 
 	List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime);
+
+	@Query("SELECT l FROM Lecture l JOIN FETCH l.speaker s WHERE s.id = :speakerId")
+	Optional<Lecture> findBySpeakerId(@Param("speakerId") Long speakerId);
 }

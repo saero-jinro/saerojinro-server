@@ -24,4 +24,6 @@ public interface LectureRepository {
 	List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime);
 
 	List<Lecture> findAll();
+
+	Optional<Lecture> findBySpeakerId(Long id);
 }
