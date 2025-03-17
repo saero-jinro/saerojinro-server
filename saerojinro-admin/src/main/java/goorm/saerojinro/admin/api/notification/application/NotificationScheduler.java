@@ -22,7 +22,8 @@ public class NotificationScheduler {
 	private final LectureQueryService lectureQueryService;
 	private final int MINUTES_BEFORE = 5;
 
-	@Scheduled(cron = "0 0/5 * * * *")
+	// 기획에서 5분 전 알림 스케줄러 취소
+//	@Scheduled(cron = "0 0/5 * * * *")
 	public void checkLectureTime() {
 		LocalDateTime fiveMinutesLater = LocalDateTime.now()
 			.truncatedTo(MINUTES)
