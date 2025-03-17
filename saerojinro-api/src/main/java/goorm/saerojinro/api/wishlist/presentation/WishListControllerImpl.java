@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.wishlist.presentation;
 
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.api.wishlist.application.*;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
@@ -26,11 +27,10 @@ public class WishListControllerImpl implements WishListController{
     }
 
     @Override
-    @GetMapping("/{startTime}")
-    public ResponseEntity<WishListResponse> getByUserAndStartTime(
-            @PathVariable("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime startTime) {
-        WishListResponse response = wishListFacade.getByUserAndStartTime(startTime);
+    @GetMapping
+    public ResponseEntity<LectureSummaryListResponse> getByUserAndStartTime(
+            @RequestParam("lectureStartTime") LocalDateTime lectureStartTime) {
+		LectureSummaryListResponse response = wishListFacade.getByUserAndStartTime(lectureStartTime);
         return ResponseEntity.ok(response);
     }
 
