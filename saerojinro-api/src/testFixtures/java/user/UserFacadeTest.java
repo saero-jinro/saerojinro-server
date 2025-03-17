@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import goorm.saerojinro.api.user.application.UserFacade;
 import goorm.saerojinro.api.user.presentation.request.UserUpdateRequest;
+import goorm.saerojinro.api.user.presentation.response.UserInfoResponse;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -75,5 +76,16 @@ public class UserFacadeTest {
 
 		// then
 		assertNotNull(user.getDeletedAt());
+	}
+
+	@Test
+	@DisplayName("getCurrentUserInfo는 현재 로그인 된 유저의 정보를 조회한다.")
+	public void getCurrentUserInfo_Success() {
+		// when
+		UserInfoResponse result = userFacade.getCurrentUserInfo();
+
+		// then
+		assertEquals(user.getName(), result.name());
+		assertEquals(user.getEmail(), result.email());
 	}
 }

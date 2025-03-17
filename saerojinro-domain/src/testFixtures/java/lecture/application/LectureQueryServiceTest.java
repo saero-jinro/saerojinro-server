@@ -148,10 +148,12 @@ public class LectureQueryServiceTest {
 	}
 
 	@Test
-	@DisplayName("시작 시간으로 강의를 조회한다")
-	void getAllLectureByStartTime_Success() {
+
+	@DisplayName("getByStartTime은 시작 시간으로 강의를 조회한다")
+	void getByStartTime_Success() {
 		// when
-		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(START_TIME);
+		List<Lecture> lectureList = lectureQueryService.getByStartTime(
+			LocalDateTime.of(2025, 3, 1, 10, 0));
 
 		// then
 		assertNotNull(lectureList);

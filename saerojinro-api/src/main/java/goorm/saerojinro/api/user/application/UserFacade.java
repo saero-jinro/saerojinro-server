@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.saerojinro.api.user.presentation.request.UserUpdateRequest;
+import goorm.saerojinro.api.user.presentation.response.UserInfoResponse;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -25,5 +26,11 @@ public class UserFacade {
 	public void delete() {
 		User user = userQueryService.me();
 		userCommandService.delete(user);
+	}
+
+	@Transactional(readOnly = true)
+	public UserInfoResponse getCurrentUserInfo() {
+		User user = userQueryService.me();
+		return UserInfoResponse.from(user);
 	}
 }

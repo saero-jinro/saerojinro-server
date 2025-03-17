@@ -39,7 +39,7 @@ public class LectureQueryService {
 		return lectureRepository.findByStartTimeBetween(start, end);
 	}
 
-	public List<Lecture> getAllLectureByStartTime(LocalDateTime time) {
+	public List<Lecture> getByStartTime(LocalDateTime time) {
 		return lectureRepository.findByStartTime(time);
 	}
 
