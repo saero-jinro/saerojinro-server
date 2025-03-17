@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/timetable")
+@RequestMapping("/api/timetables")
 public class TimetableControllerImpl implements TimetableController {
 
 	private final TimetableFacade timetableFacade;
