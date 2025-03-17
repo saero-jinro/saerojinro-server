@@ -66,23 +66,23 @@ public class LectureQueryServiceTest {
 		FakeLectureRepository fakeLectureRepository = new FakeLectureRepository();
 		lectureQueryService = new LectureQueryService(fakeLectureRepository);
 
-		Speaker SPEAKER = Speaker.create(
-			NAME, EMAIL, POSITION, INTRODUCTION, FILMOGRAPHY, SPEAKER_IMAGE_FILE
-		);
+		Speaker speaker = Speaker.builder()
+			.id(1L)
+			.name(NAME)
+			.email(EMAIL)
+			.build();
 
 		lecture1 = fakeLectureRepository.save(Lecture.create(
-				SPEAKER, TITLE, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
+			speaker, TITLE, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
 				START_TIME, END_TIME, LOCATION, CATEGORY
 			)
 		);
 
 		lecture2 = fakeLectureRepository.save(Lecture.create(
-				SPEAKER, TITLE + 2, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
+			speaker, TITLE + 2, CONTENTS, THUMBNAIL_FILE, MATERIAL_FILE, MAX_CAPACITY,
 				START_TIME, END_TIME, LOCATION, CATEGORY
 			)
 		);
-
-		fakeLectureRepository.save(lecture1);
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class LectureQueryServiceTest {
 		List<Lecture> lectures = lectureQueryService.getAll();
 
 		// then
-		assertEquals(3, lectures.size());
+		assertEquals(2, lectures.size());
 		assertEquals(TITLE, lectures.get(0).getTitle());
 		assertEquals(TITLE + 2, lectures.get(1).getTitle());
 	}
@@ -155,7 +155,7 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(3, lectureList.size());
+		assertEquals(2, lectureList.size());
 		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 
@@ -169,7 +169,7 @@ public class LectureQueryServiceTest {
 
 		// then
 		assertNotNull(lectureList);
-		assertEquals(3, lectureList.size());
+		assertEquals(2, lectureList.size());
 		assertEquals(START_TIME, lectureList.get(0).getStartTime());
 	}
 
@@ -186,5 +186,17 @@ public class LectureQueryServiceTest {
 		// then
 		assertEquals(lecture1.getTitle(), response.get(0).getTitle());
 		assertEquals(lecture2.getTitle(), response.get(1).getTitle());
+	}
+
+	@Test
+	@DisplayName("강연자 id로 강의 조회에 성공한다")
+	void getBySpeakerId_success() {
+		// given
+
+		// when
+		Lecture response = lectureQueryService.getBySpeakerId(1L);
+
+		// then
+		assertEquals(lecture1.getTitle(), response.getTitle());
 	}
 }
