@@ -1,15 +1,17 @@
 package goorm.saerojinro.api.wishlist.presentation;
 
+import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateResponse;
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 
@@ -33,13 +35,19 @@ public interface WishListController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = WishListResponse.class))
+                            content = @Content(schema = @Schema(implementation = LectureSummaryListResponse.class))
                     )
-            }
+            },
+        parameters = {
+            @Parameter(
+                name = "lectureStartTime",
+                description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
+                example = "2025-03-15T10:00:00"
+            )
+        }
     )
-    ResponseEntity<WishListResponse> getByUserAndStartTime(@PathVariable("startTime")
-                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                           LocalDateTime startTime);
+    ResponseEntity<LectureSummaryListResponse> getByUserAndStartTime(
+        @RequestParam("lectureStartTime") LocalDateTime lectureStartTime);
 
     @Operation(
             summary = "즐겨찾기 생성",
