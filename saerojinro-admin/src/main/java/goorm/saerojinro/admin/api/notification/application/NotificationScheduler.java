@@ -27,7 +27,7 @@ public class NotificationScheduler {
 		LocalDateTime fiveMinutesLater = LocalDateTime.now()
 			.truncatedTo(MINUTES)
 			.plusMinutes(MINUTES_BEFORE);
-		List<Lecture> lectureList = lectureQueryService.getAllLectureByStartTime(fiveMinutesLater);
+		List<Lecture> lectureList = lectureQueryService.getByStartTime(fiveMinutesLater);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

@@ -48,4 +48,9 @@ public class LogEventService {
 	public void cache(RedisLogEvent logEvent) {
 		logEventRepository.cache(logEvent);
 	}
+
+	@Transactional(readOnly = true)
+	public List<LogEvent> getTop20ByLectureIdInOrderByTimestampDesc(List<Long> lectureIds){
+		return logEventRepository.findTop20ByLectureIdInOrderByTimestampDesc(lectureIds);
+	}
 }
