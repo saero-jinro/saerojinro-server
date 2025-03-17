@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/speaker")
+@RequestMapping("/api/speakers")
 @RequiredArgsConstructor
 public class SpeakerControllerImpl implements SpeakerController {
 	private final SpeakerQueryService speakerQueryService;

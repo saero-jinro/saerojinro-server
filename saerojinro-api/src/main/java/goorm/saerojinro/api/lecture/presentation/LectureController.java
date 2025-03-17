@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.lecture.presentation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import goorm.saerojinro.api.lecture.presentation.response.LectureDetailResponse;
@@ -29,7 +30,7 @@ public interface LectureController {
 			)
 		}
 	)
-	ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long lectureId);
+	ResponseEntity<LectureDetailResponse> getById(@PathVariable Long lectureId);
 
 	@Operation(
 		summary = "날짜별 강의 조회",
@@ -41,7 +42,15 @@ public interface LectureController {
 			)
 		}
 	)
-	ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day);
+	ResponseEntity<LectureListResponse> getByDate(
+		@Parameter(
+			name = "date",
+			description = "행사 일자 (ISO 8601 형식: yyyy-MM-dd)",
+			example = "2025-03-15"
+		)
+		@RequestParam("date")
+		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+	);
 
 	@Operation(
 		summary = "유저 추천 강의 조회",
@@ -54,13 +63,13 @@ public interface LectureController {
 		},
 		parameters = {
 			@Parameter(
-				name = "lectureStartTime",
+				name = "startTime",
 				description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
 				example = "2025-03-15T10:00:00"
 			)
 		}
 	)
 	ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(
-		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lectureStartTime
+		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime
 	);
 }

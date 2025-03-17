@@ -125,9 +125,9 @@ public class LectureAdminFacadeTest {
 
 		// then
 		assertNotNull(response);
-		assertTrue(response.lectureId() > 0);
+		assertTrue(response.id() > 0);
 
-		Lecture createdLecture = lectureRepository.findById(response.lectureId()).orElseThrow();
+		Lecture createdLecture = lectureRepository.findById(response.id()).orElseThrow();
 		assertNotNull(createdLecture.getThumbnailFile());
 		assertNotNull(createdLecture.getMaterialFile());
 	}
@@ -137,7 +137,7 @@ public class LectureAdminFacadeTest {
 	void updateLecture_success() {
 		// given
 		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
-		Long lectureId = createResponse.lectureId();
+		Long lectureId = createResponse.id();
 
 		LectureUpdateRequest updateRequest = LectureUpdateRequest.builder()
 			.title("Updated Title")
@@ -168,7 +168,7 @@ public class LectureAdminFacadeTest {
 	void deleteLecture_success() {
 		// given
 		LectureCreateResponse createResponse = lectureAdminFacade.create(request);
-		Long lectureId = createResponse.lectureId();
+		Long lectureId = createResponse.id();
 
 		// when
 		lectureAdminFacade.delete(lectureId);
