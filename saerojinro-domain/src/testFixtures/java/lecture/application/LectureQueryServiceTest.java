@@ -189,16 +189,4 @@ public class LectureQueryServiceTest {
 		assertEquals(lecture1.getTitle(), response.get(0).getTitle());
 		assertEquals(lecture2.getTitle(), response.get(1).getTitle());
 	}
-
-	@Test
-	@DisplayName("강연자 id로 강의 조회에 성공한다")
-	void getBySpeakerId_success() {
-		// given
-
-		// when
-		Lecture response = lectureQueryService.getBySpeakerId(1L);
-
-		// then
-		assertEquals(lecture1.getTitle(), response.getTitle());
-	}
 }

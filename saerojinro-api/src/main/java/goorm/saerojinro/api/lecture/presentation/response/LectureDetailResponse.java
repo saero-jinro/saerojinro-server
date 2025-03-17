@@ -30,10 +30,7 @@ public record LectureDetailResponse(
 	LocalDateTime endTime,
 
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
-	String location,
-
-	@Schema(description = "강연자 ID", example = "1L", requiredMode = REQUIRED)
-	Long speakerId
+	String location
 ) {
 	public static LectureDetailResponse from(Lecture lecture) {
 		return LectureDetailResponse.builder()
@@ -44,7 +41,6 @@ public record LectureDetailResponse(
 			.startTime(lecture.getStartTime())
 			.endTime(lecture.getEndTime())
 			.location(lecture.getLocation())
-			.speakerId(lecture.getSpeaker().getId())
 			.build();
 	}
 }

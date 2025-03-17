@@ -94,11 +94,4 @@ public class FakeLectureRepository implements LectureRepository {
 	public List<Lecture> findAll() {
 		return data;
 	}
-
-	@Override
-	public Optional<Lecture> findBySpeakerId(Long id) {
-		return data.stream()
-			.filter(lecture -> lecture.getSpeaker().getId().equals(id))
-			.findFirst();
-	}
 }
