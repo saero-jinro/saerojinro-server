@@ -3,7 +3,6 @@ package goorm.saerojinro.admin.api.lecture.presentation.response;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import goorm.saerojinro.domain.lecture.domain.Lecture;
-import goorm.saerojinro.domain.speaker.domain.Speaker;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
