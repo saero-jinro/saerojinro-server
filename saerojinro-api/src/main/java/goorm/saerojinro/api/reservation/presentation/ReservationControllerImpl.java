@@ -16,16 +16,16 @@ public class ReservationControllerImpl implements ReservationController {
     private final ReservationFacade reservationFacade;
 
     @Override
-    @PostMapping("/{lectureId}")
-    public ResponseEntity<ReservationCreateResponse> create(@PathVariable("lectureId") Long lectureId) {
-        ReservationCreateResponse response = reservationFacade.create(lectureId);
+    @PostMapping("/lectures/{id}")
+    public ResponseEntity<ReservationCreateResponse> create(@PathVariable("id") Long id) {
+        ReservationCreateResponse response = reservationFacade.create(id);
         return ResponseEntity.status(CREATED).body(response);
     }
 
     @Override
-    @DeleteMapping("/{lectureId}")
-    public ResponseEntity<Void> cancel(@PathVariable("lectureId") Long lectureId) {
-        reservationFacade.cancel(lectureId);
+    @DeleteMapping("/lectures/{id}")
+    public ResponseEntity<Void> cancel(@PathVariable("id") Long id) {
+        reservationFacade.cancel(id);
         return ResponseEntity.noContent().build();
     }
 }

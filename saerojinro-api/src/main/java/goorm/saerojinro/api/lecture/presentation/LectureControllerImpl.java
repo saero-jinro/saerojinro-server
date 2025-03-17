@@ -20,25 +20,22 @@ public class LectureControllerImpl implements LectureController {
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<LectureDetailResponse> getByLectureId(@PathVariable Long id) {
+	public ResponseEntity<LectureDetailResponse> getById(@PathVariable Long id) {
 		LectureDetailResponse response = lectureFacade.getById(id);
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	@GetMapping("/date")
-	public ResponseEntity<LectureListResponse> getByDate(@RequestParam("day") String day) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-		LocalDate localDate = LocalDate.parse(day, formatter);
-
-		LectureListResponse response = lectureFacade.getByDate(localDate);
+	public ResponseEntity<LectureListResponse> getByDate(@RequestParam("date") LocalDate date) {
+		LectureListResponse response = lectureFacade.getByDate(date);
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	@GetMapping("/recommendations")
-	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime lectureStartTime) {
-		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(lectureStartTime);
+	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime startTime) {
+		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
 		return ResponseEntity.ok(response);
 	}
 }

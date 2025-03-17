@@ -17,7 +17,7 @@ public interface NotificationAdminController {
 			- Description : 이 API는 모든 사용자에게 알림을 전송합니다
 			- Assignee : 이신행
 		""")
-	@ApiResponse(responseCode = "204")
+	@ApiResponse(responseCode = "201")
 	ResponseEntity<Void> sendAll(
 		@Parameter(
 			description = "전체 알림 request 객체 입니다",
@@ -29,7 +29,7 @@ public interface NotificationAdminController {
 			- Description : 이 API는 강의를 예약한 사용자에게 알림을 전송합니다
 			- Assignee : 이신행
 		""")
-	@ApiResponse(responseCode = "204")
+	@ApiResponse(responseCode = "201")
 	ResponseEntity<Void> sendByLecture(
 		@PathVariable Long lectureId,
 		@Parameter(
