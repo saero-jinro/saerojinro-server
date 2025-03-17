@@ -31,12 +31,12 @@ public class NotificationAdminControllerImpl implements NotificationAdminControl
 	}
 
 	@Override
-	@PostMapping("/lecture/{lectureId}")
+	@PostMapping("/lectures/{id}")
 	public ResponseEntity<Void> sendByLecture(
-		@PathVariable Long lectureId,
+		@PathVariable Long id,
 		@RequestBody NotificationSendRequest request) {
 		eventPublisher.publishEvent(
-			CommonEvent.createWithLectureId(LECTURE_NOTICE, lectureId, request.title(), request.contents())
+			CommonEvent.createWithLectureId(LECTURE_NOTICE, id, request.title(), request.contents())
 		);
 		return ResponseEntity.noContent().build();
 	}
