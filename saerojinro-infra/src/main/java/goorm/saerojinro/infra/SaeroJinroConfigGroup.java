@@ -15,7 +15,7 @@ public enum SaeroJinroConfigGroup {
 	JPA_AUDITING(JpaAuditingConfig.class),
 	PROPERTIES(PropertiesConfig.class),
 	SCHEDULING(SchedulingConfig.class),
-	ASYNCHRONOUS(AsyncConfig.class);
+	ASYNCHRONOUS(AsyncConfig.class),
 	;
 
 	private final Class<? extends SaeroJinroConfig> configClass;
