@@ -40,16 +40,16 @@ public class WishListControllerImpl implements WishListController{
     }
 
     @Override
-    @PostMapping("/{lectureId}")
-    public ResponseEntity<WishListCreateResponse> create(@PathVariable("lectureId") Long lectureId) {
-        WishListCreateResponse response = wishListFacade.create(lectureId);
+    @PostMapping("/lectures/{id}")
+    public ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long id) {
+        WishListCreateResponse response = wishListFacade.create(id);
         return ResponseEntity.status(CREATED).body(response);
     }
 
     @Override
-    @DeleteMapping("/{lectureId}")
-    public ResponseEntity<Void> delete(@PathVariable("lectureId") Long lectureId) {
-        wishListFacade.delete(lectureId);
+    @DeleteMapping("/lectures/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        wishListFacade.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
