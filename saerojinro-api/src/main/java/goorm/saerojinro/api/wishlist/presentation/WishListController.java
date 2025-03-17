@@ -40,17 +40,17 @@ public interface WishListController {
             },
         parameters = {
             @Parameter(
-                name = "lectureStartTime",
+                name = "startTime",
                 description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
                 example = "2025-03-15T10:00:00"
             )
         }
     )
     ResponseEntity<LectureSummaryListResponse> getByUserAndStartTime(
-        @RequestParam("lectureStartTime") LocalDateTime lectureStartTime);
+        @RequestParam("startTime") LocalDateTime startTime);
 
     @Operation(
-            summary = "즐겨찾기 생성",
+            summary = "강의 즐겨찾기 생성",
             description = "유저 ID와 강의 ID를 통해 즐겨찾기를 생성합니다.",
             responses = {
                     @ApiResponse(
@@ -59,12 +59,12 @@ public interface WishListController {
                     )
             }
     )
-    ResponseEntity<WishListCreateResponse> create(@PathVariable("lectureId") Long lectureId);
+    ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long id);
 
     @Operation(
-            summary = "즐겨찾기 삭제",
+            summary = "강의 즐겨찾기 삭제",
             description = "유저 ID와 강의 ID를 통해 즐겨찾기를 삭제 합니다.",
             responses = @ApiResponse(responseCode = "204")
     )
-    ResponseEntity<Void> delete(@PathVariable("lectureId") Long lectureId);
+    ResponseEntity<Void> delete(@PathVariable("id") Long id);
 }
