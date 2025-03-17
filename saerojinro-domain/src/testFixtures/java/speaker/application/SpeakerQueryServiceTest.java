@@ -49,7 +49,7 @@ public class SpeakerQueryServiceTest {
 		speakerRepository.save(speaker);
 
 		// when
-		Speaker createdSpeaker = speakerQueryService.findById(0L);
+		Speaker createdSpeaker = speakerQueryService.findById(1L);
 
 		// then
 		assertNotNull(createdSpeaker);
