@@ -43,8 +43,14 @@ public class NotificationAdminFacade {
 			request.contents()
 		);
 
-		SseEmitter emitter = emitterQueryService.findById(receiverId)
-			.orElseThrow(EmitterNotFoundException::new);
+		SseEmitter emitter;
+		try {
+			emitter = emitterQueryService.findById(receiverId)
+				.orElseThrow(EmitterNotFoundException::new);
+		} catch (EmitterNotFoundException ignore) {
+			// 예약한 유저가 emitter를 가지지 않은 경우
+			emitter = sseSender.subscribe(receiverId);
+		}
 
 		notificationCommandService.save(notification);
 		NotificationSendResponse message = NotificationSendResponse.from(notification);
