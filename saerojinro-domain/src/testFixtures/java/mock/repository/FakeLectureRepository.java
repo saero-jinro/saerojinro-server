@@ -44,8 +44,8 @@ public class FakeLectureRepository implements LectureRepository {
 	@Override
 	public Optional<Lecture> findByIdWithLock(Long id) {
 		return data.stream()
-				.filter(lecture -> lecture.getId().equals(id))
-				.findFirst();
+			.filter(lecture -> lecture.getId().equals(id))
+			.findFirst();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class FakeLectureRepository implements LectureRepository {
 			.filter(lecture -> {
 				LocalDateTime lectureTime = lecture.getStartTime();
 				boolean isAfterOrEqualStart = !lectureTime.isBefore(start);
-				boolean isBeforeEnd         = lectureTime.isBefore(end);
+				boolean isBeforeEnd = lectureTime.isBefore(end);
 				return isAfterOrEqualStart && isBeforeEnd;
 			})
 			.toList();
@@ -93,5 +93,12 @@ public class FakeLectureRepository implements LectureRepository {
 	@Override
 	public List<Lecture> findAll() {
 		return data;
+	}
+
+	@Override
+	public Optional<Lecture> findBySpeakerId(Long id) {
+		return data.stream()
+			.filter(lecture -> lecture.getSpeaker().getId().equals(id))
+			.findFirst();
 	}
 }
