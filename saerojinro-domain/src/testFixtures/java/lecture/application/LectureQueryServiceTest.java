@@ -192,4 +192,15 @@ public class LectureQueryServiceTest {
 		assertEquals(lecture1.getTitle(), response.get(0).getTitle());
 		assertEquals(lecture2.getTitle(), response.get(1).getTitle());
 	}
+
+	@Test
+	@DisplayName("getByIdCached는 강의 캐싱되어있지 않으면 DB에서 조회한다.")
+	void getByIdCached_Success() {
+		// when
+		Lecture lecture = lectureQueryService.getById(1L);
+
+		// then
+		assertNotNull(lecture);
+		assertEquals(TITLE, lecture.getTitle());
+	}
 }
