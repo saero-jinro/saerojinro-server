@@ -1,7 +1,5 @@
 package goorm.saerojinro.domain.question.domain;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-
 import java.util.List;
 import java.util.Optional;
 
