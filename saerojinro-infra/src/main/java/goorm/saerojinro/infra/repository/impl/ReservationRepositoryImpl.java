@@ -4,7 +4,7 @@ import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import goorm.saerojinro.infra.repository.jpa.ReservationJpaRepository;
-import goorm.saerojinro.infra.repository.redis.RedisReservationRepository;
+import goorm.saerojinro.infra.repository.redis.RedisReservationCountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReservationRepositoryImpl implements ReservationRepository {
     private final ReservationJpaRepository reservationJpaRepository;
-    private final RedisReservationRepository redisReservationRepository;
+    private final RedisReservationCountRepository redisReservationCountRepository;
 
     @Override
     public boolean existByUserIdAndStartTime(Long userId, LocalDateTime startTime) {
@@ -60,11 +60,11 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public void saveReservationNumberInRedis(Long lectureId, int number) {
-        redisReservationRepository.updateCurrentReservation(lectureId, number);
+        redisReservationCountRepository.updateCurrentReservation(lectureId, number);
     }
 
     @Override
     public int countFromRedis(Long lectureId) {
-		return redisReservationRepository.findByLectureId(lectureId);
+		return redisReservationCountRepository.findByLectureId(lectureId);
     }
 }

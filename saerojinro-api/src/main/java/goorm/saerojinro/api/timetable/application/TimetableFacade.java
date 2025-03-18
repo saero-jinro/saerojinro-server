@@ -60,6 +60,7 @@ public class TimetableFacade {
 			return reservationQueryService.countByLectureIdFromRedis(id);
 		} catch (NullPointerException e) {
 			int size = reservationQueryService.countByLectureId(id);
+			// 없으면 캐싱
 			reservationCommandService.updateReservationNumberInLecture(id, size);
 			return size;
 		}
