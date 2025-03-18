@@ -4,6 +4,7 @@ import goorm.saerojinro.api.timetable.application.TimetableFacade;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
+import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
@@ -48,8 +49,10 @@ public class TimetableFacadeTest {
 		UserQueryService userQueryService = new UserQueryService(userRepository, new BCryptPasswordEncoder());
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 		WishListQueryService wishListQueryService = new WishListQueryService(wishListRepository);
+		ReservationCommandService reservationCommandService = new ReservationCommandService(reservationRepository);
 
-		timetableFacade = new TimetableFacade(userQueryService, reservationQueryService, wishListQueryService);
+		timetableFacade = new TimetableFacade(
+			userQueryService, reservationQueryService, wishListQueryService, reservationCommandService);
 
 		// 데이터 준비
 		user = userRepository.save(

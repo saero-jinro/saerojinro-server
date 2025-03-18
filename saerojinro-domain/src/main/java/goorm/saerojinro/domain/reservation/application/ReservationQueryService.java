@@ -54,4 +54,8 @@ public class ReservationQueryService {
     public List<LectureReservationCountDto> getReservationAllLecture(){
         return reservationRepository.countReservationAllLecture();
     }
+
+    public int countByLectureIdFromRedis(Long lectureId){
+        return reservationRepository.countFromRedis(lectureId);
+    }
 }

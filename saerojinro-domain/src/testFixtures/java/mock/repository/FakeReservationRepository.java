@@ -84,12 +84,8 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void saveInRedis(Long lectureId) {
-        int size = data.stream()
-            .filter(r -> r.getLecture().getId().equals(lectureId))
-            .toList()
-            .size();
-        fakeRedis.put(lectureId, size);
+    public void saveReservationNumberInRedis(Long lectureId, int number) {
+        fakeRedis.put(lectureId, number);
     }
 
     @Override

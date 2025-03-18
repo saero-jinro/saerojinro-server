@@ -3,6 +3,7 @@ package goorm.saerojinro.api.timetable.application;
 import goorm.saerojinro.api.timetable.presentation.response.ReservationListResponse;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import goorm.saerojinro.api.timetable.presentation.response.WishlistListResponse;
+import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -22,6 +23,7 @@ public class TimetableFacade {
 	private final UserQueryService userQueryService;
 	private final ReservationQueryService reservationQueryService;
 	private final WishListQueryService wishListQueryService;
+	private final ReservationCommandService reservationCommandService;
 
 	@Transactional(readOnly = true)
 	public TimetableResponse getTimetable() {

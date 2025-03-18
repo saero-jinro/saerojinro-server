@@ -59,9 +59,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public void saveInRedis(Long lectureId) {
-        int count = reservationJpaRepository.countByLectureId(lectureId);
-        redisReservationRepository.updateCurrentReservation(lectureId, count);
+    public void saveReservationNumberInRedis(Long lectureId, int number) {
+        redisReservationRepository.updateCurrentReservation(lectureId, number);
     }
 
     @Override
