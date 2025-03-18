@@ -7,6 +7,7 @@ import goorm.saerojinro.api.lecture.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheListDTO;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
@@ -56,7 +57,10 @@ public class LectureFacade {
 
 	@Transactional(readOnly = true)
 	public LectureListResponse getByDate(LocalDate localDate) {
-		List<LectureResponse> responses = lectureQueryService.getByDate(localDate).stream()
+		LectureCacheListDTO lectureCacheListDTO = lectureQueryService.getByDate(localDate);
+
+		List<LectureResponse> responses = lectureCacheListDTO.lectureCacheListDTO()
+			.stream()
 			.map(LectureResponse::from)
 			.toList();
 		return LectureListResponse.from(responses);

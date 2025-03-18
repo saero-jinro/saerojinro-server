@@ -34,7 +34,13 @@ public record LectureCacheDTO(
 	String location,
 
 	@Schema(description = "강연자 ID", example = "1L", requiredMode = REQUIRED)
-	Long speakerId
+	Long speakerId,
+
+	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
+	String speakerName,
+
+	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
+	String speakerImageUri
 ) {
 	public static LectureCacheDTO from(Lecture lecture) {
 		return LectureCacheDTO.builder()
@@ -47,6 +53,8 @@ public record LectureCacheDTO(
 			.endTime(lecture.getEndTime().toString())
 			.location(lecture.getLocation())
 			.speakerId(lecture.getSpeaker().getId())
+			.speakerName(lecture.getSpeaker().getName())
+			.speakerImageUri(lecture.getSpeaker().getImageFile().getPhysicalPath())
 			.build();
 	}
 }

@@ -1,6 +1,7 @@
 package goorm.saerojinro.api.lecture.presentation.response;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -21,10 +22,10 @@ public record LectureResponse(
 	Category category,
 
 	@Schema(description = "강의 시작 시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
-	LocalDateTime startTime,
+	String startTime,
 
 	@Schema(description = "강의 종료 시간", example = "2025-03-01T12:00:00", requiredMode = REQUIRED)
-	LocalDateTime endTime,
+	String endTime,
 
 	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
 	String speakerName,
@@ -32,15 +33,15 @@ public record LectureResponse(
 	@Schema(description = "강연자 사진", example = "local/file_0000000.jpg", requiredMode = REQUIRED)
 	String speakerImageUri
 ) {
-	public static LectureResponse from(Lecture lecture) {
+	public static LectureResponse from(LectureCacheDTO lectureCacheDTO) {
 		return LectureResponse.builder()
-			.id(lecture.getId())
-			.title(lecture.getTitle())
-			.category(lecture.getCategory())
-			.startTime(lecture.getStartTime())
-			.endTime(lecture.getEndTime())
-			.speakerName(lecture.getSpeaker().getName())
-			.speakerImageUri(lecture.getSpeaker().getImageFile().getPhysicalPath())
+			.id(lectureCacheDTO.id())
+			.title(lectureCacheDTO.title())
+			.category(lectureCacheDTO.category())
+			.startTime(lectureCacheDTO.startTime())
+			.endTime(lectureCacheDTO.endTime())
+			.speakerName(lectureCacheDTO.speakerName())
+			.speakerImageUri(lectureCacheDTO.speakerImageUri())
 			.build();
 	}
 }

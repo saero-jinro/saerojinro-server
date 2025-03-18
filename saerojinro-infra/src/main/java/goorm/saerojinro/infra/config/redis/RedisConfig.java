@@ -97,6 +97,12 @@ public class RedisConfig {
 				RedisCacheConfiguration.defaultCacheConfig()
 					.entryTtl(Duration.ofHours(1))
 					.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+					.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer)))
+			.withCacheConfiguration("lecturesByDate",
+				RedisCacheConfiguration.defaultCacheConfig()
+					.entryTtl(Duration.ofDays(1))
+					.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
 					.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer)));
+
 	}
 }
