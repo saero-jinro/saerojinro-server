@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeSpeakerRepository implements SpeakerRepository {
 	private final List<Speaker> data = Collections.synchronizedList(new ArrayList<>());
-	private final AtomicLong sequence = new AtomicLong(0);
+	private final AtomicLong sequence = new AtomicLong(1);
 
 	@Override
 	public Speaker save(Speaker speaker) {

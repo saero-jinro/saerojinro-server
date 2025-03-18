@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "File", description = "파일 API")
 public interface FileController {
@@ -21,5 +21,5 @@ public interface FileController {
 			)
 		}
 	)
-	ResponseEntity<Resource> downloadLectureFile(@RequestParam(value = "materialUri") String uri);
+	ResponseEntity<Resource> downloadLectureFile(@PathVariable Long id);
 }
