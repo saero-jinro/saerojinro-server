@@ -19,7 +19,6 @@ public class ReservationCountScheduler {
 	public void updateReservationCount() {
 		List<LectureReservationCountDto> all = reservationQueryService.getReservationAllLecture();
 		for (LectureReservationCountDto lectureCount : all) {
-			System.out.println("hello");
 			reservationCommandService.updateReservationNumberInLecture(
 				lectureCount.lectureId(), Math.toIntExact(lectureCount.reservationCount()));
 		}
