@@ -40,37 +40,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Docker 이미지 빌드 및 태깅
       - name: Build and Tag saerojinro-admin
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:${{ github.sha }} -f saerojinro-admin/Dockerfile .
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:latest
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:latest \
+          -f saerojinro-admin/Dockerfile .
 
       - name: Build and Tag saerojinro-api
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:${{ github.sha }} -f saerojinro-api/Dockerfile .
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:latest
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:latest \
+          -f saerojinro-api/Dockerfile .
 
       - name: Build and Tag saerojinro-auth
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:${{ github.sha }} -f saerojinro-auth/Dockerfile .
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:latest
-
-      # Docker Hub 푸시
-      - name: Push saerojinro-admin
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:latest
-
-      - name: Push saerojinro-api
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:latest
-
-      - name: Push saerojinro-auth
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:latest
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:latest \
+          -f saerojinro-auth/Dockerfile .
 
   deploy-to-ec2:
     needs: build-docker-image
@@ -86,5 +72,3 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             ./deploy.sh
-    
-      
