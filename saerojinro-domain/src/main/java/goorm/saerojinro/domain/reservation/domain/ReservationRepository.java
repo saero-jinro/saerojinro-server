@@ -23,4 +23,8 @@ public interface ReservationRepository {
     int countByLectureId(Long lectureId);
 
     List<LectureReservationCountDto> countReservationAllLecture();
+
+    void saveInRedis(Long lectureId);
+
+    int countFromRedis(Long lectureId);
 }
