@@ -21,9 +21,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        run: chmod +x gradlew
-
       - name: Grant execute permission to Gradle Wrapper
         run: chmod +x gradlew
 
