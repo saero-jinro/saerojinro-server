@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public enum NotificationDomainExceptionCode implements ExceptionCode {
 	NOTIFICATION_NOT_FOUND(NOT_FOUND, "Notification not found"),
+	EMITTER_NOT_FOUND(NOT_FOUND, "No Such Emitter With UserId"),
 	;
 
 	private final HttpStatus status;

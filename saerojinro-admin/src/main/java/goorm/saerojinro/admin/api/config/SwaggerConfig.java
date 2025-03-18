@@ -30,7 +30,8 @@ public class SwaggerConfig {
 	private final Environment environment;
 
 	private static final Map<String, String> PROFILE_SERVER_URL_MAP = Map.of(
-		"local", "http://localhost:8082"
+			"local", "http://localhost:8082",
+			"prod", "http://54.180.234.181:8082"
 	);
 
 	@Bean

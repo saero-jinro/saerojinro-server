@@ -4,6 +4,7 @@ import goorm.saerojinro.admin.api.notification.presentation.request.Notification
 import goorm.saerojinro.common.event.CommonEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class NotificationAdminEventHandler {
 	private final NotificationAdminFacade notificationFacade;
 
+	@Async
 	@EventListener
 	public void handleEvent(CommonEvent event) {
 		switch (event.eventType()) {

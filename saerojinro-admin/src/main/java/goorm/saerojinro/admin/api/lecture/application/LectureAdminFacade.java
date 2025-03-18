@@ -67,7 +67,7 @@ public class LectureAdminFacade {
 		);
 		fileCommandService.updateFilePhysicalPath(tempSpeakerFile.getId(), speakerProfilePath);
 
-		return LectureCreateResponse.from(speaker, lecture);
+		return LectureCreateResponse.from(lecture);
 	}
 
 	@Transactional

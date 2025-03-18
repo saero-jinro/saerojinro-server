@@ -1,6 +1,6 @@
 package goorm.saerojinro.admin.api.notification.application;
 
-import goorm.saerojinro.admin.api.notification.exception.EmitterNotFoundException;
+import goorm.saerojinro.domain.notification.exception.EmitterNotFoundException;
 import goorm.saerojinro.admin.api.notification.presentation.request.NotificationSendRequest;
 import goorm.saerojinro.domain.notification.application.EmitterQueryService;
 import goorm.saerojinro.domain.notification.application.NotificationCommandService;
@@ -43,8 +43,13 @@ public class NotificationAdminFacade {
 			request.contents()
 		);
 
-		SseEmitter emitter = emitterQueryService.findById(receiverId)
-			.orElseThrow(EmitterNotFoundException::new);
+		SseEmitter emitter;
+		try {
+			emitter = emitterQueryService.findById(receiverId);
+		} catch (EmitterNotFoundException ignore) {
+			// 예약한 유저가 emitter를 가지지 않은 경우
+			emitter = sseSender.subscribe(receiverId);
+		}
 
 		notificationCommandService.save(notification);
 		NotificationSendResponse message = NotificationSendResponse.from(notification);
