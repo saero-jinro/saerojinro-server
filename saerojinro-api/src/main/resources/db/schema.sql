@@ -44,7 +44,6 @@ create table speaker
     introduction  varchar(255) not null,
     name          varchar(255) not null,
     position      varchar(255) not null,
-    lecture_id    bigint       not null unique,
     foreign key (image_file_id) references file (id)
 );
 
@@ -71,12 +70,6 @@ create table lecture
     foreign key (thumbnail_file_id) references file (id),
     foreign key (speaker_id) references speaker (id)
 );
-
--- speaker에 FK 제약 조건 추가
-alter table speaker
-    add constraint fk_speaker_lecture
-        foreign key (lecture_id) references lecture(id) deferrable initially deferred;
-
 
 -- 4. lecture와 "user"에 의존하는 테이블들
 create table log_event
