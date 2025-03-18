@@ -133,4 +133,14 @@ public class TimetableFacadeTest {
 		assertEquals(0, timetable.reservation().size());
 		assertEquals(0, timetable.wishlist().size());
 	}
+
+	@Test
+	@DisplayName("getSize는 강의의 예약 수를 조회한다.")
+	public void getSize_Success() {
+		// when
+		int size = timetableFacade.getSize(1L);
+
+		// then
+		assertEquals(1, size);
+	}
 }

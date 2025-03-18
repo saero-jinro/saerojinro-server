@@ -25,7 +25,7 @@ public class TimetableFacade {
 	private final WishListQueryService wishListQueryService;
 	private final ReservationCommandService reservationCommandService;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public TimetableResponse getTimetable() {
 		User user = userQueryService.me();
 		if (user == null)
@@ -38,19 +38,30 @@ public class TimetableFacade {
 		List<WishlistListResponse> wishListResponseList = new ArrayList<>();
 
 		for (Reservation reservation : reservationList) {
-			int size = reservationQueryService.countByLectureId(reservation.getLecture().getId());
+			int size = getSize(reservation.getLecture().getId());
 			reservationListResponseList.add(
 				ReservationListResponse.from(reservation, size)
 			);
 		}
 
 		for (WishList wishList : wishListList) {
-			int size = reservationQueryService.countByLectureId(wishList.getLecture().getId());
+			int size = getSize(wishList.getLecture().getId());
 			wishListResponseList.add(
 				WishlistListResponse.from(wishList, size)
 			);
 		}
 
 		return TimetableResponse.of(reservationListResponseList, wishListResponseList);
+	}
+
+	@Transactional
+	public int getSize(Long id) {
+		try {
+			return reservationQueryService.countByLectureIdFromRedis(id);
+		} catch (NullPointerException e) {
+			int size = reservationQueryService.countByLectureId(id);
+			reservationCommandService.updateReservationNumberInLecture(id, size);
+			return size;
+		}
 	}
 }
