@@ -14,7 +14,7 @@ public record LectureSummaryResponse(
 	@Schema(description = "카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	Category category,
 
-	@Schema(description = "강의 썸네일 Uri", example = "uploads/lecture/thumbnail/123456789.jpg", requiredMode = REQUIRED)
+	@Schema(description = "강의 썸네일 Uri", example = "bucketUrl/uploads/{lectureId}/thumbnail/123456789.jpg", requiredMode = REQUIRED)
 	String thumbnailUri,
 
 	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = REQUIRED)

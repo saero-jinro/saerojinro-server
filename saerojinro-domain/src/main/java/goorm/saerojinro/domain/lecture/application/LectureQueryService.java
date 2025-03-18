@@ -72,5 +72,4 @@ public class LectureQueryService {
 			.sorted(Comparator.comparing(lecture -> categoryPriorityMap.getOrDefault(lecture.getCategory(), Integer.MAX_VALUE)))
 			.toList();
 	}
-
 }

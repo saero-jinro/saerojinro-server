@@ -12,17 +12,11 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
 @Builder
 public record LectureCreateRequest(
-	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = REQUIRED)
+	@Schema(description = "강의명", example = "AI와 미래 업무: 생성형 AI가 바꾸는 기업 혁신", requiredMode = REQUIRED)
 	@NotNull String title,
 
 	@Schema(description = "강의 내용", example = "Part 1: 온오프라인 경험을 연결하는 네이버 지도가 공간지능과 만나 제공하게 될 미래 모습을 소개합니다.", requiredMode = REQUIRED)
 	@NotNull String contents,
-
-	@Schema(description = "강의 썸네일 파일 ID", example = "1", requiredMode = REQUIRED)
-	@NotNull Long thumbnailId,
-
-	@Schema(description = "강의 자료 파일 ID", example = "2", requiredMode = REQUIRED)
-	@NotNull Long materialId,
 
 	@Schema(description = "강의 수용 인원", example = "100", requiredMode = REQUIRED)
 	@NotNull @Positive Long maxCapacity,
@@ -33,19 +27,19 @@ public record LectureCreateRequest(
 	@Schema(description = "강의 종료 시간", example = "2025-03-01T12:00:00", requiredMode = REQUIRED)
 	@NotNull LocalDateTime endTime,
 
-	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
+	@Schema(description = "강의 장소", example = "Room A-1", requiredMode = REQUIRED)
 	@NotNull String location,
 
 	@Schema(description = "강의 카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	@NotNull Category category,
 
-	@Schema(description = "강연자 이름", example = "Cole Palmer", requiredMode = REQUIRED)
+	@Schema(description = "강연자 이름", example = "박민수", requiredMode = REQUIRED)
 	@NotNull String speakerName,
 
-	@Schema(description = "강연자 이메일", example = "google@gmail.com", requiredMode = REQUIRED)
+	@Schema(description = "강연자 이메일", example = "mspark@gmail.com", requiredMode = REQUIRED)
 	@NotNull String speakerEmail,
 
-	@Schema(description = "강연자 회사, 직급", example = "블라블라 스타트업 CEO", requiredMode = REQUIRED)
+	@Schema(description = "강연자 회사, 직급", example = "OO 스타트업 CEO", requiredMode = REQUIRED)
 	@NotNull String speakerPosition,
 
 	@Schema(description = "한 줄 소개", example = "안녕하세요 OO 기업에서 OO를 담당하는 OOO 입니다.", requiredMode = REQUIRED)
@@ -53,6 +47,12 @@ public record LectureCreateRequest(
 
 	@Schema(description = "상세 약력", example = "OO 회사 / 프로젝트 OO 담당", requiredMode = REQUIRED)
 	@NotNull String speakerFilmography,
+
+	@Schema(description = "강의 자료 파일 ID", example = "1", requiredMode = REQUIRED)
+	@NotNull Long materialId,
+
+	@Schema(description = "강의 썸네일 파일 ID", example = "2", requiredMode = REQUIRED)
+	@NotNull Long thumbnailId,
 
 	@Schema(description = "강연자 사진 파일 ID", example = "3", requiredMode = REQUIRED)
 	@NotNull Long speakerPhotoId

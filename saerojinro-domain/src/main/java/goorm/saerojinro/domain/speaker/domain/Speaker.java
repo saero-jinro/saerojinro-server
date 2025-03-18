@@ -2,6 +2,7 @@ package goorm.saerojinro.domain.speaker.domain;
 
 import goorm.saerojinro.common.domain.BaseTimeEntity;
 import goorm.saerojinro.domain.file.domain.File;
+import goorm.saerojinro.domain.lecture.domain.Lecture;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,9 @@ public class Speaker extends BaseTimeEntity {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_file_id", nullable = false)
 	private File imageFile;
+
+	@OneToOne(mappedBy = "speaker")
+	private Lecture lecture;
 
 	public static Speaker create(String name,String email, String position, String introduction, String filmography, File image) {
 		return Speaker.builder()

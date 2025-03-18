@@ -12,9 +12,8 @@ import java.io.IOException;
 public class FileFacade {
 	private final FileQueryService fileQueryService;
 
-	public FileResource getFileResource(String uri) throws IOException {
-		File file = fileQueryService.getFileByUri(uri);
-
+	public FileResource getFileResource(Long id) throws IOException {
+		File file = fileQueryService.getFileById(id);
 		return FileResource.from(file);
 	}
 }

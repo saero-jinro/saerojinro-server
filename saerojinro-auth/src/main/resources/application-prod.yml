@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: saerojinro-auth
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      default_batch_fetch_size: 1000
+      jdbc:
+        time_zone: Asia/Seoul
+    defer-datasource-initialization: true
+    show-sql: true
+    open-in-view: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secret_key: ${JWT_SECRET_KEY}
+
+oidc:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+  google:
+    client-id: ${GOOGLE_CLIENT_ID}
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+docs:
+  admin-docs-url: ${ADMIN_DOCS_URL}
+  api-docs-url: ${API_DOCS_URL}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics,prometheus"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
