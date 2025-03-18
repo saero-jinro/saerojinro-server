@@ -1,3 +1,7 @@
+-- 양방향 매핑을 위한 트랜잭션 전체 처리
+BEGIN;
+SET CONSTRAINTS ALL DEFERRED;
+
 ---------------------------
 -- 1. file 테이블 (총 10건)
 ---------------------------
@@ -26,11 +30,11 @@ values
 ---------------------------
 -- 3. speaker 테이블 (3건)
 ---------------------------
-insert into speaker (id, created_at, updated_at, deleted_at, image_file_id, email, filmography, introduction, name, position)
+insert into speaker (id, created_at, updated_at, deleted_at, image_file_id, email, filmography, introduction, name, position, lecture_id)
 values
-    (1001, current_timestamp, current_timestamp, null, 1004, 'speaker1@example.com', 'Filmography sample 1', 'Experienced speaker', 'Dr. Smith', 'Professor'),
-    (1002, current_timestamp, current_timestamp, null, 1005, 'speaker2@example.com', 'Filmography sample 2', 'Tech expert', 'Dr. Jones', 'Senior Lecturer'),
-    (1003, current_timestamp, current_timestamp, null, 1006, 'speaker3@example.com', 'Filmography sample 3', 'Industry leader', 'Dr. Brown', 'Chief Scientist');
+    (1001, current_timestamp, current_timestamp, null, 1004, 'speaker1@example.com', 'Filmography sample 1', 'Experienced speaker', 'Dr. Smith', 'Professor', 1001),
+    (1002, current_timestamp, current_timestamp, null, 1005, 'speaker2@example.com', 'Filmography sample 2', 'Tech expert', 'Dr. Jones', 'Senior Lecturer', 1002),
+    (1003, current_timestamp, current_timestamp, null, 1006, 'speaker3@example.com', 'Filmography sample 3', 'Industry leader', 'Dr. Brown', 'Chief Scientist', 1003);
 
 ---------------------------
 -- 4. lecture 테이블 (3건)
@@ -92,3 +96,5 @@ values
     (1003, current_timestamp, current_timestamp, null, 1003, 1001),
     (1004, current_timestamp, current_timestamp, null, 1001, 1003),
     (1005, current_timestamp, current_timestamp, null, 1002, 1003);
+
+COMMIT;
