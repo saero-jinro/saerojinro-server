@@ -24,14 +24,8 @@ jobs:
       - name: Grant execute permission to Gradle Wrapper
         run: chmod +x gradlew
 
-      - name: Build saerojinro-admin
-        run: ./gradlew clean build -p saerojinro-admin -x test
-
-      - name: Build saerojinro-api
-        run: ./gradlew clean build -p saerojinro-api -x test
-
-      - name: Build saerojinro-auth
-        run: ./gradlew clean build -p saerojinro-auth -x test
+      - name: Build 
+        run: ./gradlew clean build -x test
 
       # Docker Hub 로그인
       - name: Docker Login
