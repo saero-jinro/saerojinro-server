@@ -12,12 +12,6 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record LectureDetailResponse(
-	@Schema(description = "강의 시작 시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
-	LocalDateTime startTime,
-
-	@Schema(description = "강의 종료 시간", example = "2025-03-01T12:00:00", requiredMode = REQUIRED)
-	LocalDateTime endTime,
-
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location,
 
@@ -60,11 +54,10 @@ public record LectureDetailResponse(
 			.startTime(lectureCacheDTO.startTime())
 			.endTime(lectureCacheDTO.endTime())
 			.location(lectureCacheDTO.location())
-			.speakerId(lectureCacheDTO.speakerId())
-      .speakerName(lecture.getSpeaker().getName())
-			.speakerEmail(lecture.getSpeaker().getEmail())
-			.introduction(lecture.getSpeaker().getIntroduction())
-			.speakerPhotoUrl(lecture.getSpeaker().getImageFile().getPhysicalPath())
+      		.speakerName(lectureCacheDTO.speakerName())
+			.speakerEmail(lectureCacheDTO.speakerEmail())
+			.introduction(lectureCacheDTO.introduction())
+			.speakerPhotoUrl(lectureCacheDTO.speakerPhotoUrl())
 			.build();
 	}
 }

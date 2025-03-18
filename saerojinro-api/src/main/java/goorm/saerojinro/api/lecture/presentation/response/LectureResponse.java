@@ -44,9 +44,8 @@ public record LectureResponse(
 			.startTime(lectureCacheDTO.startTime())
 			.endTime(lectureCacheDTO.endTime())
 			.speakerName(lectureCacheDTO.speakerName())
-			.speakerImageUri(lectureCacheDTO.speakerImageUri())
-			.thumbnailUri(lecture.getThumbnailFile().getPhysicalPath())
-			.location(lecture.getLocation())
+			.thumbnailUri(lectureCacheDTO.lectureThumbnail())
+			.location(lectureCacheDTO.location())
 			.build();
 	}
 }
