@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheListDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
@@ -70,6 +72,7 @@ public class LectureQueryServiceTest {
 			.id(1L)
 			.name(NAME)
 			.email(EMAIL)
+			.imageFile(SPEAKER_IMAGE_FILE)
 			.build();
 
 		lecture1 = fakeLectureRepository.save(Lecture.create(
@@ -139,12 +142,12 @@ public class LectureQueryServiceTest {
 	@DisplayName("특정 일자의 강의를 조회할 수 있다.")
 	void getByDate_success() {
 		// when
-		List<Lecture> lectures = lectureQueryService.getByDate(LocalDate.of(2025, 3, 1));
+		LectureCacheListDTO lectures = lectureQueryService.getByDate(LocalDate.of(2025, 3, 1));
 
 		// then
 		assertNotNull(lectures);
-		assertEquals(TITLE, lectures.get(0).getTitle());
-		assertEquals(TITLE + 2, lectures.get(1).getTitle());
+		assertEquals(TITLE, lectures.lectureCacheListDTO().get(0).title());
+		assertEquals(TITLE + 2, lectures.lectureCacheListDTO().get(1).title());
 	}
 
 	@Test
