@@ -2,7 +2,7 @@ FROM openjdk:23-jdk-slim
 
 WORKDIR /app
 
-COPY /build/libs/saerojinro-admin-0.0.1-SNAPSHOT.jar saerojinro-admin.jar
+COPY /saerojinro-admin/build/libs/saerojinro-admin-0.0.1-SNAPSHOT.jar saerojinro-admin.jar
 
 EXPOSE 8082
 
