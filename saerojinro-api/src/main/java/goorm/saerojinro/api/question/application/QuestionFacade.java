@@ -37,8 +37,7 @@ public class QuestionFacade {
 
     @Transactional(readOnly = true)
     public QuestionListResponse getByLecture(Long lectureId){
-        Lecture lecture = lectureQueryService.getById(lectureId);
-        List<Question> questionsList = questionQueryService.getByLecture(lecture);
+        List<Question> questionsList = questionQueryService.getByLectureId(lectureId);
 
         return QuestionListResponse.from(questionsList);
     }

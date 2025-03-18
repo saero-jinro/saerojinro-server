@@ -1,10 +1,13 @@
 package goorm.saerojinro.domain.lecture.application;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,9 +26,16 @@ public class LectureQueryService {
 		return lectureRepository.findAll();
 	}
 
-	public Lecture getById(Long lectureId) {
-		return lectureRepository.findById(lectureId)
+	public Lecture getById(Long id) {
+		return lectureRepository.findById(id)
 			.orElseThrow(LectureNotFoundException::new);
+	}
+
+	@Cacheable(value = "lecture", key = "#id", unless = "#result == null")
+	public LectureCacheDTO getByIdCached(Long id) {
+		Lecture lecture = lectureRepository.findById(id)
+			.orElseThrow(LectureNotFoundException::new);
+		return LectureCacheDTO.from(lecture);
 	}
 
 	public Lecture getByIdWithLock(Long lectureId){

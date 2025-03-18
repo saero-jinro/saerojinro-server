@@ -21,8 +21,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     }
 
     @Override
-    public List<Question> findByLecture(Lecture lecture){
-        return questionJpaRepository.findByLecture(lecture);
+    public List<Question> findByLectureId(Long lectureId){
+        return questionJpaRepository.findByLectureId(lectureId);
     }
 
     @Override

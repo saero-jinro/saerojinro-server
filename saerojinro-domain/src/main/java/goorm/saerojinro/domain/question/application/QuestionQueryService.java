@@ -22,8 +22,8 @@ public class QuestionQueryService {
         return questionRepository.findAll();
     }
 
-    public List<Question> getByLecture(Lecture lecture){
-        return questionRepository.findByLecture(lecture);
+    public List<Question> getByLectureId(Long lectureId){
+        return questionRepository.findByLectureId(lectureId);
     }
 
     public Question getById(Long questionsId){

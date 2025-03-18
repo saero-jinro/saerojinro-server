@@ -22,9 +22,9 @@ public class FakeQuestionRepository implements QuestionRepository {
     }
 
     @Override
-    public List<Question> findByLecture(Lecture lecture) {
+    public List<Question> findByLectureId(Long lectureId) {
         return data.stream()
-                .filter( q -> q.getLecture().getId().equals(lecture.getId()))
+                .filter( q -> q.getLecture().getId().equals(lectureId))
                 .toList();
     }
 

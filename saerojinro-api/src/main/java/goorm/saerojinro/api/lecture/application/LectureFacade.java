@@ -6,6 +6,7 @@ import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE
 import goorm.saerojinro.api.lecture.presentation.response.*;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
@@ -15,6 +16,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,16 +42,16 @@ public class LectureFacade {
 
 	@Transactional(readOnly = true)
 	public LectureDetailResponse getById(Long id) {
-		Lecture lecture = lectureQueryService.getById(id);
+		LectureCacheDTO lectureCacheDTO = lectureQueryService.getByIdCached(id);
 		User user = userQueryService.me();
 
 		if (user != null && user.getRole().equals(ATTENDEE)) {
-			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lecture.getId(), LECTURE_VIEW,
-				lecture.getCategory(), LocalDateTime.now());
+			RedisLogEvent redisLogEvent = RedisLogEvent.of(user.getId(), lectureCacheDTO.id(), LECTURE_VIEW,
+				lectureCacheDTO.category(), LocalDateTime.now());
 			logEventProducer.sendMessage(redisLogEvent);
 		}
 
-		return LectureDetailResponse.from(lecture);
+		return LectureDetailResponse.from(lectureCacheDTO);
 	}
 
 	@Transactional(readOnly = true)

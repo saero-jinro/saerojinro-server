@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface QuestionRepository {
     List<Question> findAll();
 
-    List<Question> findByLecture(Lecture lecture);
+    List<Question> findByLectureId(Long lectureId);
 
     Optional<Question> findById(Long id);
 

@@ -1,17 +1,17 @@
-package goorm.saerojinro.api.lecture.presentation.response;
+package goorm.saerojinro.domain.lecture.application.dto;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 @Builder
-public record LectureDetailResponse(
+public record LectureCacheDTO(
+	@Schema(description = "강의 ID", example = "1", requiredMode = REQUIRED)
+	Long id,
+
 	@Schema(description = "강의명", example = "공간지능 혁신을 통한 온오프라인 통합 경험의 미래", requiredMode = REQUIRED)
 	String title,
 
@@ -36,16 +36,17 @@ public record LectureDetailResponse(
 	@Schema(description = "강연자 ID", example = "1L", requiredMode = REQUIRED)
 	Long speakerId
 ) {
-	public static LectureDetailResponse from(LectureCacheDTO lectureCacheDTO) {
-		return LectureDetailResponse.builder()
-			.title(lectureCacheDTO.title())
-			.contents(lectureCacheDTO.contents())
-			.materialsId(lectureCacheDTO.materialsId())
-			.category(lectureCacheDTO.category())
-			.startTime(lectureCacheDTO.startTime())
-			.endTime(lectureCacheDTO.endTime())
-			.location(lectureCacheDTO.location())
-			.speakerId(lectureCacheDTO.speakerId())
+	public static LectureCacheDTO from(Lecture lecture) {
+		return LectureCacheDTO.builder()
+			.id(lecture.getId())
+			.title(lecture.getTitle())
+			.contents(lecture.getContents())
+			.materialsId(lecture.getMaterialFile().getId())
+			.category(lecture.getCategory())
+			.startTime(lecture.getStartTime().toString())
+			.endTime(lecture.getEndTime().toString())
+			.location(lecture.getLocation())
+			.speakerId(lecture.getSpeaker().getId())
 			.build();
 	}
 }
