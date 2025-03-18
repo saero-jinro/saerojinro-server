@@ -21,6 +21,10 @@ spring:
     show-sql: true
     open-in-view: false
 
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
   data:
     redis:
       host: ${REDIS_HOST:localhost}

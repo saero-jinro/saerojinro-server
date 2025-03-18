@@ -8,6 +8,7 @@ jar {
 
 dependencies {
     implementation project(":saerojinro-common")
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 
     testFixturesImplementation project(':saerojinro-common')
     testFixturesImplementation 'com.auth0:java-jwt:4.4.0'
