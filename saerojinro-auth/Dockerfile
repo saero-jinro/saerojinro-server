@@ -6,4 +6,4 @@ COPY /saerojinro-auth/build/libs/saerojinro-auth-0.0.1-SNAPSHOT.jar saerojinro-a
 
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "saerojinro-auth.jar"]
+ENTRYPOINT ["java", "-jar", "saerojinro-auth.jar", "--spring.profiles.active=prod"]

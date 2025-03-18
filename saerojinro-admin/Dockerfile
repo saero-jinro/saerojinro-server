@@ -6,4 +6,4 @@ COPY /saerojinro-admin/build/libs/saerojinro-admin-0.0.1-SNAPSHOT.jar saerojinro
 
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "saerojinro-admin.jar"]
+ENTRYPOINT ["java", "-jar", "saerojinro-admin.jar", "--spring.profiles.active=prod"]
