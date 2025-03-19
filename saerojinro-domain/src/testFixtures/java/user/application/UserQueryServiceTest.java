@@ -146,4 +146,15 @@ public class UserQueryServiceTest {
 		// then
 		assertNull(userQueryService.me());
 	}
+
+	@Test
+	@DisplayName("getAuthenticatedUsername_Failed은 현재 로그인이 안되어있는 상태에서 호출 시 anonymous를 반환한다.")
+	public void getAuthenticatedUsername_Failed() {
+		// given
+		SecurityContextHolder.clearContext();
+
+		// when
+		// then
+		assertEquals("anonymous", userQueryService.getAuthenticatedUsername());
+	}
 }
