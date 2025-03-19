@@ -58,7 +58,7 @@ public interface LectureController {
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
-				content = @Content(schema = @Schema(implementation = LectureListResponse.class))
+				content = @Content(schema = @Schema(implementation = LectureSummaryListResponse.class))
 			)
 		},
 		parameters = {
