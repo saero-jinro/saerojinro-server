@@ -9,6 +9,7 @@ import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,10 @@ public class LectureCommandService {
 		return lectureRepository.save(lecture);
 	}
 
-	@CacheEvict(value = "lecture", key = "#id")
+	@Caching(evict = {
+		@CacheEvict(value = "lecture", key = "#id"),
+		@CacheEvict(value = "lecturesByDate", key = "#startTime.toLocalDate()")
+	})
 	public void update(Long id, String title, String contents, Long maxCapacity,
 					   LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
@@ -37,8 +41,10 @@ public class LectureCommandService {
 		lecture.update(title, contents, maxCapacity, startTime, endTime, location, category);
 	}
 
-	@CacheEvict(value = "lecture", key = "#id")
-	public void delete(Long id) {
+	@Caching(evict = {
+		@CacheEvict(value = "lecture", key = "#id"),
+		@CacheEvict(value = "lecturesByDate", allEntries = true)
+	})	public void delete(Long id) {
 		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
 		lecture.delete();
 	}
