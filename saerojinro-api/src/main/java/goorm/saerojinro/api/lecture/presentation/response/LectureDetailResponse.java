@@ -1,6 +1,7 @@
 package goorm.saerojinro.api.lecture.presentation.response;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -11,12 +12,6 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record LectureDetailResponse(
-	@Schema(description = "강의 시작 시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
-	LocalDateTime startTime,
-
-	@Schema(description = "강의 종료 시간", example = "2025-03-01T12:00:00", requiredMode = REQUIRED)
-	LocalDateTime endTime,
-
 	@Schema(description = "강의 장소", example = "온라인", requiredMode = REQUIRED)
 	String location,
 
@@ -35,6 +30,12 @@ public record LectureDetailResponse(
 	@Schema(description = "강연자 이름", example = "박민수", requiredMode = REQUIRED)
 	String speakerName,
 
+	@Schema(description = "강의 시작 시간", example = "2025-03-01T10:00:00", requiredMode = REQUIRED)
+	String startTime,
+
+	@Schema(description = "강의 종료 시간", example = "2025-03-01T12:00:00", requiredMode = REQUIRED)
+	String endTime,
+
 	@Schema(description = "강연자 이메일", example = "google@google.com", requiredMode = REQUIRED)
 	String speakerEmail,
 
@@ -43,22 +44,20 @@ public record LectureDetailResponse(
 
 	@Schema(description = "강연자 사진 url", example = "bucketUrl/uploads/{lectureId}/speaker", requiredMode = REQUIRED)
 	String speakerPhotoUrl
-
-
 ) {
-	public static LectureDetailResponse from(Lecture lecture) {
+	public static LectureDetailResponse from(LectureCacheDTO lectureCacheDTO) {
 		return LectureDetailResponse.builder()
-			.startTime(lecture.getStartTime())
-			.endTime(lecture.getEndTime())
-			.location(lecture.getLocation())
-			.title(lecture.getTitle())
-			.category(lecture.getCategory())
-			.contents(lecture.getContents())
-			.materialsId(lecture.getMaterialFile().getId())
-			.speakerName(lecture.getSpeaker().getName())
-			.speakerEmail(lecture.getSpeaker().getEmail())
-			.introduction(lecture.getSpeaker().getIntroduction())
-			.speakerPhotoUrl(lecture.getSpeaker().getImageFile().getPhysicalPath())
+			.title(lectureCacheDTO.title())
+			.contents(lectureCacheDTO.contents())
+			.materialsId(lectureCacheDTO.materialsId())
+			.category(lectureCacheDTO.category())
+			.startTime(lectureCacheDTO.startTime())
+			.endTime(lectureCacheDTO.endTime())
+			.location(lectureCacheDTO.location())
+      		.speakerName(lectureCacheDTO.speakerName())
+			.speakerEmail(lectureCacheDTO.speakerEmail())
+			.introduction(lectureCacheDTO.introduction())
+			.speakerPhotoUrl(lectureCacheDTO.speakerPhotoUrl())
 			.build();
 	}
 }

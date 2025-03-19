@@ -1,14 +1,12 @@
 package goorm.saerojinro.domain.question.domain;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
-
 import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepository {
     List<Question> findAll();
 
-    List<Question> findByLecture(Lecture lecture);
+    List<Question> findByLectureId(Long lectureId);
 
     Optional<Question> findById(Long id);
 

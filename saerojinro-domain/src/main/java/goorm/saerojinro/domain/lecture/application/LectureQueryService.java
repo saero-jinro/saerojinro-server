@@ -1,10 +1,14 @@
 package goorm.saerojinro.domain.lecture.application;
 
 import goorm.saerojinro.common.domain.Category;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
+import goorm.saerojinro.domain.lecture.application.dto.LectureCacheListDTO;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
 import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,9 +27,16 @@ public class LectureQueryService {
 		return lectureRepository.findAll();
 	}
 
-	public Lecture getById(Long lectureId) {
-		return lectureRepository.findById(lectureId)
+	public Lecture getById(Long id) {
+		return lectureRepository.findById(id)
 			.orElseThrow(LectureNotFoundException::new);
+	}
+
+	@Cacheable(value = "lecture", key = "#id", unless = "#result == null")
+	public LectureCacheDTO getByIdCached(Long id) {
+		Lecture lecture = lectureRepository.findById(id)
+			.orElseThrow(LectureNotFoundException::new);
+		return LectureCacheDTO.from(lecture);
 	}
 
 	public Lecture getByIdWithLock(Long lectureId){
@@ -33,10 +44,15 @@ public class LectureQueryService {
 				.orElseThrow(LectureNotFoundException::new);
 	}
 
-	public List<Lecture> getByDate(LocalDate localDate) {
+	@Cacheable(value = "lecturesByDate", key = "#localDate", unless = "#result == null")
+	public LectureCacheListDTO getByDate(LocalDate localDate) {
 		LocalDateTime start = localDate.atStartOfDay();
 		LocalDateTime end = localDate.plusDays(1).atStartOfDay();
-		return lectureRepository.findByStartTimeBetween(start, end);
+		List<Lecture> lectures = lectureRepository.findByStartTimeBetween(start, end);
+
+		return LectureCacheListDTO.from(lectures.stream()
+			.map(LectureCacheDTO::from)
+			.toList());
 	}
 
 	public List<Lecture> getByStartTime(LocalDateTime time) {

@@ -98,7 +98,7 @@ public class QuestionsQueryServiceTest {
         Lecture lecture = createLecture();
 
         // when
-        List<Question> result = questionQueryService.getByLecture(lecture);
+        List<Question> result = questionQueryService.getByLectureId(lecture.getId());
 
         // then
         Assertions.assertNotNull(result);
@@ -113,7 +113,7 @@ public class QuestionsQueryServiceTest {
         // given
         Lecture lecture = createLecture();
 
-        List<Question> resultList = questionQueryService.getByLecture(lecture);
+        List<Question> resultList = questionQueryService.getByLectureId(lecture.getId());
         Question questions = resultList.get(0);
         Long questionsId = questions.getId();
 
