@@ -1,6 +1,7 @@
 package goorm.saerojinro.domain.user.application;
 
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,13 +37,18 @@ public class UserQueryService {
 				.orElseThrow(UserNotFoundException::new);
 	}
 
+	@Cacheable(value = "users", key = "#root.target.getAuthenticatedUsername()", unless = "#result == null")
 	public User me() {
 		try {
-			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			String email = ((UserDetails)principal).getUsername();
+			String email = getAuthenticatedUsername();
 			return getByEmail(email);
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public String getAuthenticatedUsername() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails) principal).getUsername();
 	}
 }
