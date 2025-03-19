@@ -1,5 +1,6 @@
 package goorm.saerojinro.admin.api.config;
 
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +16,7 @@ import goorm.saerojinro.infra.SaeroJinroConfigGroup;
 	SaeroJinroConfigGroup.SCHEDULING,
 	SaeroJinroConfigGroup.ASYNCHRONOUS,
 })
+@EnableCaching
 class InfraConfig {
 
 }
