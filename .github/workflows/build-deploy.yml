@@ -1,0 +1,68 @@
+name: Build and Deploy CI/CD
+
+on:
+  push:
+    branches:
+      - dev 
+  workflow_dispatch:
+
+jobs:
+  build-docker-image:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission to Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Build 
+        run: ./gradlew clean build -x test
+
+      # Docker Hub 로그인
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and Tag saerojinro-admin
+        run: |
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-admin:latest \
+          -f saerojinro-admin/Dockerfile .
+
+      - name: Build and Tag saerojinro-api
+        run: |
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-api:latest \
+          -f saerojinro-api/Dockerfile .
+
+      - name: Build and Tag saerojinro-auth
+        run: |
+          docker buildx build --platform linux/amd64 --push \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/saerojinro-auth:latest \
+          -f saerojinro-auth/Dockerfile .
+
+  deploy-to-ec2:
+    needs: build-docker-image
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            ./deploy.sh
