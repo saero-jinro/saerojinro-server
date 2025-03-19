@@ -44,7 +44,8 @@ public class LectureCommandService {
 	@Caching(evict = {
 		@CacheEvict(value = "lecture", key = "#id"),
 		@CacheEvict(value = "lecturesByDate", allEntries = true)
-	})	public void delete(Long id) {
+	})
+	public void delete(Long id) {
 		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
 		lecture.delete();
 	}
