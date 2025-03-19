@@ -8,20 +8,17 @@ import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
+	@CacheEvict(value = "lecturesByDate", key = "#startTime.toLocalDate()")
 	public Lecture create(Speaker speaker, String title, String contents, File thumbnailFile, File materialFile,
 						  Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
