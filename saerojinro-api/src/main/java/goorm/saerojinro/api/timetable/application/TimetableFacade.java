@@ -3,6 +3,7 @@ package goorm.saerojinro.api.timetable.application;
 import goorm.saerojinro.api.timetable.presentation.response.ReservationListResponse;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import goorm.saerojinro.api.timetable.presentation.response.WishlistListResponse;
+import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.user.application.UserQueryService;
@@ -22,8 +23,9 @@ public class TimetableFacade {
 	private final UserQueryService userQueryService;
 	private final ReservationQueryService reservationQueryService;
 	private final WishListQueryService wishListQueryService;
+	private final ReservationCommandService reservationCommandService;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public TimetableResponse getTimetable() {
 		User user = userQueryService.me();
 		if (user == null)
@@ -36,19 +38,31 @@ public class TimetableFacade {
 		List<WishlistListResponse> wishListResponseList = new ArrayList<>();
 
 		for (Reservation reservation : reservationList) {
-			int size = reservationQueryService.countByLectureId(reservation.getLecture().getId());
+			int size = getSize(reservation.getLecture().getId());
 			reservationListResponseList.add(
 				ReservationListResponse.from(reservation, size)
 			);
 		}
 
 		for (WishList wishList : wishListList) {
-			int size = reservationQueryService.countByLectureId(wishList.getLecture().getId());
+			int size = getSize(wishList.getLecture().getId());
 			wishListResponseList.add(
 				WishlistListResponse.from(wishList, size)
 			);
 		}
 
 		return TimetableResponse.of(reservationListResponseList, wishListResponseList);
+	}
+
+	@Transactional
+	public int getSize(Long id) {
+		try {
+			return reservationQueryService.countByLectureIdFromRedis(id);
+		} catch (NullPointerException e) {
+			int size = reservationQueryService.countByLectureId(id);
+			// 없으면 캐싱
+			reservationCommandService.updateReservationNumberInLecture(id, size);
+			return size;
+		}
 	}
 }

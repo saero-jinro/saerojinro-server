@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ReservationQueryServiceTest {
     private ReservationQueryService reservationQueryService;
+    private ReservationRepository reservationRepository;
 
     private static final Long USER_ID = 1L;
     private static final Long LECTURE_ID = 1L;
@@ -37,7 +38,7 @@ public class ReservationQueryServiceTest {
 
     @BeforeEach
     void init(){
-        ReservationRepository reservationRepository = new FakeReservationRepository();
+        reservationRepository = new FakeReservationRepository();
         reservationQueryService = new ReservationQueryService(reservationRepository);
 
         User user = User.builder()
@@ -213,5 +214,19 @@ public class ReservationQueryServiceTest {
         assertEquals(1, allLecture.size());
         assertEquals(1L, allLecture.get(0).lectureId());
         assertEquals(1L, allLecture.get(0).reservationCount());
+    }
+
+    @Test
+    @DisplayName("countByLectureIdFromRedis 는 redis에 저장된 lecture 별 Reservation 의 개수를 조회한다.")
+    public void countByLectureIdFromRedis_Success(){
+        // given
+        int value = 5;
+        reservationRepository.saveReservationNumberInRedis(LECTURE_ID, value);
+
+        // when
+        int count = reservationQueryService.countByLectureIdFromRedis(LECTURE_ID);
+
+        // then
+        assertEquals(value, count);
     }
 }

@@ -8,6 +8,7 @@ import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.repository.FakeReservationRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -89,4 +90,14 @@ public class ReservationCommandServiceTest {
     }
 
 
+    @Test
+    @DisplayName("updateReservationNumberInLecture 은 레디스에 예약인원을 저장한다.")
+    public void updateReservationNumberInLecture_Success(){
+        // when
+        reservationCommandService.updateReservationNumberInLecture(LECTURE_ID, 1);
+
+        // then
+        int count = reservationQueryService.countByLectureIdFromRedis(LECTURE_ID);
+        Assertions.assertEquals(1, count);
+    }
 }

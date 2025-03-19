@@ -4,6 +4,7 @@ import goorm.saerojinro.api.timetable.application.TimetableFacade;
 import goorm.saerojinro.api.timetable.presentation.response.TimetableResponse;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.lecture.domain.LectureRepository;
+import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
 import goorm.saerojinro.domain.reservation.domain.ReservationRepository;
@@ -48,8 +49,10 @@ public class TimetableFacadeTest {
 		UserQueryService userQueryService = new UserQueryService(userRepository, new BCryptPasswordEncoder());
 		ReservationQueryService reservationQueryService = new ReservationQueryService(reservationRepository);
 		WishListQueryService wishListQueryService = new WishListQueryService(wishListRepository);
+		ReservationCommandService reservationCommandService = new ReservationCommandService(reservationRepository);
 
-		timetableFacade = new TimetableFacade(userQueryService, reservationQueryService, wishListQueryService);
+		timetableFacade = new TimetableFacade(
+			userQueryService, reservationQueryService, wishListQueryService, reservationCommandService);
 
 		// 데이터 준비
 		user = userRepository.save(
@@ -129,5 +132,15 @@ public class TimetableFacadeTest {
 		assertNotNull(timetable);
 		assertEquals(0, timetable.reservation().size());
 		assertEquals(0, timetable.wishlist().size());
+	}
+
+	@Test
+	@DisplayName("getSize는 강의의 예약 수를 조회한다.")
+	public void getSize_Success() {
+		// when
+		int size = timetableFacade.getSize(1L);
+
+		// then
+		assertEquals(1, size);
 	}
 }

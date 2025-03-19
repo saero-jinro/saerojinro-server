@@ -22,4 +22,8 @@ public class ReservationCommandService {
     public void cancel(Reservation reservation){
         reservationRepository.delete(reservation);
     }
+
+    public void updateReservationNumberInLecture(Long lectureId, int number){
+        reservationRepository.saveReservationNumberInRedis(lectureId, number);
+    }
 }

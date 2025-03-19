@@ -7,6 +7,7 @@ import goorm.saerojinro.domain.reservation.dto.LectureReservationCountDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class FakeReservationRepository implements ReservationRepository {
     private final List<Reservation> data = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong sequence = new AtomicLong(1);
+    private final Map<Long, Integer> fakeRedis = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public Reservation save(Reservation reservation){
@@ -79,5 +81,15 @@ public class FakeReservationRepository implements ReservationRepository {
         return counts.entrySet().stream()
             .map(entry -> new LectureReservationCountDto(entry.getKey(), entry.getValue()))
             .toList();
+    }
+
+    @Override
+    public void saveReservationNumberInRedis(Long lectureId, int number) {
+        fakeRedis.put(lectureId, number);
+    }
+
+    @Override
+    public int countFromRedis(Long lectureId) {
+        return fakeRedis.get(lectureId);
     }
 }
