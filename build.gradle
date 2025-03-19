@@ -52,6 +52,7 @@ subprojects {
         testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
         testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
         testFixturesImplementation 'org.springframework.security:spring-security-test'
+        testFixturesImplementation 'software.amazon.awssdk:s3:2.20.10'
         testFixturesRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 

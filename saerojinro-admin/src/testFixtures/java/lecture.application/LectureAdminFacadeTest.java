@@ -1,6 +1,7 @@
 package lecture.application;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import goorm.saerojinro.admin.api.lecture.application.LectureAdminFacade;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
@@ -20,6 +21,8 @@ import mock.repository.FakeSpeakerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.time.LocalDateTime;
 
@@ -77,13 +80,16 @@ public class LectureAdminFacadeTest {
 		File speakerFile = File.create("speaker.jpg", SPEAKER_PATH, 3000L, "jpg");
 		fileRepository.save(speakerFile);
 
-		fileStorageService = new FileStorageService() {
+		S3Client mockS3Client = mock(S3Client.class);
+		fileStorageService = new FileStorageService(mockS3Client) {
 			@Override
 			public String moveFileDir(String originalPath, Long lectureId, String folderName) {
 				// 실제 이동하지 않고, 경로만 가정
 				return "uploads/" + lectureId + "/" + folderName + "/" + originalPath.substring(originalPath.lastIndexOf('/') + 1);
 			}
 		};
+		// 필요한 bucketName 필드를 주입합니다.
+		ReflectionTestUtils.setField(fileStorageService, "bucketName", "test-bucket");
 
 		fileCommandService = new FileCommandService(fileRepository);
 		fileQueryService = new FileQueryService(fileRepository);
