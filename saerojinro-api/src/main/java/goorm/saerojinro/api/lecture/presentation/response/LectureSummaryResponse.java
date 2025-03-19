@@ -11,6 +11,9 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
 @Builder
 public record LectureSummaryResponse(
+	@Schema(description = "강의 id", example = "1", requiredMode = REQUIRED)
+	Long lectureId,
+
 	@Schema(description = "카테고리", example = "BACKEND", requiredMode = REQUIRED)
 	Category category,
 
@@ -37,6 +40,7 @@ public record LectureSummaryResponse(
 ) {
 	public static LectureSummaryResponse from(Lecture lecture) {
 		return LectureSummaryResponse.builder()
+			.lectureId(lecture.getId())
 			.category(lecture.getCategory())
 			.thumbnailUri(lecture.getThumbnailFile().getPhysicalPath())
 			.title(lecture.getTitle())
