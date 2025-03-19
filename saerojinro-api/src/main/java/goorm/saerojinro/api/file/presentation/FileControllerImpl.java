@@ -27,13 +27,12 @@ public class FileControllerImpl implements FileController {
 		try {
 			FileResource fileResource = fileFacade.getFileResource(id);
 			File file = fileResource.file();
-			Resource resource = fileResource.resource();
 
 			return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_OCTET_STREAM)
 				.header(HttpHeaders.CONTENT_DISPOSITION,
 					"attachment; filename=\"" + file.getLogicalName() + "\"")
-				.body(resource);
+				.body(fileResource.resource());
 		} catch (IOException e) {
 			return ResponseEntity.notFound().build();
 		}

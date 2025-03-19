@@ -3,34 +3,26 @@ package goorm.saerojinro.domain.file.application;
 import goorm.saerojinro.domain.file.exception.FileDownloadFailedException;
 import goorm.saerojinro.domain.file.exception.FileSaveFailedException;
 import goorm.saerojinro.domain.file.exception.FileSizeRetrievalFailedException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
+@RequiredArgsConstructor
 public class FileStorageService {
-	private final S3Client s3Client;
-	private final String bucketName = "saerojinro-bucket";
-	private final RestTemplate restTemplate;
+	@Value("${aws.bucket-name}")
+	private String bucketName;
 
-	public FileStorageService() {
-		this.s3Client = S3Client.builder()
-			.region(Region.AP_NORTHEAST_2)
-			.credentialsProvider(DefaultCredentialsProvider.create())
-			.build();
-		this.restTemplate = new RestTemplate();
-	}
+	private final S3Client s3Client;
+	private final RestTemplate restTemplate = new RestTemplate();
 
 	public String storeFileFromUri(String fileUri, String s3Folder) {
 		String encodedUrl = encodeUrl(fileUri);
@@ -44,7 +36,6 @@ public class FileStorageService {
 		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
 			.bucket(bucketName)
 			.key(key)
-			.acl("public-read")
 			.build();
 		s3Client.putObject(putObjectRequest, RequestBody.fromBytes(fileBytes));
 		return key;
@@ -57,7 +48,6 @@ public class FileStorageService {
 			PutObjectRequest putObjectRequest = PutObjectRequest.builder()
 				.bucket(bucketName)
 				.key(key)
-				.acl("public-read")
 				.build();
 			s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
 		} catch (IOException e) {
@@ -65,19 +55,37 @@ public class FileStorageService {
 		}
 		return key;
 	}
+	public String moveFileDir(String oldKey, Long lectureId, String folderName) {
+		String fileName = oldKey.substring(oldKey.lastIndexOf('/') + 1);
+		String newKey = "uploads/" + lectureId + "/" + folderName + "/" + fileName;
 
-	public String moveFileDir(String tempPath, Long lectureId, String folderName) {
-		Path source = Paths.get(tempPath);
-		String fileName = source.getFileName().toString();
+		CopyObjectRequest copyRequest = CopyObjectRequest.builder()
+			.sourceBucket(bucketName)
+			.sourceKey(oldKey)
+			.destinationBucket(bucketName)
+			.destinationKey(newKey)
+			.build();
+		s3Client.copyObject(copyRequest);
 
-		Path target = Paths.get("uploads/" + lectureId, folderName, fileName);
+		DeleteObjectRequest delRequest = DeleteObjectRequest.builder()
+			.bucket(bucketName)
+			.key(oldKey)
+			.build();
+		s3Client.deleteObject(delRequest);
+		return newKey;
+	}
+
+	public Long getFileSize(String key) {
 		try {
-			Files.createDirectories(target.getParent());
-			Files.move(source, target);
-		} catch (IOException e) {
-			throw new FileSaveFailedException();
+			HeadObjectRequest headRequest = HeadObjectRequest.builder()
+				.bucket(bucketName)
+				.key(key)
+				.build();
+			HeadObjectResponse headResponse = s3Client.headObject(headRequest);
+			return headResponse.contentLength();
+		} catch (Exception e) {
+			throw new FileSizeRetrievalFailedException();
 		}
-		return target.toString();
 	}
 
 	private String encodeUrl(String fileUri) {
@@ -98,14 +106,6 @@ public class FileStorageService {
 			: fileUri;
 		int idx = uriWithoutQuery.lastIndexOf('.');
 		return (idx != -1) ? uriWithoutQuery.substring(idx) : "";
-	}
-
-	public Long getFileSize(String storedPath) {
-		try {
-			return Files.size(Paths.get(storedPath));
-		} catch (IOException e) {
-			throw new FileSizeRetrievalFailedException();
-		}
 	}
 
 	public String getFileExtension(String storedPath) {
