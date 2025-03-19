@@ -97,6 +97,7 @@ public class RedisConfig {
 			.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer));
 
 		return (builder) -> builder
+			.cacheDefaults(defaultCacheConfig)
 			.withCacheConfiguration("lecturesByDate", defaultCacheConfig.entryTtl(Duration.ofDays(1)));
 	}
 }

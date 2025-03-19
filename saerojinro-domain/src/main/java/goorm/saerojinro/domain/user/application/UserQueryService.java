@@ -2,6 +2,7 @@ package goorm.saerojinro.domain.user.application;
 
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,10 +38,12 @@ public class UserQueryService {
 				.orElseThrow(UserNotFoundException::new);
 	}
 
-	@Cacheable(value = "users", key = "#root.target.getAuthenticatedUsername()", unless = "#result == null")
+	@Cacheable(value = "users", key = "#root.target.getAuthenticatedUsername()", unless = "#result == null or #root.target.isAnonymous(#root.target.getAuthenticatedUsername())")
 	public User me() {
 		try {
 			String email = getAuthenticatedUsername();
+			if (isAnonymous(email)) return null;
+
 			return getByEmail(email);
 		} catch (Exception e) {
 			return null;
@@ -48,7 +51,16 @@ public class UserQueryService {
 	}
 
 	public String getAuthenticatedUsername() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ((UserDetails) principal).getUsername();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null || authentication.getPrincipal() == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+			return "anonymous";
+		}
+
+		return ((UserDetails) authentication.getPrincipal()).getUsername();
+	}
+
+	public boolean isAnonymous(String username) {
+		return "anonymous".equals(username);
 	}
 }
