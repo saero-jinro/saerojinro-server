@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,42 +20,50 @@ import java.nio.file.Paths;
 
 @Service
 public class FileStorageService {
-
+	private final S3Client s3Client;
+	private final String bucketName = "saerojinro-bucket";
 	private final RestTemplate restTemplate;
 
 	public FileStorageService() {
+		this.s3Client = S3Client.builder()
+			.region(Region.AP_NORTHEAST_2)
+			.credentialsProvider(DefaultCredentialsProvider.create())
+			.build();
 		this.restTemplate = new RestTemplate();
 	}
 
-	public String storeFileFromUri(String fileUri, String tempDir) {
+	public String storeFileFromUri(String fileUri, String s3Folder) {
 		String encodedUrl = encodeUrl(fileUri);
 		byte[] fileBytes = restTemplate.getForObject(encodedUrl, byte[].class);
 		if (fileBytes == null) {
 			throw new FileDownloadFailedException();
 		}
 		String extension = extractExtension(fileUri);
-		String fileName = System.currentTimeMillis() + extension;
+		String key = s3Folder + System.currentTimeMillis() + extension;
 
-		Path path = Paths.get(tempDir, fileName);
-		try {
-			Files.createDirectories(path.getParent());
-			Files.write(path, fileBytes);
-		} catch (IOException e) {
-			throw new FileSaveFailedException();
-		}
-		return path.toString();
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+			.bucket(bucketName)
+			.key(key)
+			.acl("public-read")
+			.build();
+		s3Client.putObject(putObjectRequest, RequestBody.fromBytes(fileBytes));
+		return key;
 	}
 
-	public String storeFile(MultipartFile multipartFile, String tempDir) {
+	public String storeFile(MultipartFile multipartFile, String s3Folder) {
 		String fileName = multipartFile.getOriginalFilename();
-		Path path = Paths.get(tempDir, fileName);
+		String key = s3Folder + System.currentTimeMillis() + "_" + fileName;
 		try {
-			Files.createDirectories(path.getParent());
-			multipartFile.transferTo(path);
+			PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+				.bucket(bucketName)
+				.key(key)
+				.acl("public-read")
+				.build();
+			s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
 		} catch (IOException e) {
 			throw new FileSaveFailedException();
 		}
-		return path.toString();
+		return key;
 	}
 
 	public String moveFileDir(String tempPath, Long lectureId, String folderName) {
