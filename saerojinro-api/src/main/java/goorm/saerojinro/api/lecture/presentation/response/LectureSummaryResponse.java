@@ -39,10 +39,13 @@ public record LectureSummaryResponse(
 	String location
 ) {
 	public static LectureSummaryResponse from(Lecture lecture) {
+		String s3Prefix = "https://saerojinro-bucket.s3.ap-northeast-2.amazonaws.com/";
+		String thumbnailUri = s3Prefix + lecture.getThumbnailFile().getPhysicalPath();
+
 		return LectureSummaryResponse.builder()
 			.lectureId(lecture.getId())
 			.category(lecture.getCategory())
-			.thumbnailUri(lecture.getThumbnailFile().getPhysicalPath())
+			.thumbnailUri(thumbnailUri)
 			.title(lecture.getTitle())
 			.contents(lecture.getContents())
 			.speakerName(lecture.getSpeaker().getName())
