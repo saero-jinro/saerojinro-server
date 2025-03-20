@@ -7,7 +7,6 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Builder
 public record ReceivedNotificationResponse(
@@ -24,7 +23,7 @@ public record ReceivedNotificationResponse(
 		return ReceivedNotificationResponse.builder()
 			.title(notification.getTitle())
 			.contents(notification.getContents())
-			.createdAt(notification.getCreatedAt().truncatedTo(MILLIS))
+			.createdAt(notification.getCreatedAt())
 			.build();
 	}
 }
