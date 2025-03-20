@@ -46,7 +46,7 @@ public interface LectureController {
 		@Parameter(
 			name = "date",
 			description = "행사 일자 (ISO 8601 형식: yyyy-MM-dd)",
-			example = "2025-03-15"
+			example = "2025-03-01"
 		)
 		@RequestParam("date")
 		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
@@ -65,7 +65,7 @@ public interface LectureController {
 			@Parameter(
 				name = "startTime",
 				description = "강의 시작 시간 (ISO 8601 형식: yyyy-MM-dd'T'HH:mm:ss)",
-				example = "2025-03-15T10:00:00"
+				example = "2025-03-01T10:00:00"
 			)
 		}
 	)

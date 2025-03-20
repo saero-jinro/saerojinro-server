@@ -44,6 +44,7 @@ public class UserQueryService {
 			String email = getAuthenticatedUsername();
 			if (isAnonymous(email)) return null;
 
+
 			return getByEmail(email);
 		} catch (Exception e) {
 			return null;

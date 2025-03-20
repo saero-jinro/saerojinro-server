@@ -37,6 +37,9 @@ public record LectureResponse(
 	Category category
 ) {
 	public static LectureResponse from(LectureCacheDTO lectureCacheDTO) {
+		String s3Prefix = "https://saerojinro-bucket.s3.ap-northeast-2.amazonaws.com/";
+		String thumbnailUrl = s3Prefix + lectureCacheDTO.lectureThumbnail();
+
 		return LectureResponse.builder()
 			.id(lectureCacheDTO.id())
 			.title(lectureCacheDTO.title())
@@ -44,7 +47,7 @@ public record LectureResponse(
 			.startTime(lectureCacheDTO.startTime())
 			.endTime(lectureCacheDTO.endTime())
 			.speakerName(lectureCacheDTO.speakerName())
-			.thumbnailUri(lectureCacheDTO.lectureThumbnail())
+			.thumbnailUri(thumbnailUrl)
 			.location(lectureCacheDTO.location())
 			.build();
 	}

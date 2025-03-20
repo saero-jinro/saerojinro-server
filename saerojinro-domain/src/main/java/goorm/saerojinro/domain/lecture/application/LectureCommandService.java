@@ -8,20 +8,18 @@ import goorm.saerojinro.domain.lecture.exception.LectureNotFoundException;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.context.annotation.Primary;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class LectureCommandService {
 	private final LectureRepository lectureRepository;
 
+	@CacheEvict(value = "lecturesByDate", key = "#startTime.toLocalDate()")
 	public Lecture create(Speaker speaker, String title, String contents, File thumbnailFile, File materialFile,
 						  Long maxCapacity, LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 
@@ -32,7 +30,10 @@ public class LectureCommandService {
 		return lectureRepository.save(lecture);
 	}
 
-	@CacheEvict(value = "lecture", key = "#id")
+	@Caching(evict = {
+		@CacheEvict(value = "lecture", key = "#id"),
+		@CacheEvict(value = "lecturesByDate", key = "#startTime.toLocalDate()")
+	})
 	public void update(Long id, String title, String contents, Long maxCapacity,
 					   LocalDateTime startTime, LocalDateTime endTime, String location, Category category) {
 		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
@@ -40,7 +41,10 @@ public class LectureCommandService {
 		lecture.update(title, contents, maxCapacity, startTime, endTime, location, category);
 	}
 
-	@CacheEvict(value = "lecture", key = "#id")
+	@Caching(evict = {
+		@CacheEvict(value = "lecture", key = "#id"),
+		@CacheEvict(value = "lecturesByDate", allEntries = true)
+	})
 	public void delete(Long id) {
 		Lecture lecture = lectureRepository.findById(id).orElseThrow(LectureNotFoundException::new);
 		lecture.delete();

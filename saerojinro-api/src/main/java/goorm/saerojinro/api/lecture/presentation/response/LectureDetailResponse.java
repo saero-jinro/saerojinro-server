@@ -46,6 +46,9 @@ public record LectureDetailResponse(
 	String speakerPhotoUrl
 ) {
 	public static LectureDetailResponse from(LectureCacheDTO lectureCacheDTO) {
+		String s3Prefix = "https://saerojinro-bucket.s3.ap-northeast-2.amazonaws.com/";
+		String speakerPhotoUrl = s3Prefix + lectureCacheDTO.speakerPhotoUrl();
+
 		return LectureDetailResponse.builder()
 			.title(lectureCacheDTO.title())
 			.contents(lectureCacheDTO.contents())
@@ -57,7 +60,7 @@ public record LectureDetailResponse(
       		.speakerName(lectureCacheDTO.speakerName())
 			.speakerEmail(lectureCacheDTO.speakerEmail())
 			.introduction(lectureCacheDTO.introduction())
-			.speakerPhotoUrl(lectureCacheDTO.speakerPhotoUrl())
+			.speakerPhotoUrl(speakerPhotoUrl)
 			.build();
 	}
 }
