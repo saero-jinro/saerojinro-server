@@ -30,8 +30,8 @@ public class SwaggerConfig {
 	private final Environment environment;
 
 	private static final Map<String, String> PROFILE_SERVER_URL_MAP = Map.of(
-			"local", "http://localhost:8082",
-			"prod", "http://54.180.234.181:8082"
+		"local", "http://localhost:8082",
+		"prod", "https://admin.saerojinro.site"
 	);
 
 	@Bean
@@ -82,7 +82,7 @@ public class SwaggerConfig {
 				<ul>
 					<li>사용자 API 문서: <a href="%s" target="_blank">%s</a></li><br>
 					<li>인증/인가 API 문서: <a href="%s" target="_blank">%s</a></li>
-            	</ul>
+				        	</ul>
 				""",
 			apiDocsUrl, apiDocsUrl,
 			authDocsUrl, authDocsUrl);
