@@ -13,7 +13,8 @@ public record ReceivedNotificationListResponse(
 	@Schema(description = "받은 알림 리스트",
 		example = "[{"
 			+ "\"title\": \"[전체 공지] 불났어요\", "
-			+ "\"contents\": \"다들 돔황챠\"}]",
+			+ "\"contents\": \"다들 돔황챠\", "
+			+ "\"createdAt\": \"2025-03-01T10:00:00\"}]",
 		requiredMode = REQUIRED)
 	List<ReceivedNotificationResponse> contents
 ) {
