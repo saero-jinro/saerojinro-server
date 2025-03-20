@@ -24,21 +24,21 @@ public abstract class BaseTimeEntity {
 	@CreationTimestamp
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(pattern = "yyyy-mm-dd kk:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(nullable = false, updatable = false)
 	protected LocalDateTime createdAt;
 
 	@UpdateTimestamp
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(pattern = "yyyy-mm-dd kk:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(nullable = false)
 	protected LocalDateTime updatedAt;
 
 	@Column
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(pattern = "yyyy-mm-dd kk:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	protected LocalDateTime deletedAt;
 
 	public void delete(){
