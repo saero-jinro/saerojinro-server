@@ -3,6 +3,7 @@ package goorm.saerojinro.admin.api.lecture.presentation;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,4 +52,15 @@ public interface LectureAdminController {
 	)
 	ResponseEntity<Void> delete(@PathVariable Long lectureId
 	);
+
+	@Operation(
+		summary = "강의 전체 조회",
+		description = "운영자가 강의를 전체조회 합니다",
+		responses = {
+			@ApiResponse(
+				responseCode = "200"
+			)
+		}
+	)
+	ResponseEntity<LectureIdNameMappingListResponse> findAll();
 }
