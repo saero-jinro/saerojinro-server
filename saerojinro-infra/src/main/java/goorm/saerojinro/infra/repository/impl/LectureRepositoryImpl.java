@@ -58,6 +58,6 @@ public class LectureRepositoryImpl implements LectureRepository {
 
 	@Override
 	public List<Lecture> findAll() {
-		return lectureJpaRepository.findAllAndDeletedAtIsNull();
+		return lectureJpaRepository.findAllByDeletedAtIsNull();
 	}
 }

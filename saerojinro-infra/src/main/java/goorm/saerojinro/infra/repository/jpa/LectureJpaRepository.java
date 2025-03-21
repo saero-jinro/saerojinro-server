@@ -17,7 +17,7 @@ public interface LectureJpaRepository extends JpaRepository<Lecture, Long> {
 		"WHERE l.startTime >= :start AND l.startTime < :end AND l.deletedAt IS NULL")
 	List<Lecture> findByStartTimeBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-	List<Lecture> findAllAndDeletedAtIsNull();
+	List<Lecture> findAllByDeletedAtIsNull();
 
 	Optional<Lecture> findByIdAndDeletedAtIsNull(@Param("id") Long id);
 
