@@ -4,6 +4,7 @@ import goorm.saerojinro.admin.api.lecture.application.LectureAdminFacade;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,11 @@ public class LectureAdminControllerImpl implements LectureAdminController {
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		lectureAdminFacade.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping
+	public ResponseEntity<LectureIdNameMappingListResponse> findAll() {
+		LectureIdNameMappingListResponse response = lectureAdminFacade.findAll();
+		return ResponseEntity.ok(response);
 	}
 }

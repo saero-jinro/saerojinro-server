@@ -3,17 +3,22 @@ package goorm.saerojinro.admin.api.lecture.application;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingResponse;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
 import goorm.saerojinro.domain.file.application.FileStorageService;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
+import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +28,7 @@ public class LectureAdminFacade {
 	private final FileQueryService fileQueryService;
 	private final FileCommandService fileCommandService;
 	private final FileStorageService fileStorageService;
+	private final LectureQueryService lectureQueryService;
 
 	@Transactional
 	public LectureCreateResponse create(LectureCreateRequest request) {
@@ -87,5 +93,17 @@ public class LectureAdminFacade {
 	@Transactional
 	public void delete(Long lectureId) {
 		lectureCommandService.delete(lectureId);
+	}
+
+	@Transactional(readOnly = true)
+	public LectureIdNameMappingListResponse findAll() {
+		List<Lecture> lectures = lectureQueryService.getAll();
+
+		List<LectureIdNameMappingResponse> responses = lectures
+			.stream()
+			.map(LectureIdNameMappingResponse::from)
+			.toList();
+
+		return LectureIdNameMappingListResponse.from(responses);
 	}
 }

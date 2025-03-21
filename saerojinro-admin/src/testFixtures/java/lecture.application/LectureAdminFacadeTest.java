@@ -7,12 +7,15 @@ import goorm.saerojinro.admin.api.lecture.application.LectureAdminFacade;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
+import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
 import goorm.saerojinro.domain.file.application.FileStorageService;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureCommandService;
+import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.application.SpeakerCommandService;
 import mock.repository.FakeFileRepository;
@@ -25,11 +28,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class LectureAdminFacadeTest {
 
 	private LectureAdminFacade lectureAdminFacade;
 	private LectureCommandService lectureCommandService;
+	private LectureQueryService lectureQueryService;
 	private SpeakerCommandService speakerCommandService;
 
 	private FileQueryService fileQueryService;
@@ -94,6 +99,7 @@ public class LectureAdminFacadeTest {
 		fileCommandService = new FileCommandService(fileRepository);
 		fileQueryService = new FileQueryService(fileRepository);
 		lectureCommandService = new LectureCommandService(lectureRepository);
+		lectureQueryService = new LectureQueryService(lectureRepository);
 		speakerCommandService = new SpeakerCommandService(speakerRepository);
 
 		lectureAdminFacade = new LectureAdminFacade(
@@ -101,7 +107,8 @@ public class LectureAdminFacadeTest {
 			speakerCommandService,
 			fileQueryService,
 			fileCommandService,
-			fileStorageService
+			fileStorageService,
+			lectureQueryService
 		);
 
 		request = LectureCreateRequest.builder()
@@ -183,5 +190,19 @@ public class LectureAdminFacadeTest {
 		Lecture deletedLecture = lectureRepository.findById(lectureId)
 			.orElseThrow();
 		assertNotNull(deletedLecture.getDeletedAt());
+	}
+
+	@Test
+	@DisplayName("강의 전체 조회 성공")
+	void findAllLectures_success() {
+		LectureCreateResponse createResponse1 = lectureAdminFacade.create(request);
+		LectureCreateResponse createResponse2 = lectureAdminFacade.create(request);
+
+		LectureIdNameMappingListResponse allResponse = lectureAdminFacade.findAll();
+
+		// then
+		assertNotNull(allResponse);
+		assertTrue(allResponse.lectures().size() >= 2, "강의 목록의 크기는 최소 2 이상이어야 합니다.");
+
 	}
 }
