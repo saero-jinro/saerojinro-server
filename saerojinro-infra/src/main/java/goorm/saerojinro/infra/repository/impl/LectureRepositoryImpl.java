@@ -23,7 +23,7 @@ public class LectureRepositoryImpl implements LectureRepository {
 
 	@Override
 	public Optional<Lecture> findById(Long id) {
-		return lectureJpaRepository.findById(id);
+		return lectureJpaRepository.findByIdAndDeletedAtIsNull(id);
 	}
 
 	@Override
@@ -43,21 +43,21 @@ public class LectureRepositoryImpl implements LectureRepository {
 
 	@Override
 	public List<Lecture> findByStartTime(LocalDateTime time) {
-		return lectureJpaRepository.findByStartTime(time);
+		return lectureJpaRepository.findByStartTimeAndDeletedAtIsNull(time);
 	}
 
 	@Override
 	public List<Lecture> findByStartTimeAfterAndEndTimeBefore(LocalDateTime startTime, LocalDateTime endTime) {
-		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(startTime, endTime);
+		return lectureJpaRepository.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqualAndDeletedAtIsNull(startTime, endTime);
 	}
 
 	@Override
 	public List<Lecture> findByCategoryInAndStartTime(List<Category> categories, LocalDateTime lectureTime) {
-		return lectureJpaRepository.findByCategoryInAndStartTime(categories, lectureTime);
+		return lectureJpaRepository.findByCategoryInAndStartTimeAndDeletedAtIsNull(categories, lectureTime);
 	}
 
 	@Override
 	public List<Lecture> findAll() {
-		return lectureJpaRepository.findAll();
+		return lectureJpaRepository.findAllAndDeletedAtIsNull();
 	}
 }
