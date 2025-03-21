@@ -15,10 +15,10 @@ public class File extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "text")
 	private String logicalName;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, columnDefinition = "text")
 	private String physicalPath;
 
 	@Column(nullable = false)

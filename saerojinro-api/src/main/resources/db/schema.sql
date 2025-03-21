@@ -7,8 +7,8 @@ create table file
     deleted_at    timestamp(6),
     file_size     bigint       not null,
     extension     varchar(255) not null,
-    logical_name  varchar(255) not null,
-    physical_path varchar(255) not null unique
+    logical_name  text not null,
+    physical_path text not null unique
 );
 
 create table "user"
