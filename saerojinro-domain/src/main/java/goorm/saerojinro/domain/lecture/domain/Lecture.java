@@ -40,7 +40,7 @@ public class Lecture extends BaseTimeEntity {
 	@Column(nullable = false, unique = true)
 	private String title;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "text")
 	private String contents;
 
 	@Column(nullable = false)

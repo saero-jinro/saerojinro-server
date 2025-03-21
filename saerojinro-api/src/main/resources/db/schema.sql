@@ -63,7 +63,7 @@ create table lecture
     category          varchar(255) not null
         check (category in
                ('BACKEND', 'FRONTEND', 'AI', 'DATA', 'CLOUD', 'DEVOPS', 'UX_UI', 'SEC', 'PM', 'BLOCKCHAIN', 'MOBILE')),
-    contents          varchar(255) not null,
+    contents          text not null,
     location          varchar(255) not null,
     title             varchar(255) not null unique,
     foreign key (material_file_id) references file (id),
