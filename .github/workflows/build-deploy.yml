@@ -1,7 +1,7 @@
 name: Build and Deploy CI/CD
 
 on:
-  push:
+  pull_request:
     branches:
       - dev 
   workflow_dispatch:
@@ -58,6 +58,12 @@ jobs:
     environment: dev
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set executable permission for deploy.sh
+        run: chmod +x deploy.sh
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
