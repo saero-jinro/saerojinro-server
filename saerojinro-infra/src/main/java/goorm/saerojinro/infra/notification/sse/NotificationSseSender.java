@@ -14,7 +14,14 @@ public class NotificationSseSender {
 	private final EmitterRepository emitterRepository;
 
 	public SseEmitter subscribe(Long userId) {
-		return emitterRepository.save(userId);
+		SseEmitter saved = emitterRepository.save(userId);
+		sendNotification(saved,
+			NotificationSendResponse.builder()
+				.title("연결 완료")
+				.contents("SSE 연결 완료")
+				.build()
+		);
+		return saved;
 	}
 
 	public void sendNotification(SseEmitter emitter, NotificationSendResponse message) {
