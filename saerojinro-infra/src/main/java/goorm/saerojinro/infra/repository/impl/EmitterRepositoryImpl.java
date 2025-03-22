@@ -2,6 +2,7 @@ package goorm.saerojinro.infra.repository.impl;
 
 import goorm.saerojinro.domain.notification.domain.EmitterRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
 	@Override
 	public SseEmitter save(Long id) {
-		SseEmitter emitter = new SseEmitter(12 * 60 * 60 * 1000L);
-		emitter.onCompletion(() -> emitters.remove(id));
-		emitter.onTimeout(emitter::complete);
-		emitters.put(id, emitter);
-		return emitter;
+		Optional<SseEmitter> emitter = findById(id);
+		emitter.ifPresent(ResponseBodyEmitter::complete);
+
+		SseEmitter newEmitter = new SseEmitter(12 * 60 * 60 * 1000L);
+		newEmitter.onCompletion(() -> emitters.remove(id));
+		newEmitter.onTimeout(newEmitter::complete);
+		return emitters.put(id, newEmitter);
 	}
 
 	@Override

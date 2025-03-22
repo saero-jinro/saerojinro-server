@@ -22,7 +22,7 @@ public class NotificationControllerImpl implements NotificationController {
 	@PostMapping("/subscribe")
 	public ResponseEntity<SseEmitter> subscribe() {
 		SseEmitter response = notificationFacade.subscribe();
-		return ResponseEntity.status(CREATED).body(response);
+		return ResponseEntity.ok(response);
 	}
 
 	@Override

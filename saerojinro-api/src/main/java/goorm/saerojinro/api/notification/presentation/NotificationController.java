@@ -16,7 +16,7 @@ public interface NotificationController {
 			- Description : 이 API는 사용자가 알림을 구독합니다
 			- Assignee : 이신행
 		""")
-	@ApiResponse(responseCode = "201")
+	@ApiResponse(responseCode = "200")
 	ResponseEntity<SseEmitter> subscribe();
 
 	@Operation(summary = "알림 조회 API", description = """
