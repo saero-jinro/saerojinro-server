@@ -23,7 +23,8 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 		SseEmitter newEmitter = new SseEmitter(12 * 60 * 60 * 1000L);
 		newEmitter.onCompletion(() -> emitters.remove(id));
 		newEmitter.onTimeout(newEmitter::complete);
-		return emitters.put(id, newEmitter);
+		emitters.put(id, newEmitter);
+		return newEmitter;
 	}
 
 	@Override
