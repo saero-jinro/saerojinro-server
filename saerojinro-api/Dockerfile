@@ -6,4 +6,4 @@ COPY /saerojinro-api/build/libs/saerojinro-api-0.0.1-SNAPSHOT.jar saerojinro-api
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "saerojinro-api.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "-jar", "saerojinro-api.jar", "--spring.profiles.active=prod"]
