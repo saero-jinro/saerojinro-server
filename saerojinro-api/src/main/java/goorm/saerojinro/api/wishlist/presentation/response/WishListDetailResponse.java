@@ -13,6 +13,9 @@ public record WishListDetailResponse(
     @Schema(description = "즐겨찾기 ID", example = "1", requiredMode = REQUIRED)
     Long id,
 
+    @Schema(description = "강의 ID", example = "1001", requiredMode = REQUIRED)
+    Long lectureId,
+
     @Schema(description = "강의자 이름", example = "박민준", requiredMode = REQUIRED)
     String speaker,
 
@@ -27,11 +30,12 @@ public record WishListDetailResponse(
 ) {
     public static WishListDetailResponse from(WishList wishList){
         return WishListDetailResponse.builder()
-            .id(wishList.getId())
-            .speaker(wishList.getLecture().getSpeaker().getName())
-            .lectureTitle(wishList.getLecture().getTitle())
-            .startTime(wishList.getLecture().getStartTime())
-            .endTime(wishList.getLecture().getEndTime())
-            .build();
+                .id(wishList.getId())
+                .lectureId(wishList.getLecture().getId())
+                .speaker(wishList.getLecture().getSpeaker().getName())
+                .lectureTitle(wishList.getLecture().getTitle())
+                .startTime(wishList.getLecture().getStartTime())
+                .endTime(wishList.getLecture().getEndTime())
+                .build();
     }
 }
