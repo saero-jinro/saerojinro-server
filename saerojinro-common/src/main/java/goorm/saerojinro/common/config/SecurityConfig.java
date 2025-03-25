@@ -88,7 +88,7 @@ public class SecurityConfig {
 		return request -> {
 			CorsConfiguration config = new CorsConfiguration();
 			config.setAllowedHeaders(Collections.singletonList("*"));
-			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 			config.setAllowedOriginPatterns(Arrays.asList("*"));
 			config.setAllowCredentials(true);
 			return config;
