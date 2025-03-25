@@ -89,7 +89,18 @@ public class SecurityConfig {
 			CorsConfiguration config = new CorsConfiguration();
 			config.setAllowedHeaders(Collections.singletonList("*"));
 			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-			config.setAllowedOriginPatterns(Arrays.asList("*"));
+			config.setAllowedOriginPatterns(
+				Arrays.asList(
+					"http://localhost:3000",
+					"http://localhost:8080",
+					"http://localhost:8081",
+					"http://localhost:8082",
+					"https://admin.saerojinro.site",
+					"https://api.saerojinro.site",
+					"https://auth.saerojinro.site",
+					"https://ittime.site"
+				)
+			);
 			config.setAllowCredentials(true);
 			return config;
 		};
