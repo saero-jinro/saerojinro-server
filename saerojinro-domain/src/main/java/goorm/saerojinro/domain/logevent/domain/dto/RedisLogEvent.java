@@ -15,13 +15,13 @@ public record RedisLogEvent(
 	Category category,
 	LocalDateTime timestamp
 ) {
-	public static RedisLogEvent of(Long userId, Long lectureId, LogEventType logEventType, Category category, LocalDateTime timestamp) {
+	public static RedisLogEvent of(Long userId, Long lectureId, LogEventType logEventType, Category category) {
 		return RedisLogEvent.builder()
 			.userId(userId)
 			.lectureId(lectureId)
 			.logEventType(logEventType)
 			.category(category)
-			.timestamp(timestamp)
+			.timestamp(LocalDateTime.now())
 			.build();
 	}
 }

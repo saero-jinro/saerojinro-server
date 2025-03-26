@@ -9,6 +9,7 @@ import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateR
 import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
 import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
 import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
@@ -28,13 +29,12 @@ public class ReservationFacade {
     private final LectureQueryService lectureQueryService;
     private final ReservationQueryService reservationQueryService;
     private final ReservationCommandService reservationCommandService;
-    private final LogEventProducer logEventProducer;
+    private final LogEventService logEventService;
 
     @Transactional
     public ReservationCreateResponse create(Long lectureId) {
         User user = userQueryService.me();
         Lecture lecture = lectureQueryService.getByIdWithLock(lectureId);
-        LogEventType logEventType;
 
         try {
             reservationQueryService.validateReservationFull(lecture);
@@ -42,28 +42,11 @@ public class ReservationFacade {
           
             Reservation reservation = reservationCommandService.create(user, lecture);
 
-            logEventType = LECTURE_RESERVATION_SUCCESS;
-            RedisLogEvent redisLogEvent = RedisLogEvent.of(
-                user.getId(),
-                lecture.getId(),
-                logEventType,
-                lecture.getCategory(),
-                LocalDateTime.now()
-            );
-            logEventProducer.sendMessage(redisLogEvent);
+            logEventService.sendLogEventFromEntity(user, lecture, LECTURE_RESERVATION_SUCCESS);
 
             return ReservationCreateResponse.from(reservation);
         } catch (CustomException e) {
-            logEventType = LECTURE_RESERVATION_FAIL;
-            RedisLogEvent redisLogEvent = RedisLogEvent.of(
-                user.getId(),
-                lecture.getId(),
-                logEventType,
-                lecture.getCategory(),
-                LocalDateTime.now()
-            );
-            logEventProducer.sendMessage(redisLogEvent);
-
+            logEventService.sendLogEventFromEntity(user, lecture, LECTURE_RESERVATION_FAIL);
             throw e;
         }
     }
