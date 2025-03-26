@@ -35,7 +35,7 @@ jobs:
 
       - name: Test Coverage Report
         id: jacoco
-        uses: madrapps/jacoco-report@v1.6
+        uses: Madrapps/jacoco-report@v1.7.1
         with:
           title: Test Coverage Report
           paths: |
