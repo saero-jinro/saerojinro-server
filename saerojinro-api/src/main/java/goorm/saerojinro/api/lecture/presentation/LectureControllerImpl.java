@@ -33,7 +33,7 @@ public class LectureControllerImpl implements LectureController {
 	}
 
 	@Override
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('ATTENDEE')")
 	@GetMapping("/recommendations")
 	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime startTime) {
 		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);

@@ -42,7 +42,7 @@ public class WishListControllerImpl implements WishListController{
 
     @Override
     @PostMapping("/lectures/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long id) {
         WishListCreateResponse response = wishListFacade.create(id);
         return ResponseEntity.status(CREATED).body(response);
@@ -50,7 +50,7 @@ public class WishListControllerImpl implements WishListController{
 
     @Override
     @DeleteMapping("/lectures/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         wishListFacade.delete(id);
         return ResponseEntity.noContent().build();

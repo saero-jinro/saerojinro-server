@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/timetables")
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ATTENDEE')")
 public class TimetableControllerImpl implements TimetableController {
 
 	private final TimetableFacade timetableFacade;

@@ -34,7 +34,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @PostMapping("/lectures/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<QuestionCreateResponse> create(@PathVariable("id") Long id,
                                                          QuestionCreateRequest request) {
         QuestionCreateResponse response = questionsFacade.create(id, request);
@@ -43,7 +43,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<Void> update(@PathVariable("id") Long id,
                                        QuestionUpdateRequest request) {
         questionsFacade.update(id, request);
@@ -52,7 +52,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         questionsFacade.delete(id);
         return ResponseEntity.noContent().build();

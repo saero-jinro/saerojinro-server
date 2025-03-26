@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ATTENDEE')")
 @RequestMapping("/api/files")
 public class FileControllerImpl implements FileController {
 	private final FileFacade fileFacade;
