@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ATTENDEE')")
 @RequestMapping("/api/notifications")
 public class NotificationControllerImpl implements NotificationController {
 	private final NotificationFacade notificationFacade;

@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ATTENDEE')")
 @RequestMapping("/api/reservations")
 public class ReservationControllerImpl implements ReservationController {
     private final ReservationFacade reservationFacade;
