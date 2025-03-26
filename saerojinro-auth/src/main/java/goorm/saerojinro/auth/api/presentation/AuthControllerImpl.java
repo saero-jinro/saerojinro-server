@@ -1,6 +1,7 @@
 package goorm.saerojinro.auth.api.presentation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ public class AuthControllerImpl implements AuthController {
 
 	@Override
 	@PostMapping("/reissue")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<JwtResponse> reissue(ReissueRequest request) {
 		JwtResponse response = authFacade.reissue(request);
 		return ResponseEntity.ok(response);
@@ -42,6 +44,7 @@ public class AuthControllerImpl implements AuthController {
 
 	@Override
 	@PostMapping("/logout")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Void> logout(HttpServletRequest request) {
 		authFacade.logout(request);
 		return ResponseEntity.noContent().build();
