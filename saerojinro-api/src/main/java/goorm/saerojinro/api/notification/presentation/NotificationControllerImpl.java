@@ -4,6 +4,7 @@ import goorm.saerojinro.api.notification.application.NotificationFacade;
 import goorm.saerojinro.api.notification.presentation.response.ReceivedNotificationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/notifications")
 public class NotificationControllerImpl implements NotificationController {
 	private final NotificationFacade notificationFacade;

@@ -7,6 +7,7 @@ import goorm.saerojinro.api.question.presentation.response.QuestionCreateRespons
 import goorm.saerojinro.api.question.presentation.response.QuestionListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -33,6 +34,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @PostMapping("/lectures/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<QuestionCreateResponse> create(@PathVariable("id") Long id,
                                                          QuestionCreateRequest request) {
         QuestionCreateResponse response = questionsFacade.create(id, request);
@@ -41,6 +43,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> update(@PathVariable("id") Long id,
                                        QuestionUpdateRequest request) {
         questionsFacade.update(id, request);
@@ -49,6 +52,7 @@ public class QuestionControllerImpl implements QuestionController {
 
     @Override
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         questionsFacade.delete(id);
         return ResponseEntity.noContent().build();

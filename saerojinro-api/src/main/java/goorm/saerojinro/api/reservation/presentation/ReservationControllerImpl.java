@@ -4,15 +4,16 @@ import goorm.saerojinro.api.reservation.application.ReservationFacade;
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/reservations")
 public class ReservationControllerImpl implements ReservationController {
-
     private final ReservationFacade reservationFacade;
 
     @Override

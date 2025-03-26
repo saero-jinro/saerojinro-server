@@ -6,6 +6,7 @@ import goorm.saerojinro.api.lecture.presentation.response.LectureListResponse;
 import goorm.saerojinro.api.lecture.presentation.response.LectureSummaryListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ public class LectureControllerImpl implements LectureController {
 	}
 
 	@Override
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/recommendations")
 	public ResponseEntity<LectureSummaryListResponse> getRecommendationLectures(LocalDateTime startTime) {
 		LectureSummaryListResponse response = lectureFacade.getRecommendationLectures(startTime);
