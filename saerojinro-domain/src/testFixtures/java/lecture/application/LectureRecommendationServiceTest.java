@@ -26,19 +26,17 @@ import goorm.saerojinro.domain.speaker.domain.Speaker;
 public class LectureRecommendationServiceTest {
 	private LectureRecommendationService lectureRecommendationService;
 	private final List<LogEvent> logEvents = new ArrayList<>();
-	private Lecture backendLecture;
-	private Lecture devopsLecture;
 
 	@BeforeEach
 	public void init() {
 		lectureRecommendationService = new LectureRecommendationService();
 
-		backendLecture = Lecture.builder()
+		Lecture backendLecture = Lecture.builder()
 			.id(1L)
 			.category(DEVOPS)
 			.build();
 
-		devopsLecture = Lecture.builder()
+		Lecture devopsLecture = Lecture.builder()
 			.id(2L)
 			.category(DEVOPS)
 			.build();
@@ -93,24 +91,24 @@ public class LectureRecommendationServiceTest {
 			null,
 			null,
 			LECTURE_RESERVATION_FAIL,
-			DEVOPS,
-			LocalDateTime.now())
+			DEVOPS
+			)
 		);
 
 		logEvents.add(RedisLogEvent.of(
 			null,
 			null,
 			LECTURE_RESERVATION_FAIL,
-			DEVOPS,
-			LocalDateTime.now())
+			DEVOPS
+			)
 		);
 
 		logEvents.add(RedisLogEvent.of(
 			null,
 			null,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now())
+			BACKEND
+			)
 		);
 
 		// when

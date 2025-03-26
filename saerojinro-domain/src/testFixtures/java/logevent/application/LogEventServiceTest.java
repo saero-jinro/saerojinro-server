@@ -27,6 +27,7 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
+import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeLectureRepository;
 import mock.repository.FakeUserRepository;
@@ -47,8 +48,9 @@ public class LogEventServiceTest {
 		logEventService = new LogEventService(
 			fakeEventLogRepository,
 			userQueryService,
-			lectureQueryService
-		);
+			lectureQueryService,
+			new FakeLogEventProducer()
+			);
 
 		user = fakeUserRepository.save(User.builder()
 			.email("email@email.com")
@@ -124,32 +126,28 @@ public class LogEventServiceTest {
 			1L,
 			1L,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
+			BACKEND
 		);
 
 		RedisLogEvent redisLogEvent2 = RedisLogEvent.of(
 			1L,
 			1L,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
+			BACKEND
 		);
 
 		RedisLogEvent redisLogEvent3 = RedisLogEvent.of(
 			1L,
 			1L,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
+			BACKEND
 		);
 
 		RedisLogEvent redisLogEvent4 = RedisLogEvent.of(
 			1L,
 			2L,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
+			BACKEND
 		);
 
 		logEventService.save(record + 1, redisLogEvent1);
@@ -167,7 +165,12 @@ public class LogEventServiceTest {
 	public void save_Success() {
 		// given
 		String record = "record";
-		RedisLogEvent redisLogEvent = RedisLogEvent.of(1L, 1L, LECTURE_RESERVATION_SUCCESS, BACKEND, LocalDateTime.now());
+		RedisLogEvent redisLogEvent = RedisLogEvent.of(
+			1L,
+			1L,
+			LECTURE_RESERVATION_SUCCESS,
+			BACKEND
+		);
 
 		// when
 		LogEvent response = logEventService.save(record, redisLogEvent);
@@ -208,8 +211,7 @@ public class LogEventServiceTest {
 			1L,
 			1L,
 			LECTURE_RESERVATION_SUCCESS,
-			BACKEND,
-			LocalDateTime.now()
+			BACKEND
 		);
 
 		// when

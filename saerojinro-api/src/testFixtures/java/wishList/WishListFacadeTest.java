@@ -7,6 +7,7 @@ import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.file.domain.File;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.speaker.domain.Speaker;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -14,6 +15,7 @@ import goorm.saerojinro.domain.wishlist.application.WishListCommandService;
 import goorm.saerojinro.domain.wishlist.application.WishListQueryService;
 import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
+import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeUserRepository;
 import mock.repository.FakeWishListRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,12 +51,15 @@ public class WishListFacadeTest {
         WishListQueryService wishListQueryService = new WishListQueryService(wishListRepository);
         FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
 
+        UserQueryService userQueryService = new UserQueryService(userRepository, new BCryptPasswordEncoder());
+        LectureQueryService lectureQueryService = new LectureQueryService(lectureRepository);
+        LogEventService logEventService = new LogEventService(new FakeLogEventRepository(), userQueryService, lectureQueryService, fakeEventLogProducer);
         wishListFacade = new WishListFacade(
             wishListQueryService,
             new WishListCommandService(wishListRepository, wishListQueryService),
-            new UserQueryService(userRepository, new BCryptPasswordEncoder()),
-            new LectureQueryService(lectureRepository),
-            fakeEventLogProducer
+            userQueryService,
+            lectureQueryService,
+            logEventService
         );
 
         user = userRepository.save(User.builder()
