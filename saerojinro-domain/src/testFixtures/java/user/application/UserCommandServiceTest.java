@@ -1,8 +1,6 @@
 package user.application;
 
-import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.domain.User;
@@ -51,8 +48,8 @@ public class UserCommandServiceTest {
 	}
 
 	@Test
-	@DisplayName("kakaoSocialLogin은 신규 유저 생성이 가능하다.")
-	void kakaoSocialLogin_CreateNewUser() {
+	@DisplayName("createKakaoUser는 신규 유저 생성이 가능하다.")
+	void createKakaoUser_CreateNewUser() {
 		// given
 		String oauthIdentity = "kakao_12345";
 		String name = "박민준";
@@ -60,7 +57,7 @@ public class UserCommandServiceTest {
 		String profileImage = "http://kakao.com/profile.png";
 
 		// when
-		user = userCommandService.kakaoSocialLogin(oauthIdentity, name, email, profileImage);
+		user = userCommandService.createKakaoUser(oauthIdentity, name, email, profileImage);
 
 		// then
 		assertEquals(oauthIdentity, user.getOauthIdentity());
@@ -70,28 +67,28 @@ public class UserCommandServiceTest {
 	}
 
 	@Test
-	@DisplayName("kakaoSocialLogin은 기존 유저 정보 업데이트가 가능하다.")
-	void kakaoSocialLogin_UpdateExistingUser() {
+	@DisplayName("updateSocialInfo는 기존 유저 정보 업데이트가 가능하다.")
+	void updateSocialInfo_UpdateExistingUser() {
 		// given
 		String oauthIdentity = "kakao_12345";
 		String originalName = "박민준";
 		String originalEmail = "minjun@kakao.com";
 		String originalProfileImage = "http://kakao.com/old_profile.png";
 
-		userCommandService.kakaoSocialLogin(oauthIdentity, originalName, originalEmail, originalProfileImage);
+		User user = userCommandService.createKakaoUser(oauthIdentity, originalName, originalEmail, originalProfileImage);
 
 		String updatedName = "민준박";
 		String updatedEmail = "minjun.new@kakao.com";
 		String updatedProfileImage = "http://kakao.com/new_profile.png";
 
 		// when
-		User updatedUser = userCommandService.kakaoSocialLogin(oauthIdentity, updatedName, updatedEmail, updatedProfileImage);
+		userCommandService.updateSocialInfo(user, updatedName, updatedEmail, updatedProfileImage);
 
 		// then
-		assertEquals(oauthIdentity, updatedUser.getOauthIdentity());
-		assertEquals(updatedName, updatedUser.getName());
-		assertEquals(updatedEmail, updatedUser.getEmail());
-		assertEquals(updatedProfileImage, updatedUser.getProfileImage());
+		assertEquals(oauthIdentity, user.getOauthIdentity());
+		assertEquals(updatedName, user.getName());
+		assertEquals(updatedEmail, user.getEmail());
+		assertEquals(updatedProfileImage, user.getProfileImage());
 	}
 
 	@Test

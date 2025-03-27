@@ -10,7 +10,6 @@ import goorm.saerojinro.auth.api.presentation.request.EmailLoginRequest;
 import goorm.saerojinro.auth.api.presentation.request.ReissueRequest;
 import goorm.saerojinro.auth.api.presentation.request.SocialLoginRequest;
 import goorm.saerojinro.auth.api.presentation.response.JwtResponse;
-import goorm.saerojinro.auth.social.dto.SocialUserProfile;
 import goorm.saerojinro.auth.social.kakao.KakaoOidcTokenValidator;
 import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.jwt.JwtProvider;
@@ -44,15 +43,28 @@ public class AuthFacade {
 	public JwtResponse kakaoSocialLogin(SocialLoginRequest request) {
 		OidcIdToken oidcIdToken = kakaoOidcTokenValidator.validateAndDecodeIdToken(request.idToken());
 
-		SocialUserProfile socialUserProfile = SocialUserProfile.from(oidcIdToken);
-		String email = socialUserProfile.email();
+		String identifier = oidcIdToken.getSubject();
+		String name = oidcIdToken.getNickName();
+		String email = oidcIdToken.getEmail();
+		String profileImage = oidcIdToken.getPicture();
 
-		User user = userCommandService.kakaoSocialLogin(
-			socialUserProfile.identifier(),
-			socialUserProfile.name(),
-			email,
-			socialUserProfile.profileImage()
-		);
+		User user = userQueryService.getByOauthId(identifier);
+
+		if (user != null) {
+			userCommandService.updateSocialInfo(
+				user,
+				name,
+				email,
+				profileImage
+			);
+		} else {
+			user = userCommandService.createKakaoUser(
+				identifier,
+				name,
+				email,
+				profileImage
+			);
+		}
 
 		return createToken(user.getId(), user.getEmail(), user.getRole());
 	}
