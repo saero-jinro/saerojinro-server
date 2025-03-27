@@ -25,20 +25,6 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
-/*	public User kakaoSocialLogin(User user, String oauthIdentity, String name, String email, String profileImage) {
-		return userRepository.findByOauthIdentityAndProvider(oauthIdentity, KAKAO)
-			.map(user -> {
-				user.updateName(name);
-				user.updateEmail(email);
-				user.updateProfileImage(profileImage);
-				return userRepository.save(user);
-			})
-			.orElseGet(() -> {
-				User newUser = User.createKakaoUser(oauthIdentity, name, email, profileImage);
-				return userRepository.save(newUser);
-			});
-	}*/
-
 	public void updateSocialInfo(User user, String name, String email, String profileImage) {
 		user.updateName(name);
 		user.updateEmail(email);
