@@ -31,13 +31,17 @@ public record QuestionResponse(
 	Boolean isWriter
 ) {
 	public static QuestionResponse from(Question question, User currentUser) {
+		Long currentUserId = null;
+		if(currentUser != null) {
+			currentUserId = currentUser.getId();
+		}
 		return QuestionResponse.builder()
 			.id(question.getId())
 			.content(question.getContent())
 			.userId(question.getUser().getId())
 			.userName(question.getUser().getName())
 			.profileImage(question.getUser().getProfileImage())
-			.isWriter(question.getUser().getId().equals(currentUser.getId()))
+			.isWriter(question.getUser().getId().equals(currentUserId))
 			.build();
 	}
 }
