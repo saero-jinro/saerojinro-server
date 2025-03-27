@@ -27,7 +27,7 @@ public record QuestionResponse(
 		requiredMode = NOT_REQUIRED)
 	String profileImage,
 
-	@Schema(description = "질문자가 로그인한 유저인지", example = "True", requiredMode = REQUIRED)
+	@Schema(description = "질문자가 로그인한 유저인지", example = "true", requiredMode = REQUIRED)
 	Boolean isWriter
 ) {
 	public static QuestionResponse from(Question question, User currentUser) {
