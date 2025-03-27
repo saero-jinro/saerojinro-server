@@ -1,6 +1,7 @@
 package user.application;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
+import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,6 +24,7 @@ import mock.repository.FakeUserRepository;
 
 public class UserQueryServiceTest {
 	private UserQueryService userQueryService;
+	private User user;
 
 	@BeforeEach
 	public void init() {
@@ -30,7 +32,9 @@ public class UserQueryServiceTest {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		userQueryService = new UserQueryService(fakeUserRepository, bCryptPasswordEncoder);
 
-		fakeUserRepository.save(User.builder()
+		user = fakeUserRepository.save(User.builder()
+			.oauthIdentity("identity")
+			.provider(KAKAO)
 			.email("email@email.com")
 			.password(bCryptPasswordEncoder.encode("password1234!"))
 			.name("박민준")
@@ -156,5 +160,18 @@ public class UserQueryServiceTest {
 		// when
 		// then
 		assertEquals("anonymous", userQueryService.getAuthenticatedUsername());
+	}
+
+	@Test
+	@DisplayName("getOauthId는 oauthIdentity로 유저를 조회한다.")
+	public void getOauthId_Success() {
+		// given
+		String identity = "identity";
+
+		// when
+		User result = userQueryService.getByOauthId(identity);
+
+		// then
+		assertEquals(result, user);
 	}
 }
