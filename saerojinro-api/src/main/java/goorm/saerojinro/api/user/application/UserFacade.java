@@ -1,5 +1,6 @@
 package goorm.saerojinro.api.user.application;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ATTENDEE')")
 public class UserFacade {
 	private final UserCommandService userCommandService;
 	private final UserQueryService userQueryService;
