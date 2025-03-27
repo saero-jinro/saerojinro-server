@@ -1,10 +1,13 @@
 package goorm.saerojinro.common.exception;
 
+import static goorm.saerojinro.common.exception.GlobalExceptionCode.FORBIDDEN;
 import static goorm.saerojinro.common.exception.GlobalExceptionCode.INVALID_INPUT;
 import static goorm.saerojinro.common.exception.GlobalExceptionCode.SERVER_ERROR;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.naming.AuthenticationException;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,6 +15,7 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +45,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<ExceptionResponse> handleException(Exception exception) {
 		eventPublisher.publishEvent(exception);
 		return ResponseEntity.internalServerError().body(ExceptionResponse.from(SERVER_ERROR));
+	}
+
+	@ExceptionHandler(AuthorizationDeniedException.class)
+	protected ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException exception) {
+		eventPublisher.publishEvent(exception);
+		ExceptionResponse response = ExceptionResponse.from(FORBIDDEN);
+		return ResponseEntity.status(response.status()).body(response);
 	}
 
 	@Override
