@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record UserInfoResponse(
-	@Schema(description = "사용지 이름", example = "박민준", requiredMode = REQUIRED)
+	@Schema(description = "사용자 이름", example = "박민준", requiredMode = REQUIRED)
 	String name,
 
 	@Schema(description = "사용자 이메일", example = "alswns11346@kgu.ac.kr", requiredMode = REQUIRED)

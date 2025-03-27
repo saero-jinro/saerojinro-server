@@ -9,7 +9,6 @@ import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.question.application.QuestionCommandService;
 import goorm.saerojinro.domain.question.application.QuestionQueryService;
 import goorm.saerojinro.domain.question.domain.Question;
-import goorm.saerojinro.domain.question.exception.QuestionNotAuthorizedException;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static goorm.saerojinro.common.domain.BaseRole.*;
 
 @Component
 @RequiredArgsConstructor
@@ -31,15 +28,17 @@ public class QuestionFacade {
     @Transactional(readOnly = true)
     public QuestionListResponse getAll(){
         List<Question> questionList = questionQueryService.getAll();
+        User user = userQueryService.me();
 
-        return QuestionListResponse.from(questionList);
+        return QuestionListResponse.from(questionList, user);
     }
 
     @Transactional(readOnly = true)
     public QuestionListResponse getByLecture(Long lectureId){
         List<Question> questionsList = questionQueryService.getByLectureId(lectureId);
+        User user = userQueryService.me();
 
-        return QuestionListResponse.from(questionsList);
+        return QuestionListResponse.from(questionsList, user);
     }
 
     @Transactional
