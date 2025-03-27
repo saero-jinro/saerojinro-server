@@ -39,7 +39,7 @@ public class UserCommandService {
 			});
 	}
 
-	@CacheEvict(value = "users", key = "#email")
+	@CacheEvict(value = "users", key = "#user.getEmail()")
 	public void update(User user, String name, String email, Category category) {
 		user.updateName(name);
 		user.updateEmail(email);
