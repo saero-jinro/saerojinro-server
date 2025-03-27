@@ -2,6 +2,7 @@ package goorm.saerojinro.domain.user.application;
 
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,10 @@ public class UserCommandService {
 	public User kakaoSocialLogin(String oauthIdentity, String name, String email, String profileImage) {
 		return userRepository.findByOauthIdentityAndProvider(oauthIdentity, KAKAO)
 			.map(user -> {
-				update(user, name, email, null);
+				user.updateName(name);
+				user.updateEmail(email);
 				user.updateProfileImage(profileImage);
-				return userRepository.save(user);
+				return user;
 			})
 			.orElseGet(() -> {
 				User newUser = User.createKakaoUser(oauthIdentity, name, email, profileImage);
@@ -37,6 +39,7 @@ public class UserCommandService {
 			});
 	}
 
+	@CacheEvict(value = "users", key = "#email")
 	public void update(User user, String name, String email, Category category) {
 		user.updateName(name);
 		user.updateEmail(email);

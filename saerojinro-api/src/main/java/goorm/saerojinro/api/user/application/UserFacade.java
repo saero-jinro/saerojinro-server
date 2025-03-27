@@ -20,7 +20,9 @@ public class UserFacade {
 
 	@Transactional
 	public void update(UserUpdateRequest request) {
-		User user = userQueryService.me();
+		Long id = userQueryService.me().getId();
+		User user = userQueryService.getById(id);
+
 		userCommandService.update(user, request.name(), request.email(), request.interest());
 	}
 
