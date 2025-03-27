@@ -5,6 +5,7 @@ import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateR
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
+import goorm.saerojinro.domain.logevent.application.LogEventService;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.exception.ReservationExistException;
@@ -13,6 +14,7 @@ import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
 import mock.producer.FakeLogEventProducer;
 import mock.repository.FakeLectureRepository;
+import mock.repository.FakeLogEventRepository;
 import mock.repository.FakeReservationRepository;
 import mock.repository.FakeUserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -55,14 +57,17 @@ public class ReservationFacadeTest {
         FakeLectureRepository lectureRepository = new FakeLectureRepository();
         FakeLogEventProducer fakeEventLogProducer = new FakeLogEventProducer();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        UserQueryService userQueryService = new UserQueryService(userRepository, passwordEncoder);
+        LectureQueryService lectureQueryService = new LectureQueryService(lectureRepository);
+        LogEventService logEventService = new LogEventService(new FakeLogEventRepository(), userQueryService, lectureQueryService, fakeEventLogProducer);
 
         reservationQueryService = new ReservationQueryService(reservationRepository);
         reservationFacade = new ReservationFacade(
-                new UserQueryService(userRepository, passwordEncoder),
-                new LectureQueryService(lectureRepository),
+                userQueryService,
+                lectureQueryService,
                 reservationQueryService,
                 new ReservationCommandService(reservationRepository),
-                fakeEventLogProducer
+                logEventService
         );
 
         user = User.builder()

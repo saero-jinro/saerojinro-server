@@ -72,8 +72,8 @@ public class LectureFacadeTest {
 		fakeLogEventRepository = new FakeLogEventRepository();
 		FakeUserRepository fakeUserRepository = new FakeUserRepository();
 		UserQueryService userQueryService = new UserQueryService(fakeUserRepository, new BCryptPasswordEncoder());
-		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService);
-		lectureFacade = new LectureFacade(lectureQueryService, fakeEventLogProducer, userQueryService, new LectureRecommendationService(), logEventService);
+		LogEventService logEventService = new LogEventService(fakeLogEventRepository, userQueryService, lectureQueryService, fakeEventLogProducer);
+		lectureFacade = new LectureFacade(lectureQueryService, userQueryService, new LectureRecommendationService(), logEventService);
 
 
 		Speaker speaker = Speaker.builder()
@@ -127,24 +127,21 @@ public class LectureFacadeTest {
 			user1.getId(),
 			lecture1.getId(),
 			LECTURE_RESERVATION_SUCCESS,
-			lecture1.getCategory(),
-			LocalDateTime.now()
+			lecture1.getCategory()
 		);
 
 		redisLogEvent2 = RedisLogEvent.of(
 			user1.getId(),
 			lecture1.getId(),
 			LECTURE_RESERVATION_SUCCESS,
-			lecture1.getCategory(),
-			LocalDateTime.now()
+			lecture1.getCategory()
 		);
 
 		redisLogEvent3 = RedisLogEvent.of(
 			user1.getId(),
 			lecture2.getId(),
 			LECTURE_RESERVATION_SUCCESS,
-			lecture2.getCategory(),
-			LocalDateTime.now()
+			lecture2.getCategory()
 		);
 
 		logEventService.save(record + 1, redisLogEvent1);

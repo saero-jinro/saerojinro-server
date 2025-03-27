@@ -7,12 +7,14 @@ import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateRes
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/lectures")
+@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class LectureAdminControllerImpl implements LectureAdminController {
 	private final LectureAdminFacade lectureAdminFacade;

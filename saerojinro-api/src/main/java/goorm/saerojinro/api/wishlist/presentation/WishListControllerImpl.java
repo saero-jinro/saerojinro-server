@@ -6,6 +6,7 @@ import goorm.saerojinro.api.wishlist.presentation.response.WishListCreateRespons
 import goorm.saerojinro.api.wishlist.presentation.response.WishListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class WishListControllerImpl implements WishListController{
 
     @Override
     @PostMapping("/lectures/{id}")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<WishListCreateResponse> create(@PathVariable("id") Long id) {
         WishListCreateResponse response = wishListFacade.create(id);
         return ResponseEntity.status(CREATED).body(response);
@@ -48,6 +50,7 @@ public class WishListControllerImpl implements WishListController{
 
     @Override
     @DeleteMapping("/lectures/{id}")
+    @PreAuthorize("hasRole('ATTENDEE')")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         wishListFacade.delete(id);
         return ResponseEntity.noContent().build();
