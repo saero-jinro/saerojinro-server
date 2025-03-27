@@ -172,6 +172,10 @@ public class UserQueryServiceTest {
 		User result = userQueryService.getByOauthId(identity);
 
 		// then
-		assertEquals(result, user);
+		assertEquals(user.getId(), result.getId());
+		assertEquals(identity, result.getOauthIdentity());
+		assertEquals(ADMIN, result.getRole());
+		assertEquals(user.getName(), result.getName());
+		assertEquals(user.getEmail(), result.getEmail());
 	}
 }
