@@ -36,7 +36,6 @@ public class AuthControllerImpl implements AuthController {
 
 	@Override
 	@PostMapping("/reissue")
-	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<JwtResponse> reissue(ReissueRequest request) {
 		JwtResponse response = authFacade.reissue(request);
 		return ResponseEntity.ok(response);
@@ -44,7 +43,7 @@ public class AuthControllerImpl implements AuthController {
 
 	@Override
 	@PostMapping("/logout")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('ATTENDEE')")
 	public ResponseEntity<Void> logout(HttpServletRequest request) {
 		authFacade.logout(request);
 		return ResponseEntity.noContent().build();
