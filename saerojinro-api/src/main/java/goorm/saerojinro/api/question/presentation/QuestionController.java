@@ -51,8 +51,8 @@ public interface QuestionController {
             ) @Valid @RequestBody QuestionCreateRequest request);
 
     @Operation(
-            summary = "강의 별 질문 수정 API",
-            description = "강의 별로 특정 질문 데이터를 수정 합니다."
+            summary = "질문 수정 API",
+            description = "특정 질문 데이터를 수정 합니다."
     )
     @ApiResponse(responseCode = "204")
     ResponseEntity<Void> update(
@@ -63,8 +63,8 @@ public interface QuestionController {
             ) @Valid @RequestBody QuestionUpdateRequest request);
 
     @Operation(
-            summary = "강의 별 질문 삭제 API",
-            description = "강의 별로 특정 질문 데이터를 삭제 합니다."
+            summary = "질문 삭제 API",
+            description = "특정 질문 데이터를 삭제 합니다."
     )
     @ApiResponse(responseCode = "204")
     ResponseEntity<Void> delete(@PathVariable("id") Long id);
