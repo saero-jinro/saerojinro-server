@@ -25,7 +25,7 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
-	public User kakaoSocialLogin(String oauthIdentity, String name, String email, String profileImage) {
+/*	public User kakaoSocialLogin(User user, String oauthIdentity, String name, String email, String profileImage) {
 		return userRepository.findByOauthIdentityAndProvider(oauthIdentity, KAKAO)
 			.map(user -> {
 				user.updateName(name);
@@ -37,6 +37,17 @@ public class UserCommandService {
 				User newUser = User.createKakaoUser(oauthIdentity, name, email, profileImage);
 				return userRepository.save(newUser);
 			});
+	}*/
+
+	public void updateSocialInfo(User user, String name, String email, String profileImage) {
+		user.updateName(name);
+		user.updateEmail(email);
+		user.updateProfileImage(profileImage);
+	}
+
+	public User createKakaoUser(String oauthIdentity, String name, String email, String profileImage) {
+		User user = User.createKakaoUser(oauthIdentity, name, email, profileImage);
+		return userRepository.save(user);
 	}
 
 	@CacheEvict(value = "users", key = "#user.getEmail()")

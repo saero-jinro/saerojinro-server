@@ -1,6 +1,8 @@
 package goorm.saerojinro.domain.user.application;
 
 
+import static goorm.saerojinro.common.domain.Provider.KAKAO;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +49,11 @@ public class UserQueryService {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public User getByOauthId(String oauthIdentity) {
+		return userRepository.findByOauthIdentityAndProvider(oauthIdentity, KAKAO)
+			.orElse(null);
 	}
 
 	public String getAuthenticatedUsername() {
