@@ -23,19 +23,55 @@ Commit 메시지는 `타입: 내용` 형식으로 작성합니다.
 <hr>
 
 # Contributors 🧑🏻‍💻
+|**Server**|                                                 **Server**                                                 |                                                **Server**                                                 |                                                 **Server**                                                 |
+|:--------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
+| [<img src="https://github.com/minjo-on.png" alt="박민준" width="150" />](https://github.com/minjo-on) | [<img src="https://github.com/SD-gif.png" alt="서동준" width="150" />](https://github.com/SD-gif) |     [<img src="https://github.com/fbehddn.png" alt="유동우" width="150" />](https://github.com/fbehddn)      | [<img src="https://github.com/LeeShinHaeng.png" alt="이신행" width="150" />](https://github.com/LeeShinHaeng) |
+|                               [**박민준**](https://github.com/minjo-on)                               |                                 [**서동준**](https://github.com/SD-gif)                                 |                 [**유동우**](https://github.com/fbehddn)                                                     |                                   [**이신행**](https://github.com/LeeShinHaeng)                                    |
+
 
 <hr>
 
 # Tech Stacks 📚
 
-<hr>
-
-# ERD 📈
+![image](.github/images/cicd_pipeline.png)
 
 <hr>
 
 # Architecture 🏗
 
-<hr>
+```
+.
+├── admin          // 관리자 기능 관련 엔드포인트 및 비즈니스로직 
+│   ├── src
+│   │   └── ...
+│   ├── buid.gradle
+│   └── Dockerfile
+├── api            // 일반 사용자 기능 관련 엔드포인트 및 비즈니스로직 
+│   ├── src
+│   │   └── ...
+│   ├── buid.gradle
+│   └── Dockerfile
+├── auth           // 인증 및 인가 관련 엔드포인 및 비즈니스 로직
+│   ├── src
+│   │   └── ...
+│   ├── buid.gradle
+│   └── Dockerfile
+├── common         // 공통 엔티티 및 기능 (로깅, 예외 처리 등)
+│   ├── src
+│   │   └── ...
+│   └── buid.gradle
+├── domain         // 도메인 로직
+│   ├── src
+│   │   └── ...
+│   └── buid.gradle
+├── infra     // JPA Redis 등 기술적 관심사
+│   ├── src
+│   │   └── ...
+│   └── buid.gradle
+// ..
 
-# Package 📦
+```
+
+![image](.github/images/multimodule.png)
+
+<hr>
