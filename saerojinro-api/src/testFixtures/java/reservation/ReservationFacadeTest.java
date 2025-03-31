@@ -71,6 +71,7 @@ public class ReservationFacadeTest {
         );
 
         user = User.builder()
+                .id(USER_ID)
                 .email("email@email.com")
                 .password(passwordEncoder.encode("password1234!"))
                 .name("박민준")

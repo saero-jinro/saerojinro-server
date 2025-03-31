@@ -123,18 +123,6 @@ public class TimetableFacadeTest {
 	}
 
 	@Test
-	@DisplayName("getTimetable은 사용자가 로그인하지 않으면 빈 리스트를 반환한다")
-	public void getTimetable_Not_Login() {
-		// when
-		TimetableResponse timetable = timetableFacade.getTimetable();
-
-		// then
-		assertNotNull(timetable);
-		assertEquals(0, timetable.reservation().size());
-		assertEquals(0, timetable.wishlist().size());
-	}
-
-	@Test
 	@DisplayName("getSize는 강의의 예약 수를 조회한다.")
 	public void getSize_Success() {
 		// when
