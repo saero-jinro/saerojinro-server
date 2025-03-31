@@ -43,9 +43,9 @@ public class UserQueryService {
 	@Cacheable(value = "users", key = "#root.target.getAuthenticatedUsername()", unless = "#result == null or #root.target.isAnonymous(#root.target.getAuthenticatedUsername())")
 	public User me() {
 		try {
-			String email = getAuthenticatedUsername();
-			if (isAnonymous(email)) return null;
-			return getByEmail(email);
+			Long id = Long.valueOf(getAuthenticatedUsername());
+			if (isAnonymous(id)) return null;
+			return getById(id);
 		} catch (Exception e) {
 			return null;
 		}
@@ -66,7 +66,7 @@ public class UserQueryService {
 		return ((UserDetails) authentication.getPrincipal()).getUsername();
 	}
 
-	public boolean isAnonymous(String username) {
-		return "anonymous".equals(username);
+	public boolean isAnonymous(Long id) {
+		return "anonymous".equals(id.toString());
 	}
 }

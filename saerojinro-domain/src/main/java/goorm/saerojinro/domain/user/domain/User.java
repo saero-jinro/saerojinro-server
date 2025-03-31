@@ -114,6 +114,6 @@ public class User extends BaseTimeEntity implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return email;
+		return id.toString();
 	}
 }
