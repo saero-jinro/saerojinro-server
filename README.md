@@ -33,7 +33,7 @@ Commit 메시지는 `타입: 내용` 형식으로 작성합니다.
 
 # Tech Stacks 📚
 
-![image](.github/images/cicd_pipeline.png)
+![image](/.github/images/cicd_pipeline.png)
 
 <hr>
 
@@ -72,6 +72,6 @@ Commit 메시지는 `타입: 내용` 형식으로 작성합니다.
 
 ```
 
-![image](.github/images/multimodule.png)
+![image](/.github/images/multimodule.png)
 
 <hr>
