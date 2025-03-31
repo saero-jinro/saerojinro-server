@@ -48,7 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(AuthorizationDeniedException.class)
-	protected ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException exception) {
+	protected ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthorizationDeniedException exception) {
 		eventPublisher.publishEvent(exception);
 		ExceptionResponse response = ExceptionResponse.from(FORBIDDEN);
 		return ResponseEntity.status(response.status()).body(response);
