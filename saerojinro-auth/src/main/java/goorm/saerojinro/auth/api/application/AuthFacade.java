@@ -36,7 +36,7 @@ public class AuthFacade {
 	public JwtResponse emailLogin(EmailLoginRequest request) {
 		User user = userQueryService.login(request.email(), request.password());
 
-		return createToken(user.getId(), user.getEmail(), user.getRole());
+		return createToken(user.getId(),  user.getRole());
 	}
 
 	@Transactional
@@ -66,7 +66,7 @@ public class AuthFacade {
 			);
 		}
 
-		return createToken(user.getId(), user.getEmail(), user.getRole());
+		return createToken(user.getId(), user.getRole());
 	}
 
 	@Transactional(readOnly = true)
@@ -75,12 +75,12 @@ public class AuthFacade {
 
 		User user = userQueryService.getById(refreshToken.getId());
 
-		return createToken(user.getId(), user.getEmail(), user.getRole());
+		return createToken(user.getId(), user.getRole());
 	}
 
-	private JwtResponse createToken(Long id, String email, BaseRole role) {
+	private JwtResponse createToken(Long id, BaseRole role) {
 		String refreshToken = UUID.randomUUID().toString();
-		String accessToken = jwtProvider.generateAccessToken(email, role);
+		String accessToken = jwtProvider.generateAccessToken(id, role);
 		refreshTokenService.save(id, refreshToken);
 		return JwtResponse.of(accessToken, refreshToken);
 	}

@@ -36,12 +36,12 @@ public class JwtProvider {
 	private final static String HEADER_AUTHORIZATION = "Authorization";
 	private final static String TOKEN_PREFIX = "Bearer ";
 
-	public String generateAccessToken(String email, BaseRole role) {
+	public String generateAccessToken(Long id, BaseRole role) {
 		Date now = new Date();
-		return makeToken(new Date(now.getTime() + Duration.ofHours(1).toMillis()), email, role);
+		return makeToken(new Date(now.getTime() + Duration.ofHours(1).toMillis()), id, role);
 	}
 
-	private String makeToken(Date expiry, String email, BaseRole role) {
+	private String makeToken(Date expiry, Long id, BaseRole role) {
 		Date now = new Date();
 
 		return Jwts.builder()
@@ -49,7 +49,7 @@ public class JwtProvider {
 			.setIssuer(jwtProperties.getIssuer())
 			.setIssuedAt(now)
 			.setExpiration(expiry)
-			.setSubject(email)
+			.setSubject(id.toString())
 			.claim("role", role.name())
 			.signWith(HS256, jwtProperties.getSecretKey())
 			.compact();
