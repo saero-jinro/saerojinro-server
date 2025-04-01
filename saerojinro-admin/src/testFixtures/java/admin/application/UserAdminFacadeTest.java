@@ -25,7 +25,7 @@ public class UserAdminFacadeTest {
 			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder)
 		);
 
-		User user = fakeUserRepository.save(
+		fakeUserRepository.save(
 			User.createKakaoUser(
 				"identity",
 				"name",
