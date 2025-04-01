@@ -26,7 +26,6 @@ import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import jakarta.servlet.http.HttpServletRequest;
 import mock.repository.FakeBlackListRepository;
 import mock.repository.FakeRefreshTokenRepository;
 import mock.repository.FakeUserRepository;

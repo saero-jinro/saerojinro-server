@@ -3,16 +3,12 @@ package goorm.saerojinro.api.reservation.application;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 
-import java.time.LocalDateTime;
 
 import goorm.saerojinro.api.reservation.presentation.response.ReservationCreateResponse;
 import goorm.saerojinro.common.exception.CustomException;
 import goorm.saerojinro.domain.lecture.application.LectureQueryService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.logevent.application.LogEventService;
-import goorm.saerojinro.domain.logevent.domain.LogEventProducer;
-import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
-import goorm.saerojinro.domain.logevent.domain.enums.LogEventType;
 import goorm.saerojinro.domain.reservation.application.ReservationCommandService;
 import goorm.saerojinro.domain.reservation.application.ReservationQueryService;
 import goorm.saerojinro.domain.reservation.domain.Reservation;
