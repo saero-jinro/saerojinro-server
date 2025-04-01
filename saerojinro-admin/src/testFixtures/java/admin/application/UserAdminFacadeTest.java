@@ -16,7 +16,6 @@ import mock.repository.FakeUserRepository;
 
 public class UserAdminFacadeTest {
 	private UserAdminFacade userAdminFacade;
-	private User user;
 
 	@BeforeEach
 	public void init() {
@@ -26,7 +25,7 @@ public class UserAdminFacadeTest {
 			new UserCommandService(fakeUserRepository, bCryptPasswordEncoder)
 		);
 
-		user = fakeUserRepository.save(
+		fakeUserRepository.save(
 			User.createKakaoUser(
 				"identity",
 				"name",

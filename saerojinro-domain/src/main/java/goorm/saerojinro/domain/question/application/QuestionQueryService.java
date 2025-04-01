@@ -1,6 +1,5 @@
 package goorm.saerojinro.domain.question.application;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.question.domain.Question;
 import goorm.saerojinro.domain.question.domain.QuestionRepository;
 import goorm.saerojinro.domain.question.exception.QuestionNotAuthorizedException;

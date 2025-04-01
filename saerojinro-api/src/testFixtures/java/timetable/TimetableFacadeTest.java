@@ -33,7 +33,6 @@ import java.time.LocalDateTime;
 
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TimetableFacadeTest {
 	private TimetableFacade timetableFacade;

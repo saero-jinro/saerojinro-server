@@ -8,7 +8,6 @@ import goorm.saerojinro.admin.api.lecture.presentation.request.LectureCreateRequ
 import goorm.saerojinro.admin.api.lecture.presentation.request.LectureUpdateRequest;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureCreateResponse;
 import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingListResponse;
-import goorm.saerojinro.admin.api.lecture.presentation.response.LectureIdNameMappingResponse;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.file.application.FileCommandService;
 import goorm.saerojinro.domain.file.application.FileQueryService;
@@ -28,7 +27,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class LectureAdminFacadeTest {
 

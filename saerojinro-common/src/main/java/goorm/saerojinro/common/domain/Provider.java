@@ -1,7 +1,5 @@
 package goorm.saerojinro.common.domain;
 
-import java.util.Arrays;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,13 +12,4 @@ public enum Provider {
 
 	private final String jwkSetUri;
 	private final String issuer;
-
-	// public static Provider from(String provider) {
-	// 	String upperCastedProvider = provider.toUpperCase();
-	//
-	// 	return Arrays.stream(Provider.values())
-	// 		.filter(item -> item.name().equals(upperCastedProvider))
-	// 		.findFirst()
-	// 		.orElseThrow(ProviderNotFoundException::new);
-	// }
 }

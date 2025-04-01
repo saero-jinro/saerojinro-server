@@ -1,6 +1,5 @@
 package goorm.saerojinro.auth.social.kakao;
 
-
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 
 import org.springframework.stereotype.Service;

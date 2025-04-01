@@ -2,11 +2,8 @@ package goorm.saerojinro.api.lecture.presentation.response;
 
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-
-import java.time.LocalDateTime;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 

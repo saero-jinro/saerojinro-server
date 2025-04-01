@@ -1,6 +1,5 @@
 package goorm.saerojinro.domain.user.application;
 
-
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 
 import org.springframework.cache.annotation.Cacheable;

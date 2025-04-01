@@ -1,14 +1,10 @@
 package goorm.saerojinro.domain.user.application;
 
-import static goorm.saerojinro.common.domain.Provider.KAKAO;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
-import goorm.saerojinro.common.domain.Provider;
 import goorm.saerojinro.domain.user.domain.User;
 import goorm.saerojinro.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;

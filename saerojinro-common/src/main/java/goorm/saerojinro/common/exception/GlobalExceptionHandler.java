@@ -7,8 +7,6 @@ import static goorm.saerojinro.common.exception.GlobalExceptionCode.SERVER_ERROR
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSourceResolvable;

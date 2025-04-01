@@ -1,6 +1,5 @@
 package goorm.saerojinro.infra.repository.impl;
 
-import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.question.domain.Question;
 import goorm.saerojinro.domain.question.domain.QuestionRepository;
 import goorm.saerojinro.infra.repository.jpa.QuestionJpaRepository;

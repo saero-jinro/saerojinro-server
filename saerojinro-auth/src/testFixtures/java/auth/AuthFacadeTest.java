@@ -3,10 +3,6 @@ package auth;
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +26,6 @@ import goorm.saerojinro.common.domain.reissue.domain.RefreshToken;
 import goorm.saerojinro.domain.user.application.UserCommandService;
 import goorm.saerojinro.domain.user.application.UserQueryService;
 import goorm.saerojinro.domain.user.domain.User;
-import jakarta.servlet.http.HttpServletRequest;
 import mock.repository.FakeBlackListRepository;
 import mock.repository.FakeRefreshTokenRepository;
 import mock.repository.FakeUserRepository;
