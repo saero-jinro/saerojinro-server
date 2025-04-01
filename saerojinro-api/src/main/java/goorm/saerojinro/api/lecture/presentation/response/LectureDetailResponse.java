@@ -5,8 +5,6 @@ import goorm.saerojinro.domain.lecture.application.dto.LectureCacheDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
