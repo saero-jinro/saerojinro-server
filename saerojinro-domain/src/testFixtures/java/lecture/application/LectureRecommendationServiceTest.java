@@ -2,7 +2,6 @@ package lecture.application;
 
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static goorm.saerojinro.common.domain.Category.DEVOPS;
-import static goorm.saerojinro.common.domain.Category.FRONTEND;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_FAIL;
 import static goorm.saerojinro.domain.logevent.domain.enums.LogEventType.LECTURE_RESERVATION_SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +20,6 @@ import goorm.saerojinro.domain.lecture.application.LectureRecommendationService;
 import goorm.saerojinro.domain.lecture.domain.Lecture;
 import goorm.saerojinro.domain.logevent.domain.LogEvent;
 import goorm.saerojinro.domain.logevent.domain.dto.RedisLogEvent;
-import goorm.saerojinro.domain.speaker.domain.Speaker;
 
 public class LectureRecommendationServiceTest {
 	private LectureRecommendationService lectureRecommendationService;

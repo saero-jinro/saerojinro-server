@@ -2,7 +2,6 @@ package user;
 
 import static goorm.saerojinro.common.domain.BaseRole.ADMIN;
 import static goorm.saerojinro.common.domain.BaseRole.ATTENDEE;
-import static goorm.saerojinro.common.domain.BaseRole.SPEAKER;
 import static goorm.saerojinro.common.domain.Category.BACKEND;
 import static goorm.saerojinro.common.domain.Provider.KAKAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import goorm.saerojinro.common.domain.BaseRole;
 import goorm.saerojinro.common.domain.Category;
 import goorm.saerojinro.domain.user.domain.User;
 
